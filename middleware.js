@@ -9,7 +9,7 @@ export const BLOCKED_UA = /(gptbot|claudebot|anthropic-ai|ccbot|bytespider|meta-
 
 export const config = {
   // Fonts, the stylesheet, the script and icons are skipped to keep invocations low; they hold no site content.
-  matcher: ['/((?!robots\\.txt|fonts/|styles\\.css|site\\.js|favicon\\.svg|apple-touch-icon\\.png).*)'],
+  matcher: ['/((?!robots\\.txt|fonts/|styles\\.css|site\\.js|favicon\\.(?:svg|ico)|apple-touch-icon\\.png|icon-(?:192|512)\\.png|site\\.webmanifest).*)'],
 };
 
 export default function middleware(request) {
