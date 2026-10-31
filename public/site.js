@@ -2,10 +2,15 @@
 // Shared behaviour for every CarSalesTeam page. Each block only runs when its markup is present.
 const $ = id => document.getElementById(id);
 
-// Header: compact bar once the page scrolls.
+// Header: compact bar once the page scrolls. Two thresholds, so a page resting near the line never flips it back
+// and forth.
 const header = document.querySelector('.top');
 if (header) {
-  const updateHeader = () => header.classList.toggle('scrolled', window.scrollY > 65);
+  const updateHeader = () => {
+    const on = header.classList.contains('scrolled');
+    if (!on && window.scrollY > 90) header.classList.add('scrolled');
+    else if (on && window.scrollY < 40) header.classList.remove('scrolled');
+  };
   window.addEventListener('scroll', updateHeader, { passive: true });
   // No check at start-up: reading the scroll position then forces the layout that follows the web font swap into
   // one long script task. A page opened part-way down (an anchor link or a reload) fires a scroll event anyway.
@@ -22,9 +27,10 @@ const config = configEl ? JSON.parse(configEl.textContent) : null;
 // motion), and this only starts, pauses and replays the CSS animations, and keeps the live status in step.
 const runs = [...document.querySelectorAll('.run')];
 // Every step keeps its place in the layout the whole time: only opacity and transform animate, so nothing on
-// the page moves. A replay fades the finished run out, then starts again from the first step.
+// the page moves. A replay fades out only the steps and the conversation (never the whole card), restarts them
+// from the first step, and the card's frame, lanes and titles stay still.
 const reset = run => {
-  run.classList.add('is-reset');
+  run.classList.add('is-reset', 'is-looped');
   void run.offsetWidth; // Restarts the CSS animations from the first step.
   delete run.dataset.lane;
   run.classList.remove('is-reset', 'is-done', 'is-fading');
@@ -58,7 +64,7 @@ runs.forEach(run => {
     // Closing beat: holds on the closed record and its summary, offers a replay, then cross-fades into the next
     // loop. Off screen the new loop waits, paused, until the run is back in view.
     run.holdTimer = setTimeout(() => run.classList.add('is-done'), 1200);
-    run.loopTimer = setTimeout(() => restart(run), 5200);
+    run.loopTimer = setTimeout(() => restart(run), 6000);
   });
   run.querySelector('.run-replay').addEventListener('click', () => restart(run));
 });
@@ -69,10 +75,13 @@ const sync = run => run.classList.toggle('is-playing', seen.has(run) && !userPau
 const syncAll = () => runs.forEach(sync);
 if (!('IntersectionObserver' in window)) { runs.forEach(run => seen.add(run)); syncAll(); }
 else {
+  // Starts once a quarter of the run is on screen and pauses only when it has left the screen entirely, so a run
+  // sitting at the edge of the window never stutters between playing and paused. Nothing restarts on scroll.
   const io = new IntersectionObserver(entries => entries.forEach(e => {
-    if (e.isIntersecting) seen.add(e.target); else seen.delete(e.target);
+    if (e.intersectionRatio >= 0.25) seen.add(e.target);
+    else if (!e.isIntersecting) seen.delete(e.target);
     sync(e.target);
-  }), { threshold: 0.25 });
+  }), { threshold: [0, 0.25] });
   runs.forEach(run => io.observe(run));
 }
 const pauseBtn = $('flow-pause');
