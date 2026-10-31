@@ -1,0 +1,116 @@
+{
+  "slug": "dealership-vehicle-enquiries",
+  "sector": "dealerships",
+  "kind": "Guide",
+  "topic": "Dealerships",
+  "title": "How do dealerships stop losing vehicle enquiries?",
+  "shortTitle": "Losing vehicle enquiries",
+  "description": "Dealerships stop losing vehicle enquiries by recording every enquiry in one place, giving each one a named owner, and keeping it open until the customer has a confirmed next step, such as a booked test drive or service visit.",
+  "published": "2026-10-31",
+  "updated": "2026-10-31",
+  "summary": {
+    "question": "How do dealerships stop losing vehicle enquiries?",
+    "answer": "Dealerships stop losing vehicle enquiries by recording every enquiry in one place, giving each one a named owner, and keeping it open until the customer has a confirmed next step, such as a booked test drive or service visit. Most enquiries are not lost because nobody replied. They are lost because the reply did not lead to a next step, and nobody followed up.",
+    "takeaways": [
+      "Record every enquiry in one place, whether it came by phone, email, website or walk-in.",
+      "Give each enquiry one named owner on the sales or service team.",
+      "Check stock and appointment capacity before confirming anything to the customer.",
+      "Keep each enquiry open until it has a confirmed next step.",
+      "Send discount, trade-in and financing requests to authorised staff."
+    ]
+  },
+  "scope": {
+    "covers": "Vehicle enquiries, test-drive requests and service-visit requests: where they get lost, and how to move each one to a confirmed next step.",
+    "excludes": "Pricing, discounts, financing, trade-in valuations, fault diagnosis, repair authorisation and the features of any specific dealer management system.",
+    "instead": "Those stay with the sales manager, the service desk or other authorised staff."
+  },
+  "sections": [
+    {
+      "heading": "Where do vehicle enquiries get lost?",
+      "paragraphs": [
+        "A shopper asks about a car through a website form, by phone or by message. Someone sends a reply. Then the enquiry waits."
+      ],
+      "list": [
+        "Enquiries arrive in several places, and no single list shows them all.",
+        "Nobody owns the enquiry, so each salesperson assumes someone else picked it up.",
+        "The first reply answers the question but does not offer a next step.",
+        "The car or the appointment slot is not checked, so a promise has to be taken back.",
+        "Busy days push follow-ups to tomorrow, and tomorrow they are forgotten."
+      ]
+    },
+    {
+      "heading": "How do you stop it?",
+      "ordered": true,
+      "list": [
+        "Bring every enquiry into one shared list, with the vehicle or service needed, contact details and preferred timing.",
+        "Name one owner for each enquiry, on the sales desk or the service desk.",
+        "Check current stock and appointment capacity before confirming anything.",
+        "Offer a specific next step in the first reply, such as a test-drive time or a service slot.",
+        "Keep the enquiry open, and follow up, until that next step is confirmed or the customer says no."
+      ]
+    },
+    {
+      "heading": "What should stay with people?",
+      "paragraphs": [
+        "Discounts, financing, trade-in valuations, fault diagnosis and repair authorisations need authorised staff. A request for money off or a guaranteed trade-in value should go to the sales manager before anyone answers it.",
+        "Staff should confirm that a vehicle is available before it is promised to a customer."
+      ]
+    },
+    {
+      "heading": "How do you know it is working?",
+      "paragraphs": [
+        "Count the enquiries with a confirmed next step, and track response time, attended appointments, open enquiries and the staff effort needed. Record these before you change anything, so you have something to compare with."
+      ],
+      "links": [
+        {
+          "href": "/guides/staff-minutes-per-resolved-request",
+          "label": "How to measure staff minutes per resolved request"
+        }
+      ]
+    },
+    {
+      "heading": "How does CarSalesTeam help?",
+      "paragraphs": [
+        "CarSalesTeam runs this workflow for dealer groups and their dealerships. It records each sales or service enquiry, checks the stock and scheduling sources you allow, prepares the next step for staff to confirm, and keeps open enquiries visible. Discounts, financing and trade-ins stay with authorised staff."
+      ],
+      "links": [
+        {
+          "href": "/#example",
+          "label": "See the dealership workflow with sample enquiries"
+        }
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "q": "Why do dealerships lose vehicle enquiries?",
+      "a": "Because enquiries arrive in several places, have no named owner, and stop after the first reply. Without a confirmed next step, the shopper moves on."
+    },
+    {
+      "q": "What counts as a confirmed next step?",
+      "a": "Something both sides have agreed, such as a booked test drive or a service appointment confirmed by staff. A reply on its own does not count."
+    },
+    {
+      "q": "Who should answer a discount or trade-in request?",
+      "a": "Authorised staff, such as the sales manager. Discounts, financing and trade-in valuations are decisions, not information to pass on."
+    },
+    {
+      "q": "Does this work for the service desk too?",
+      "a": "Yes. Service-visit requests get lost the same way, and the same steps apply: one list, one owner and a confirmed appointment."
+    }
+  ],
+  "related": [
+    {
+      "href": "/",
+      "label": "CarSalesTeam for dealer groups"
+    },
+    {
+      "href": "/guides/workflow-exceptions",
+      "label": "What is an exception in a workflow?"
+    },
+    {
+      "href": "/guides/staff-minutes-per-resolved-request",
+      "label": "What is staff minutes per resolved request?"
+    }
+  ]
+}

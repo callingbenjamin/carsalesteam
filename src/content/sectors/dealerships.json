@@ -1,0 +1,164 @@
+{
+  "key": "dealerships",
+  "name": "Dealerships",
+  "tagline": "Every lead deserves a next step.",
+  "description": "CarSalesTeam is a managed workflow service for dealer groups and their dealerships that brings vehicle enquiries, test-drive requests and service follow-ups into one workflow, with your sales and service teams in control.",
+  "topic": "Dealership enquiry follow-up",
+  "task": "following up sales and service enquiries",
+  "hero": {
+    "eyebrow": "FROM FIRST ENQUIRY TO THE NEXT VISIT",
+    "headline": [
+      "Every lead deserves",
+      "a next step."
+    ],
+    "intro": "CarSalesTeam is a managed workflow service for dealer groups and their dealerships that brings vehicle enquiries, test-drive requests and service follow-ups into one workflow, with your sales and service teams in control.",
+    "audience": "For dealer groups & their dealerships",
+    "request": "Is the SUV still available? Can I test-drive it Saturday?",
+    "next": [
+      {
+        "who": "CarSalesTeam",
+        "does": "Prepares the enquiry and requests an availability check."
+      },
+      {
+        "who": "Your team",
+        "does": "Confirms the vehicle and appointment."
+      }
+    ],
+    "foot": "For the people behind every sale."
+  },
+  "summary": {
+    "question": "What is CarSalesTeam?",
+    "answer": "CarSalesTeam is a managed workflow service for dealer groups and their dealerships that brings vehicle enquiries, test-drive requests and service follow-ups into one workflow, with your sales and service teams in control. Every enquiry gets a clear next step, and staff confirm inventory and appointments before anything is promised.",
+    "takeaways": [
+      "Every enquiry gets a clear next step and a named person to confirm it.",
+      "Vehicle availability, discounts, financing, trade-in valuations and repair authorisations stay with authorised staff.",
+      "Staff confirm inventory and appointments before anything is promised.",
+      "Results are measured by enquiries with a confirmed next step, compared with how you work today."
+    ]
+  },
+  "scope": {
+    "covers": "Vehicle enquiries, test-drive requests and service-visit requests prepared for staff confirmation, for the dealerships and enquiry sources you choose.",
+    "excludes": "Confirming vehicle availability, discounts, financing, trade-in valuations, fault diagnosis and repair authorisations.",
+    "instead": "Those stay with the sales manager, the service desk or other authorised staff."
+  },
+  "statement": [
+    "Your team has a dealership to run.",
+    "Keep enquiries moving from first contact to a confirmed next step."
+  ],
+  "workflow": {
+    "eyebrow": "THE WORK BETWEEN THE WORK",
+    "heading": "A reply is the beginning.",
+    "body": "A shopper asks about a vehicle. The answer needs current inventory, a clear owner and a follow-up. The service desk needs the same discipline.",
+    "steps": [
+      {
+        "title": "Capture the enquiry",
+        "body": "Collect the vehicle or service request, contact details and preferred timing."
+      },
+      {
+        "title": "Prepare the next step",
+        "body": "Check permitted inventory and scheduling sources. Ask staff when information is missing."
+      },
+      {
+        "title": "Confirm and follow through",
+        "body": "Record staff-approved appointments and follow-ups. Keep unresolved enquiries visible."
+      }
+    ]
+  },
+  "demo": {
+    "eyebrow": "EXPLORE A WORKFLOW",
+    "heading": "From interested to scheduled.",
+    "body": "Explore sales, service and commercial approval examples. Every enquiry goes to a responsible team.",
+    "scenes": [
+      {
+        "tab": "Test drive",
+        "request": "Can I test-drive the blue SUV on Saturday morning?",
+        "source": "Sample customer message",
+        "owner": "Sales adviser",
+        "rule": "Verify vehicle availability and appointment capacity before confirming.",
+        "draft": "Prepare a test-drive request for Saturday morning. Vehicle and time remain unconfirmed.",
+        "action": "Confirm next step",
+        "result": "Sales handoff prepared. Staff still need to verify inventory and confirm a slot."
+      },
+      {
+        "tab": "Service visit",
+        "request": "My car is due for a service. Do you have a slot next week?",
+        "source": "Sample customer message",
+        "owner": "Service desk",
+        "rule": "Use approved service categories and scheduling access. Do not diagnose a fault.",
+        "draft": "Collect vehicle details and preferred dates, then request service-desk confirmation.",
+        "action": "Confirm next step",
+        "result": "Service request prepared. No appointment or diagnosis has been promised."
+      },
+      {
+        "tab": "Price exception",
+        "request": "Can you take $2,000 off and guarantee my trade-in value?",
+        "source": "Sample customer message",
+        "owner": "Sales manager",
+        "rule": "Discounts, trade-in valuations and financing commitments require authorised staff.",
+        "draft": "Route the requested discount and trade-in appraisal to the sales manager.",
+        "action": "Confirm next step",
+        "result": "Manager review requested. No price, financing or trade-in commitment was made."
+      }
+    ]
+  },
+  "card": {
+    "scene": "Test drive"
+  },
+  "measure": {
+    "metric": "Enquiries with a confirmed next step",
+    "metricBody": "Track response time, attended appointments, unresolved leads and the staff effort required.",
+    "boundary": "Your team owns the deal.",
+    "boundaryBody": "Vehicle availability, discounts, financing, trade-in valuations and repair authorisations stay with your authorised staff.",
+    "boundaryLinks": [
+      {
+        "href": "/guides/approval-rules",
+        "label": "How to write approval rules"
+      },
+      {
+        "href": "/guides/workflow-exceptions",
+        "label": "How discount requests and other exceptions are routed"
+      }
+    ]
+  },
+  "start": {
+    "scope": [
+      "Enquiries from the sources you choose",
+      "Sales and service workflows",
+      "Staff confirmation of inventory and appointments",
+      "Regular reports on follow-through and staff time"
+    ]
+  },
+  "form": {
+    "orgLabel": "Company name",
+    "orgPlaceholder": "Your organisation",
+    "emailPlaceholder": "you@company.com",
+    "workflows": [
+      "Vehicle enquiry and test-drive booking",
+      "Service appointment coordination",
+      "Lead follow-up"
+    ],
+    "toolsPlaceholder": "Email, scheduling, CRM, or other tools",
+    "volumeLabel": "Approximate enquiries per week",
+    "recordsNote": "Do not enter customer or transaction records.",
+    "briefOrgLabel": "Organisation",
+    "briefRecordsLine": "This enquiry contains no customer or transaction records."
+  },
+  "faq": [
+    {
+      "q": "Does this connect to our DMS or CRM?",
+      "a": "Only if that is agreed after an assessment. We assess your existing systems, permissions and integration options before agreeing scope; no integration with a particular DMS or CRM is promised in advance."
+    },
+    {
+      "q": "Can it quote prices or approve financing?",
+      "a": "No. It can share approved information within agreed limits, but discounts, financing decisions and trade-in commitments remain with authorised staff."
+    },
+    {
+      "q": "Does it handle both sales and service?",
+      "a": "Yes, if you agree both. Sales and service each run as their own workflow, with their own approval rules and their own results."
+    }
+  ],
+  "footage": {
+    "credit": "Antoni Shkraba",
+    "url": "https://www.pexels.com/video/couple-talking-to-a-car-dealer-7154209/"
+  }
+}
