@@ -21,12 +21,15 @@ export const startSteps = d => [
   { name: 'Go live', text: 'Go live with the agreed rules, with regular reports on results and staff time.' },
 ];
 
-// One concrete, illustrative example per workflow step, taken from the first demo scenario.
-const stepExamples = s => [
-  `Example: ${s.request} Owner: ${s.owner.toLowerCase()}.`,
-  `Example rule: ${s.rule} Example draft: ${s.draft}`,
-  `Example result: ${s.result}`,
-];
+const pad = n => String(n).padStart(2, '0');
+export const ACTOR = { agent: 'Agent', team: 'Human', customer: 'Customer' };
+
+// One end-to-end run of a scenario, as an ordered list. Every step keeps its number, actor, action and status in
+// separate elements, and all of the text is in the HTML; site.js only adds the playback (see .flow in styles.css).
+export const flowList = (steps, { compact = false } = {}) => `<div class="flow${compact ? ' flow-compact' : ''}" style="--n:${steps.length}"><span class="flow-line" aria-hidden="true"><span class="flow-fill"></span></span><ol>${steps.map((st, i) => `<li class="flow-step is-${st.actor}${st.approval ? ' has-approval' : ''}" style="--i:${i}"><span class="flow-num" aria-hidden="true">${pad(i + 1)}</span><span class="flow-head"><span class="flow-actor"><span class="visually-hidden">Step ${i + 1}. </span><b>${ACTOR[st.actor]}</b><span class="flow-who">${esc(st.who)}</span></span>${compact ? '' : `<span class="flow-status">${esc(st.status)}</span>`}</span><span class="flow-do">${esc(compact ? st.short : st.does)}</span>${!compact && st.approval ? `<span class="flow-approval"><b>Human approval</b> ${esc(st.approval)}</span>` : ''}</li>`).join('')}</ol></div>`;
+
+// Each workflow phase lists the steps of the first scenario that belong to it, so the overview and the full run agree.
+const phaseExample = (scene, phase) => scene.steps.map((st, i) => ({ ...st, n: i + 1 })).filter(st => st.phase === phase);
 
 // The home page, built from the one service file in src/content/sectors. Its "In short" answer links to the
 // guide whose `sector` is this service, if there is one.
@@ -46,8 +49,10 @@ export function sectorPage(d, guides = []) {
   const title = `${SITE.name} | ${SITE.category}`;
   const steps = startSteps(d);
   const guide = guides.find(g => g.sector === d.key);
-  const examples = stepExamples(first);
-  if (d.workflow.steps.length !== examples.length) throw new Error(`${d.key}: workflow.steps needs exactly ${examples.length} steps`);
+  for (const s of d.demo.scenes) {
+    if (s.steps.length < 6 || s.steps.length > 9) throw new Error(`${d.key}: scene "${s.tab}" needs 6 to 9 steps`);
+    for (const st of s.steps) if (!ACTOR[st.actor] || !st.status || !st.does || !st.short || !(st.phase >= 1 && st.phase <= d.workflow.steps.length)) throw new Error(`${d.key}: scene "${s.tab}" has an incomplete step`);
+  }
   const main = `<section class="hero" aria-labelledby="headline">
 <div class="hero-media" aria-hidden="true">${posterPicture(d.key, { sizes: HERO_SIZES, attrs: 'fetchpriority="high"' })}<video id="hero-video" muted loop playsinline preload="metadata" tabindex="-1"><source src="${asset(`${media}/hero.mp4`)}" type="video/mp4"></video></div>
 <div class="hero-wash" aria-hidden="true"></div>
@@ -61,9 +66,9 @@ export function sectorPage(d, guides = []) {
 </div>
 <figure class="hero-card">
 <p class="hero-card-label">Incoming request</p>
-<p class="hero-card-request">“${esc(d.hero.request)}”</p>
+<p class="hero-card-request">“${esc(first.request)}”</p>
 <p class="hero-card-label">What happens next</p>
-<ol class="handoff">${d.hero.next.map((s, i) => `<li><span class="number">0${i + 1} /</span><strong>${esc(s.who)}</strong><span>${esc(s.does)}</span></li>`).join('')}</ol>
+${flowList(first.steps, { compact: true })}
 <figcaption>Illustrative example · synthetic data</figcaption>
 </figure>
 </div>
@@ -75,26 +80,26 @@ ${answerBlock({ ...d.summary, link: guide ? { href: `/guides/${guide.slug}`, lab
 <div class="statement"><p>${esc(d.statement[0])} <strong>${esc(d.statement[1])}</strong></p></div>
 <section id="workflow">
 <div class="section-head"><div><div class="eyebrow">${esc(d.workflow.eyebrow)}</div><h2>${esc(d.workflow.heading)}</h2></div><p>This page covers one task: ${esc(d.task)}. ${esc(d.workflow.body)}</p></div>
-<ol class="steps">${d.workflow.steps.map((s, i) => `<li class="step"><span class="number">0${i + 1} /</span><h3>${esc(s.title)}</h3><p>${esc(s.body)}</p><p class="step-example">${esc(examples[i])}</p></li>`).join('')}</ol>
-<p class="micro example-note">Illustrative example with synthetic data, from the “${esc(first.tab)}” scenario below. It is not a customer record.</p>
+<ol class="steps rise-group">${d.workflow.steps.map((s, i) => `<li class="step rise" style="--i:${i}"><span class="number">Phase ${pad(i + 1)}</span><h3>${esc(s.title)}</h3><p>${esc(s.body)}</p><ol class="step-example" aria-label="${esc(first.tab)} example">${phaseExample(first, i + 1).map(st => `<li><span class="se-num">${pad(st.n)}</span><span class="se-actor">${ACTOR[st.actor]}</span><span class="se-status">${esc(st.status)}</span></li>`).join('')}</ol></li>`).join('')}</ol>
+<p class="micro example-note">Illustrative example · synthetic data. The steps are from the “${esc(first.tab)}” scenario below; it is not a customer record.</p>
 </section>
 </div>
 <section class="demo-section" id="example"><div class="wrap">
 <div class="section-head"><div><div class="eyebrow">${esc(d.demo.eyebrow)}</div><h2>${esc(d.demo.heading)}</h2></div><p>${esc(d.demo.body)}</p></div>
 <div class="demo">
-<aside class="demo-side"><div class="label">Choose a scenario</div><div class="tabs" role="group" aria-label="Example scenarios">${d.demo.scenes.map((s, i) => `<button type="button" class="tab${i === 0 ? ' active' : ''}" aria-pressed="${i === 0}" aria-controls="demo-panel">${esc(s.tab)}</button>`).join('')}</div><p class="micro">Each scenario uses synthetic data to show how an enquiry moves from intake to a confirmed next step.</p></aside>
+<aside class="demo-side"><div class="label">Choose a scenario</div><div class="tabs" role="group" aria-label="Example scenarios">${d.demo.scenes.map((s, i) => `<button type="button" class="tab${i === 0 ? ' active' : ''}" aria-pressed="${i === 0}" aria-controls="scene-${i}">${esc(s.tab)}</button>`).join('')}</div><p class="micro">Each scenario uses synthetic data to show one enquiry end to end, from the first message to closed and logged. Agent steps are prepared by ${SITE.name}; human steps are your staff.</p></aside>
 <div class="demo-body" id="demo-panel">
-<div class="demo-titlebar"><span>${SITE.name} / Sales and service</span><span>Illustrative example</span></div>
-<div class="demo-meta"><span id="demo-source">${esc(first.source)}</span><span class="pill" id="demo-owner">${esc(first.owner)}</span></div>
-<p class="request" id="demo-request">${esc(first.request)}</p>
-<div class="rule" id="demo-rule">${esc(first.rule)}</div>
-<p class="draft-label">Proposed next step</p>
-<p class="draft" id="demo-draft">${esc(first.draft)}</p>
-<div class="demo-actions"><button class="btn" id="demo-act" type="button">${esc(first.action)}</button><button class="reset" id="demo-reset" type="button">Reset example</button></div>
-<div class="demo-status" id="demo-status" role="status" aria-live="polite"></div>
+<div class="demo-titlebar"><span>${SITE.name} / Sales and service</span><span>Illustrative example · synthetic data</span></div>
+${d.demo.scenes.map((s, i) => `<article class="scene" id="scene-${i}" aria-label="${esc(s.tab)} scenario">
+<div class="demo-meta"><span>${esc(s.source)}</span><span class="pill">Owner: ${esc(s.owner)}</span></div>
+<p class="request">“${esc(s.request)}”</p>
+<div class="rule">${esc(s.rule)}</div>
+${flowList(s.steps)}
+</article>`).join('\n')}
+<div class="demo-actions"><button class="reset" id="flow-pause" type="button" hidden>Pause</button><button class="reset" id="flow-replay" type="button" hidden>Replay</button><span class="demo-status">A local simulation. No live action is taken.</span></div>
 </div>
 </div>
-<noscript><p>The interactive example requires JavaScript. You can contact <a href="mailto:${SITE.email}">${SITE.email}</a> to get started.</p></noscript>
+<noscript><p>All three scenarios are shown in full above. You can contact <a href="mailto:${SITE.email}">${SITE.email}</a> to get started.</p></noscript>
 </div></section>
 <div class="wrap">
 <section class="measure">
@@ -173,7 +178,6 @@ ${faqList(faq)}
       email: SITE.email,
       briefOrgLabel: d.form.briefOrgLabel,
       briefRecordsLine: d.form.briefRecordsLine,
-      scenes: d.demo.scenes,
     },
   });
 }
