@@ -17,47 +17,88 @@ const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const configEl = $('config');
 const config = configEl ? JSON.parse(configEl.textContent) : null;
 
-// Workflow flows: every step is already in the HTML. This only plays them like a live run (see .flow in
-// styles.css): while at least a quarter of a flow is on screen it plays; off screen it pauses. At the end it holds,
-// then plays again. Reduced motion leaves everything static.
-const flows = [...document.querySelectorAll('.flow')];
-const HOLD = 4000;
+// Workflow runs: every step is already in the HTML (see .run in styles.css). This only plays them like a live run:
+// one step at a time is active, a token moves to whoever has the request, and finished steps keep their label and
+// icon. Only classes and the token's transform change, so nothing on the page moves. A run plays while at least a
+// quarter of it is on screen and pauses off screen; at the end it holds, cross-fades and starts again.
+// Reduced motion leaves the whole run static. No scrolling and no focus changes happen during playback.
+const runs = [...document.querySelectorAll('.run')];
+const HOLD = 3500;
+const FADE = 300;
 const players = new Map();
 let userPaused = false;
 const pauseBtn = $('flow-pause');
 const replayBtn = $('flow-replay');
-const restart = el => {
+const setToken = (el, p, jump) => {
+  const step = p.steps[p.idx];
+  if (!step) return;
+  const ic = step.querySelector('.run-ic').getBoundingClientRect();
+  const board = p.board.getBoundingClientRect();
+  p.token.className = 'run-token ' + (step.className.match(/is-(customer|agent|team)/) || [''])[0] + (jump ? ' no-tr' : '');
+  p.token.style.transform = `translate(${Math.round(ic.left - board.left + ic.width / 2)}px,${Math.round(ic.top - board.top + ic.height / 2)}px)`;
+  if (jump) { void p.token.offsetWidth; p.token.classList.remove('no-tr'); }
+};
+const show = (el, idx, jump) => {
+  const p = players.get(el);
+  p.idx = idx;
+  p.steps.forEach((s, i) => { s.classList.toggle('is-now', i === idx); s.classList.toggle('is-done', i < idx); });
+  p.bar.style.transform = `scaleX(${(idx + 1) / p.steps.length})`;
+  setToken(el, p, jump);
+};
+const schedule = el => {
   const p = players.get(el);
   clearTimeout(p.timer);
-  p.ended = false;
-  el.classList.remove('is-armed');
-  void el.offsetWidth; // Restart the CSS animations from the first step.
-  el.classList.add('is-armed');
-  sync(el);
+  p.timer = null;
+  if (!p.playing) return;
+  const last = p.idx >= p.steps.length - 1;
+  p.timer = setTimeout(() => {
+    p.timer = null;
+    if (!last) { show(el, p.idx + 1); schedule(el); return; }
+    restart(el, true);
+  }, last ? HOLD : p.step);
+};
+const restart = (el, fade) => {
+  const p = players.get(el);
+  clearTimeout(p.timer);
+  clearTimeout(p.fadeTimer);
+  p.timer = null;
+  const begin = () => { show(el, 0, true); el.classList.remove('is-fading'); schedule(el); };
+  if (!fade) { begin(); return; }
+  el.classList.add('is-fading');
+  p.fadeTimer = setTimeout(begin, FADE);
 };
 const sync = el => {
   const p = players.get(el);
-  const play = p.visible && !userPaused && !document.hidden && !el.closest('[hidden]');
-  el.classList.toggle('is-running', play && !p.ended);
-  if (play && p.ended && !p.timer) p.timer = setTimeout(() => { p.timer = null; restart(el); }, HOLD);
-  if (!play && p.timer) { clearTimeout(p.timer); p.timer = null; }
+  const play = p.visible && !userPaused && !document.hidden && !el.closest('.scene:not(.is-active)');
+  if (play === p.playing) return;
+  p.playing = play;
+  if (play) schedule(el); else { clearTimeout(p.timer); p.timer = null; }
 };
-const syncAll = () => flows.forEach(sync);
-if (flows.length && 'IntersectionObserver' in window && !motion.matches) {
+const syncAll = () => runs.forEach(sync);
+if (runs.length && 'IntersectionObserver' in window && !motion.matches) {
   const io = new IntersectionObserver(entries => entries.forEach(e => {
     players.get(e.target).visible = e.isIntersecting;
     sync(e.target);
   }), { threshold: 0.25 });
-  flows.forEach(el => {
-    players.set(el, { visible: false, ended: false, timer: null });
-    el.classList.add('is-armed');
-    el.querySelector('.flow-fill').addEventListener('animationend', () => { players.get(el).ended = true; sync(el); });
+  runs.forEach(el => {
+    players.set(el, {
+      steps: [...el.querySelectorAll('.run-step')], board: el.querySelector('.run-board'), token: el.querySelector('.run-token'),
+      bar: el.querySelector('.run-bar span'), step: el.classList.contains('run-compact') ? 1300 : 1700,
+      idx: 0, visible: false, playing: false, timer: null, fadeTimer: null,
+    });
+    el.classList.add('is-live');
+    show(el, 0, true);
     io.observe(el);
   });
+  // The token follows its step if the card is resized (for example on rotation); nothing else depends on size.
+  window.addEventListener('resize', () => runs.forEach(el => setToken(el, players.get(el), true)), { passive: true });
   document.addEventListener('visibilitychange', syncAll);
-  motion.addEventListener('change', () => { if (motion.matches) flows.forEach(el => { el.classList.remove('is-armed', 'is-running'); clearTimeout(players.get(el).timer); }); });
+  motion.addEventListener('change', () => {
+    if (!motion.matches) return;
+    runs.forEach(el => { const p = players.get(el); clearTimeout(p.timer); clearTimeout(p.fadeTimer); p.playing = false; el.classList.remove('is-live', 'is-fading'); });
+  });
   if (pauseBtn && replayBtn) {
-    pauseBtn.hidden = replayBtn.hidden = false;
+    document.documentElement.classList.add('flow-on'); // The controls were in the layout already, just invisible.
     pauseBtn.addEventListener('click', () => {
       userPaused = !userPaused;
       pauseBtn.textContent = userPaused ? 'Play' : 'Pause';
@@ -66,7 +107,8 @@ if (flows.length && 'IntersectionObserver' in window && !motion.matches) {
     replayBtn.addEventListener('click', () => {
       userPaused = false;
       pauseBtn.textContent = 'Pause';
-      document.querySelectorAll('.scene:not([hidden]) .flow').forEach(restart);
+      syncAll();
+      document.querySelectorAll('.scene.is-active .run').forEach(el => restart(el, true));
     });
   }
 }
@@ -81,15 +123,15 @@ document.querySelectorAll('.rise-group').forEach(g => {
 const scenes = [...document.querySelectorAll('.scene')];
 const tabs = [...document.querySelectorAll('.tab')];
 if (scenes.length && tabs.length) {
-  document.documentElement.classList.add('js-flow');
+  // Scenes are stacked in one grid cell (styles.css), so switching is a cross-fade at a constant height.
   const show = index => {
     tabs.forEach((b, i) => { b.classList.toggle('active', i === index); b.setAttribute('aria-pressed', String(i === index)); });
-    scenes.forEach((s, i) => { s.hidden = i !== index; });
-    const el = scenes[index].querySelector('.flow');
+    scenes.forEach((s, i) => s.classList.toggle('is-active', i === index));
+    syncAll();
+    const el = scenes[index].querySelector('.run');
     if (players.has(el)) restart(el);
   };
   tabs.forEach((b, i) => b.addEventListener('click', () => show(i)));
-  scenes.forEach((s, i) => { s.hidden = i !== 0; });
 }
 
 // Enquiry: prepared in the browser, then sent by the visitor's own email app or saved as a file.

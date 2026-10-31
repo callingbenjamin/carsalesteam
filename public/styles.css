@@ -381,69 +381,135 @@ ol.steps{list-style:none;margin:0;padding:0}
 .boundary-links{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px;font-size:14px}
 .boundary-links a{color:var(--ink);text-decoration:underline;text-underline-offset:4px}
 
-/* End-to-end flow: numbered steps, each with its actor, action and status in separate elements. */
+/* End-to-end flows, readable at a glance. One accent colour per actor, shared by the four
+   Actuathron sites: customer blue #2563EB, agent teal #0D9488, your team amber #D97706. Same hues,
+   lightness adjusted for WCAG contrast: --c is for dark panels (4.5:1 or more on #273135), --c-ink for light ones (4.5:1 or more on ivory).
+   The team amber sits near the brand amber, so approvals are also marked by the shield and the 'Your team approves' pill, never by colour alone. */
 .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.sprite{position:absolute;width:0;height:0;overflow:hidden}
+.ic{width:16px;height:16px;flex:none}
+.is-customer{--c:#6A94F1;--c-ink:#2563EB}
+.is-agent{--c:#10B2A4;--c-ink:#0A7167}
+.is-team{--c:#E98006;--c-ink:#A45A05}
 .step .number{display:inline-block;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;border:1px solid currentColor;border-radius:20px;padding:3px 9px}
-.step-example li{display:grid;grid-template-columns:24px 66px 1fr;gap:8px;align-items:baseline;padding-left:12px;border-left:1px solid var(--line)}
-.se-num{font-variant-numeric:tabular-nums;color:var(--signal-ink)}
-.se-actor{font-size:10px;letter-spacing:.8px;text-transform:uppercase}
-.se-status{color:var(--ink)}
-.scene+.scene{margin-top:44px;padding-top:34px;border-top:1px solid #ffffff20}
-.js-flow .scene[hidden]{display:none}
-.flow{--step:700ms;--gap:16px;--n:9;position:relative;margin-top:6px}
-/* Step index and count for the playback delays (no inline styles under the site's CSP). */
-.flow-step:nth-child(1),.rise:nth-child(1){--i:0}.flow-step:nth-child(2),.rise:nth-child(2){--i:1}.flow-step:nth-child(3),.rise:nth-child(3){--i:2}.flow-step:nth-child(4),.rise:nth-child(4){--i:3}.flow-step:nth-child(5),.rise:nth-child(5){--i:4}.flow-step:nth-child(6),.rise:nth-child(6){--i:5}.flow-step:nth-child(7),.rise:nth-child(7){--i:6}.flow-step:nth-child(8),.rise:nth-child(8){--i:7}.flow-step:nth-child(9),.rise:nth-child(9){--i:8}.flow-step:nth-child(10),.rise:nth-child(10){--i:9}
-.flow-n1{--n:1}.flow-n2{--n:2}.flow-n3{--n:3}.flow-n4{--n:4}.flow-n5{--n:5}.flow-n6{--n:6}.flow-n7{--n:7}.flow-n8{--n:8}.flow-n9{--n:9}.flow-n10{--n:10}
-.flow ol{list-style:none;margin:0;padding:0;display:grid;gap:var(--gap)}
-.flow-line{position:absolute;left:13px;top:14px;bottom:14px;width:1px;background:#ffffff1f}
-.flow-fill{position:absolute;inset:0;background:var(--signal);transform-origin:top;transform:scaleY(1)}
-.flow-step{position:relative;display:grid;grid-template-columns:28px 1fr;column-gap:14px;row-gap:4px;align-items:start}
-.flow-num{grid-row:span 3;width:27px;height:27px;border-radius:50%;display:grid;place-items:center;font-size:10px;font-variant-numeric:tabular-nums;background:var(--panel);border:1px solid var(--signal);color:var(--ink);position:relative}
-.is-team .flow-num,.is-customer .flow-num{border-style:dashed}
-.flow-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 10px;padding-top:4px}
-.flow-actor{display:flex;align-items:baseline;gap:8px;font-size:12px;color:var(--ink)}
-.flow-actor b{font-weight:500;font-size:9px;letter-spacing:1.2px;text-transform:uppercase;padding:2px 7px;border-radius:4px;background:#ffffff14;color:var(--ink)}
-.is-agent .flow-actor b{background:var(--signal-dim);color:var(--signal)}
-.is-team .flow-actor b{background:var(--ink);color:var(--graphite)}
-.flow-who{color:var(--muted)}
-.flow-status{font-size:10px;letter-spacing:.4px;color:var(--signal);border:1px solid #f2b54466;border-radius:20px;padding:2px 9px;white-space:nowrap}
-.flow-do{font-size:13px;line-height:1.5;color:#dcd9d3}
-.flow-approval{font-size:11px;line-height:1.45;color:#e8e5df;border-left:2px solid var(--ink);padding:5px 0 5px 10px;background:#ffffff0a}
-.flow-approval b{font-weight:500;text-transform:uppercase;letter-spacing:1px;font-size:9px;margin-right:6px;color:var(--signal)}
-.flow-compact{--step:420ms;--gap:9px}
-.flow-compact .flow-line{left:10px;top:11px;bottom:11px}
-.flow-compact .flow-step{grid-template-columns:22px 1fr;column-gap:10px;row-gap:1px}
-.flow-compact .flow-num{width:21px;height:21px;font-size:9px;grid-row:span 2}
-.flow-compact .flow-head{padding-top:2px}
-.flow-compact .flow-actor{font-size:11px;gap:6px}
-.flow-compact .flow-actor b{font-size:8px;padding:1px 5px}
-.flow-compact .flow-do{font-size:12.5px;line-height:1.4}
-.hero-card .flow-num{background:#252e31}
+.step-example li{display:grid;grid-template-columns:22px 15px 1fr auto;gap:8px;align-items:center;padding-left:10px;border-left:2px solid var(--c-ink)}
+.se-num{font-variant-numeric:tabular-nums;color:var(--muted)}
+.se-ic{width:15px;height:15px;color:var(--c-ink)}
+.se-lbl{font-weight:600;color:var(--ink)}
+.se-actor{font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:var(--c-ink)}
+
+/* Scenario panel: every scene sits in the same grid cell from first paint, so the panel is always the height of
+   the tallest one, and switching or replaying is a cross-fade. Nothing is inserted, removed, collapsed or resized,
+   and the page never scroll-anchors around the card. */
+.demo{grid-template-columns:1fr;gap:28px}
+.demo-side{grid-column:1;grid-row:1;position:static;padding:0}
+.demo-body{grid-column:1;grid-row:2}
+.tabs{flex-direction:row;flex-wrap:wrap;gap:10px}
+.tab{font:500 15px/1.3 var(--font);border:1px solid #ffffff30;padding:12px 18px;border-radius:10px;letter-spacing:0}
+.tab:after{display:none}
+.tab.active{border-color:var(--signal);background:var(--signal-dim)}
+.demo-side .micro{margin-top:14px;max-width:none}
+.scenes{display:grid;overflow-anchor:none}
+.scene{grid-area:1/1;min-width:0;transition:opacity .3s ease,visibility 0s}
+.scene:not(.is-active){opacity:0;visibility:hidden;transition:opacity .3s ease,visibility 0s .3s}
+.demo-section,.run,.rise-group,.hero-card{overflow-anchor:none}
+.flow-ctl{visibility:hidden}
+.flow-on .flow-ctl{visibility:visible}
+#flow-pause{width:4.2em;text-align:left}
 .demo-actions{margin-top:30px;padding-top:18px;border-top:1px solid #ffffff20}
 
-/* Playback, in the style of lucidrail.ai: items rise in one after another while a progress line runs down the
-   steps. Only runs once site.js adds .is-armed, so without JavaScript or with reduced motion everything is static. */
+/* The run: a summary counted from the flow, lane headers, then the phases. On wide screens each step sits in its
+   actor's lane (grid rows from nth-child, as the CSP allows no style attributes); narrow screens and the hero card
+   use one column with a coloured rail per actor. */
+.run{position:relative;margin-top:10px}
+.run-sum{font-size:12px;letter-spacing:.2px;color:var(--ink);margin:0 0 14px;font-variant-numeric:tabular-nums}
+.run-lanes{display:grid;grid-template-columns:repeat(3,1fr)}
+.lane-h{font-size:10px;letter-spacing:1.3px;text-transform:uppercase;color:var(--c);padding:0 14px 9px;border-bottom:2px solid var(--c)}
+.run-board{position:relative;padding-top:4px;transition:opacity .3s ease}
+.run-bands{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);pointer-events:none}
+.band{border-right:1px solid #ffffff0d}
+.band.is-customer{background:#8ec5e807}.band.is-agent{background:#f2b5440a}.band.is-team{background:#7fd1ae08;border-right:0}
+.run-bar{position:absolute;left:0;right:0;top:0;height:2px;overflow:hidden}
+.run-bar span{position:absolute;inset:0;background:var(--signal);transform-origin:left;transform:scaleX(0);transition:transform .5s ease}
+.run-phase{position:relative}
+.run-ph{display:flex;align-items:center;gap:10px;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);margin:14px 0 6px;padding:0 14px}
+.run-ph:after{content:'';flex:1;height:1px;background:#ffffff14}
+.run-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);row-gap:4px}
+.run-step:nth-child(1){grid-row:1}.run-step:nth-child(2){grid-row:2}.run-step:nth-child(3){grid-row:3}.run-step:nth-child(4){grid-row:4}.run-step:nth-child(5){grid-row:5}.run-step:nth-child(6){grid-row:6}.run-step:nth-child(7){grid-row:7}.run-step:nth-child(8){grid-row:8}.run-step:nth-child(9){grid-row:9}.run-step:nth-child(10){grid-row:10}
+.run-step.is-customer{grid-column:1}.run-step.is-agent{grid-column:2}.run-step.is-team{grid-column:3}
+.run-step{position:relative;display:grid;grid-template-columns:30px 1fr;column-gap:11px;row-gap:3px;align-items:start;padding:8px 14px;transition:opacity .35s ease}
+.run-step:before{content:'';position:absolute;inset:0;border-radius:8px;background:#ffffff0c;box-shadow:inset 0 0 0 1px #ffffff14;opacity:0;transition:opacity .35s ease;pointer-events:none}
+.run-ic{grid-row:span 2;position:relative;z-index:1;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:var(--c);border:1.5px solid var(--c);background:var(--panel)}
+.is-approval .run-ic{border-radius:9px}
+.run-cp{position:absolute;right:-7px;bottom:-7px;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:#D97706;color:#17201f;box-shadow:0 0 0 2px var(--panel)}
+.run-cp .ic{width:12px;height:12px}
+.run-head{display:flex;flex-wrap:wrap;align-items:baseline;align-content:center;gap:2px 8px;min-height:30px}
+.run-lbl{font-weight:600;font-size:14px;line-height:1.3;color:var(--ink)}
+.run-who{font-size:11px;color:var(--muted)}
+.run-ok{font-size:9.5px;letter-spacing:.6px;text-transform:uppercase;line-height:1.5;white-space:nowrap;color:#17201f;background:#D97706;border-radius:20px;padding:1px 8px}
+.run-say{grid-column:2;font-size:12.5px;line-height:1.45;color:#cfccc6;transition:opacity .35s ease,transform .35s ease}
+.run-why{display:block;margin-top:4px;font-size:11.5px;color:#a8d8c2}
+.run-token{position:absolute;left:0;top:0;z-index:2;width:42px;height:42px;margin:-21px 0 0 -21px;border-radius:50%;border:2px solid var(--c,#F2B544);box-shadow:0 0 0 5px #ffffff10;opacity:0;pointer-events:none;transition:transform .55s cubic-bezier(.28,.11,.32,1),opacity .3s ease,border-color .3s ease}
+.run-token.no-tr{transition:none}
+.hero-card .run-ic,.hero-card .run-cp{background:#232c2f}
+.hero-card .run-cp{background:#D97706;box-shadow:0 0 0 2px #232c2f}
+
+/* Playback, added by site.js (.is-live): one step is active and shows its sentence, finished steps keep only
+   label and icon, later steps wait dimmed, and a token moves to whoever has the request. Only opacity and
+   transform change, so every step keeps its place and size. Without JavaScript or with reduced motion the whole
+   run is shown, static. */
+.run.is-live .run-step{opacity:.36}
+.run.is-live .run-step.is-done{opacity:.72}
+.run.is-live .run-step.is-now{opacity:1}
+.run.is-live .run-step.is-now:before{opacity:1}
+.run.is-live .run-say{opacity:0;transform:translateY(-4px)}
+.run.is-live .is-now .run-say{opacity:1;transform:none}
+.run.is-live .run-token{opacity:1}
+.run:not(.is-live) .run-bar span{transform:scaleX(1)}
+.run.is-fading .run-board{opacity:0}
+
+/* One column: the hero card always, and the scenario panel on narrow screens. Lane headers become a legend. */
+.run-compact .run-lanes{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:8px}
+.run-compact .lane-h{display:flex;align-items:center;gap:6px;padding:0;border:0;letter-spacing:1px}
+.run-compact .lane-h:before{content:'';width:3px;height:12px;border-radius:2px;background:var(--c)}
+.run-compact .run-bands{display:none}
+.run-compact .run-steps{grid-template-columns:1fr}
+.run-compact .run-step{grid-column:1;border-left:3px solid var(--c);border-radius:0 8px 8px 0;padding:6px 10px;grid-template-columns:24px 1fr;column-gap:9px;row-gap:1px}
+.run-compact .run-step:before{border-radius:0 8px 8px 0}
+.run-compact .run-ic{width:24px;height:24px}
+.run-compact .run-ic .ic{width:13px;height:13px}
+.run-compact .is-approval .run-ic{border-radius:7px}
+.run-compact .run-cp{width:15px;height:15px;right:-6px;bottom:-6px}
+.run-compact .run-cp .ic{width:10px;height:10px}
+.run-compact .run-head{min-height:24px;gap:1px 7px}
+.run-compact .run-lbl{font-size:13px}
+.run-compact .run-who{font-size:10.5px}
+.run-compact .run-ok{font-size:8.5px;padding:0 6px}
+.run-compact .run-say{font-size:12px;line-height:1.4}
+.run-compact .run-ph{margin:9px 0 4px;padding:0;font-size:9px}
+.run-compact .run-sum{font-size:11px;margin-bottom:10px}
+.run-compact .run-token{width:32px;height:32px;margin:-16px 0 0 -16px;box-shadow:0 0 0 4px #ffffff10}
+
+/* Workflow overview cards rise in once, in the style of lucidrail.ai. */
 @keyframes flow-rise{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
-@keyframes flow-fill{from{transform:scaleY(0)}to{transform:scaleY(1)}}
-@keyframes flow-mark{0%{background:var(--panel);box-shadow:0 0 0 0 #f2b54488}40%{background:var(--signal);color:var(--graphite);box-shadow:0 0 0 6px #f2b54400}100%{background:var(--signal);color:var(--graphite);box-shadow:none}}
-@keyframes flow-live{0%,100%{background:transparent}20%,70%{background:#f2b54412}}
-.flow.is-armed .flow-step,.flow.is-armed .flow-status,.flow.is-armed .flow-approval{opacity:0;animation:flow-rise .36s cubic-bezier(.28,.11,.32,1) forwards paused;animation-delay:calc(var(--i) * var(--step) + 40ms)}
-.flow.is-armed .flow-status{animation-delay:calc(var(--i) * var(--step) + 260ms)}
-.flow.is-armed .flow-approval{animation-delay:calc(var(--i) * var(--step) + 360ms)}
-.flow.is-armed .flow-num{animation:flow-mark var(--step) cubic-bezier(.28,.11,.32,1) forwards paused;animation-delay:calc(var(--i) * var(--step) + 40ms)}
-.flow.is-armed .flow-step:after{content:'';position:absolute;inset:-6px -10px -6px -8px;border-radius:8px;pointer-events:none;animation:flow-live calc(var(--step) * 1.4) ease-out paused;animation-delay:calc(var(--i) * var(--step))}
-.flow.is-armed .flow-fill{transform:scaleY(0);animation:flow-fill calc(var(--n) * var(--step)) linear forwards paused}
-.flow.is-armed.is-running .flow-step,.flow.is-armed.is-running .flow-status,.flow.is-armed.is-running .flow-approval,.flow.is-armed.is-running .flow-num,.flow.is-armed.is-running .flow-step:after,.flow.is-armed.is-running .flow-fill{animation-play-state:running}
+.rise:nth-child(1){--i:0}.rise:nth-child(2){--i:1}.rise:nth-child(3){--i:2}.rise:nth-child(4){--i:3}.rise:nth-child(5){--i:4}.rise:nth-child(6){--i:5}.rise:nth-child(7){--i:6}.rise:nth-child(8){--i:7}.rise:nth-child(9){--i:8}.rise:nth-child(10){--i:9}
 .rise-group.is-armed .rise{opacity:0;animation:flow-rise .36s cubic-bezier(.28,.11,.32,1) forwards paused;animation-delay:calc(var(--i) * 120ms + 40ms)}
 .rise-group.is-armed.is-running .rise{animation-play-state:running}
 @media(prefers-reduced-motion:reduce){
-  .flow.is-armed *,.flow.is-armed .flow-step:after,.rise-group.is-armed .rise{animation:none!important;opacity:1!important;transform:none!important}
+  .rise-group.is-armed .rise{animation:none!important;opacity:1!important;transform:none!important}
+  .scene,.run-board,.run-step,.run-step:before,.run-say,.run-token,.run-bar span{transition:none!important}
 }
 @media(max-width:760px){
-  .flow-do{font-size:13px}
-  .flow-head{padding-top:3px}
   .scene .request{font-size:20px}
   .demo-body{padding:22px 18px}
-  .step-example li{grid-template-columns:22px 60px 1fr}
-  .flow-compact .flow-do{font-size:12px}
+  .tab{font-size:13px;padding:11px 13px}
+  .run-lanes{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:8px}
+  .lane-h{display:flex;align-items:center;gap:6px;padding:0;border:0;letter-spacing:1px}
+  .lane-h:before{content:'';width:3px;height:12px;border-radius:2px;background:var(--c)}
+  .run-bands{display:none}
+  .run-steps{grid-template-columns:1fr}
+  .run-step.is-customer,.run-step.is-agent,.run-step.is-team{grid-column:1}
+  .run-step{border-left:3px solid var(--c);border-radius:0 8px 8px 0;padding:8px 12px}
+  .run-step:before{border-radius:0 8px 8px 0}
+  .run-ph{padding:0}
 }

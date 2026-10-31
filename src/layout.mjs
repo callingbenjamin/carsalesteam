@@ -50,6 +50,7 @@ ${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" hr
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/fonts/geist-latin-v5.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${asset('/styles.css')}">
+<noscript><link rel="stylesheet" href="${asset('/noscript.css')}"></noscript>
 <script src="${asset('/site.js')}" defer></script>${jsonLd ? `\n<script type="application/ld+json">${jsonBlock(jsonLd)}</script>` : ''}
 </head>
 <body${bodyClass ? ` class="${bodyClass}"` : ''}><a class="skip" href="#main">Skip to content</a>
