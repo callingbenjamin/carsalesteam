@@ -7,13 +7,13 @@ export const esc = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp
 // JSON inside <script type="application/json">: keep "</script>" from closing the tag early.
 export const jsonBlock = value => JSON.stringify(value).replace(/</g, '\\u003c');
 
-// The logo: the amber mark and the wordmark (public/brand/carsalesteam-logo.svg).
+// The logo: the amber mark (a car in a chat bubble) and the wordmark (public/brand/carsalesteam-logo.svg).
 // Inline, the wordmark takes the text colour, so it reads ivory on the graphite header and footer.
 const LOGO_FILE = readFileSync(new URL('../public/brand/carsalesteam-logo.svg', import.meta.url), 'utf8').trim();
 export const LOGO = LOGO_FILE
   .replace('<svg xmlns="http://www.w3.org/2000/svg" ', '<svg class="brand-logo" aria-hidden="true" focusable="false" ')
-  .replace('fill="#20292C"', 'fill="currentColor"');
-if (!LOGO.includes('brand-logo') || !LOGO.includes('currentColor')) throw new Error('public/brand/carsalesteam-logo.svg: expected one <svg> with a #20292C wordmark');
+  .replace(/(<text\b[^>]*?)fill="#20292C"/, '$1fill="currentColor"');
+if (!LOGO.includes('brand-logo') || !LOGO.includes('currentColor')) throw new Error('public/brand/carsalesteam-logo.svg: expected one <svg> with a #20292C <text> wordmark');
 
 const ARROW = '<span aria-hidden="true">↗</span>';
 export const arrow = ARROW;
@@ -46,8 +46,10 @@ ${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" hr
 <meta name="twitter:image:alt" content="${esc(imageAlt)}">
 <meta name="twitter:title" content="${esc(shareTitle)}">
 <meta name="twitter:description" content="${esc(description)}">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/fonts/geist-latin-v5.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${asset('/styles.css')}">
 <noscript><link rel="stylesheet" href="${asset('/noscript.css')}"></noscript>

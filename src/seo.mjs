@@ -13,7 +13,7 @@ export const organization = () => ({
   '@id': ORG_ID,
   name: SITE.name,
   url: `${SITE.url}/`,
-  logo: { '@type': 'ImageObject', url: `${SITE.url}/apple-touch-icon.png`, width: 180, height: 180 },
+  logo: { '@type': 'ImageObject', url: `${SITE.url}/icon-512.png`, width: 512, height: 512 },
   description: SITE.description,
   email: SITE.email,
   contactPoint: { '@type': 'ContactPoint', contactType: 'sales', email: SITE.email },

@@ -32,7 +32,7 @@ scripts/check.mjs            links and anchors, one JSON-LD block per page, FAQ 
                              meta description on the page, share-image alt text, robots.txt groups and Content-Signal,
                              llms.txt sections, canonicals, no emojis
 scripts/test-middleware.mjs  tests middleware.js with blocked and allowed user agents
-scripts/make-images.py       regenerates the share image (public/og/home.png) and the touch icon (needs google-chrome)
+scripts/make-images.py       regenerates the share image (public/og/home.png), the touch and app icons and favicon.ico (needs google-chrome)
 scripts/make-responsive.py   makes the AVIF and WebP sizes of the hero photo
 ```
 
