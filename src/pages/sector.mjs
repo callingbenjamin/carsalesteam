@@ -49,7 +49,7 @@ export const iconSprite = () => `<svg class="sprite" aria-hidden="true" focusabl
 export const icon = (k, cls = '') => `<svg class="ic${cls ? ` ${cls}` : ''}" aria-hidden="true" focusable="false"><use href="#i-${k}"/></svg>`;
 
 // Facts counted from the flow itself; nothing else goes in the summary.
-export const flowSummary = steps => `${steps.length} steps · agent handles ${steps.filter(s => s.actor === 'agent').length} · your team approves ${steps.filter(s => s.approval).length}`;
+export const flowSummary = steps => `${steps.length} steps · ${SITE.name} handles ${steps.filter(s => s.actor === 'agent').length} · your team approves ${steps.filter(s => s.approval).length}`;
 // The closing line of a run, also counted from the flow.
 export const flowEnd = steps => { const a = steps.filter(s => s.approval).length; return `${steps.length} steps · ${a} approval${a === 1 ? '' : 's'} · closed and logged`; };
 
@@ -99,8 +99,8 @@ ${compact ? '' : `<div class="run-detail" aria-hidden="true">${steps.map((st, i)
 }
 export const legend = `<p class="run-legend">${LANE_KEYS.map(([key, name]) => `<span class="lane-key lane-${key}">${actorIcon(key)}${esc(name)}</span>`).join(' ')} ${checkpoint}</p>`;
 
-// Each workflow phase lists the steps of the first scenario that belong to it, so the overview and the full run agree.
-const phaseExample = (scene, phase) => scene.steps.map((st, i) => ({ ...st, n: i + 1 })).filter(st => st.phase === phase);
+// The workflow overview: eight steps, two per phase, each with its actor, icon and any approval.
+const FLOW_PHASE = [0, 0, 1, 1, 2, 2, 3, 3];
 
 // The home page, built from the one service file in src/content/sectors. Its "In short" answer links to the
 // guide whose `sector` is this service, if there is one.
@@ -120,11 +120,12 @@ export function sectorPage(d, guides = []) {
   const title = `${SITE.name} | ${SITE.category}`;
   const steps = startSteps(d);
   const guide = guides.find(g => g.sector === d.key);
+  if (d.workflow.steps.length !== FLOW_PHASE.length || d.workflow.steps.some(s => !ACTOR[s.actor] || !s.who || !s.title || !s.body || !ICON_PATHS[s.icon])) throw new Error(`${d.key}: the workflow needs 8 complete steps`);
   for (const s of d.demo.scenes) {
     if (s.steps.length < 6 || s.steps.length > 9) throw new Error(`${d.key}: scene "${s.tab}" needs 6 to 9 steps`);
     if (!s.people?.customer || !s.people?.team) throw new Error(`${d.key}: scene "${s.tab}" needs people`);
     for (const st of s.steps) if (!Array.isArray(st.chat) || st.chat.length < 1 || st.chat.length > 2 || st.chat.some(m => !ACTOR[m.from] || !m.text || m.text.length > 100)) throw new Error(`${d.key}: scene "${s.tab}" needs 1 or 2 short messages per step`);
-    for (const st of s.steps) if (!ACTOR[st.actor] || !st.status || !st.does || !st.short || !st.label || st.label.split(' ').length > 3 || !ICON_PATHS[st.icon] || !(st.stage >= 1 && st.stage <= STAGES.length) || !(st.phase >= 1 && st.phase <= d.workflow.steps.length)) throw new Error(`${d.key}: scene "${s.tab}" has an incomplete step`);
+    for (const st of s.steps) if (!ACTOR[st.actor] || !st.status || !st.does || !st.short || !st.label || st.label.split(' ').length > 3 || !ICON_PATHS[st.icon] || !(st.stage >= 1 && st.stage <= STAGES.length)) throw new Error(`${d.key}: scene "${s.tab}" has an incomplete step`);
   }
   const main = `${iconSprite()}<section class="hero" aria-labelledby="headline">
 <div class="hero-media" aria-hidden="true">${posterPicture(d.key, { sizes: HERO_SIZES, attrs: 'fetchpriority="high"' })}<video id="hero-video" muted loop playsinline preload="metadata" tabindex="-1"><source src="${asset(`${media}/hero.mp4`)}" type="video/mp4"></video></div>
@@ -153,8 +154,9 @@ ${answerBlock({ ...d.summary, link: guide ? { href: `/guides/${guide.slug}`, lab
 <div class="statement"><p>${esc(d.statement[0])} <strong>${esc(d.statement[1])}</strong></p></div>
 <section id="workflow">
 <div class="section-head"><div><div class="eyebrow">${esc(d.workflow.eyebrow)}</div><h2>${esc(d.workflow.heading)}</h2></div><p>This page covers one task: ${esc(d.task)}. ${esc(d.workflow.body)}</p></div>
-<ol class="steps rise-group">${d.workflow.steps.map((s, i) => `<li class="step rise"><span class="number">Phase ${pad(i + 1)}</span><h3>${esc(s.title)}</h3><p>${esc(s.body)}</p><ol class="step-example" aria-label="${esc(first.tab)} example">${phaseExample(first, i + 1).map(st => `<li class="is-${st.actor}"><span class="se-num">${pad(st.n)}</span>${icon(st.icon, 'se-ic')}<b class="se-lbl">${esc(st.label)}</b><span class="se-actor">${st.actor === 'agent' ? 'Agent' : esc(LANE_NAME[st.actor])}</span></li>`).join('')}</ol></li>`).join('')}</ol>
-<p class="micro example-note">Illustrative example · synthetic data. The steps are from the “${esc(first.tab)}” scenario below; it is not a customer record.</p>
+${legend}
+<ol class="steps flow-steps">${d.workflow.steps.map((s, i) => `<li class="step lane-${s.actor}"><span class="flow-top"><span class="number">${pad(i + 1)}</span> <span class="flow-icons">${actorIcon(s.actor)}${icon(s.icon, 'run-ic')}</span> <span class="run-who">${esc(s.who)}</span><span class="flow-phase">${STAGES[FLOW_PHASE[i]]}</span></span><h3>${esc(s.title)}</h3><p>${esc(s.body)}</p>${s.approval ? `<p class="flow-approval">${checkpoint} <span>${esc(s.approval)}</span></p>` : ''}</li>`).join('\n')}</ol>
+<p class="micro example-note">See it run on illustrative examples with synthetic data in the scenarios below.</p>
 </section>
 </div>
 <section class="demo-section" id="example"><div class="wrap">

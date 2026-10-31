@@ -37,19 +37,65 @@
   "workflow": {
     "eyebrow": "THE WORK BETWEEN THE WORK",
     "heading": "A reply is the beginning.",
-    "body": "A shopper asks about a vehicle. The answer needs current inventory, a clear owner and a follow-up. The service desk needs the same discipline.",
+    "body": "A shopper asks about a vehicle. The answer needs current inventory, a clear owner and a follow-up. The service desk needs the same discipline. Here is every step from the shopper’s enquiry to the closed record, and where your staff decide.",
     "steps": [
       {
-        "title": "Receive and understand",
-        "body": "Take the request from the channel it arrived on, sort it by type and urgency, and check the sources and rules you allow."
+        "title": "The enquiry arrives",
+        "actor": "customer",
+        "who": "Shopper",
+        "icon": "inbox",
+        "body": "A shopper asks about a vehicle, a test drive or a service visit through the website form, by phone or by message, on the channels your dealership chose. Every enquiry goes into one shared list."
       },
       {
-        "title": "Acknowledge and hand off",
-        "body": "Draft a reply with the expected response time for your team to approve, brief the right person, and follow up until it is answered."
+        "title": "CarSalesTeam reads it",
+        "actor": "agent",
+        "who": "CarSalesTeam",
+        "icon": "tag",
+        "body": "It works out what kind of enquiry it is and how urgent, and picks out the details: the vehicle, the preferred time, the contact details and anything that needs a manager."
       },
       {
-        "title": "Confirm, close and record",
-        "body": "Your staff confirm or decide. The customer is updated with what was approved, and the outcome is recorded and reported."
+        "title": "CarSalesTeam checks the context",
+        "actor": "agent",
+        "who": "CarSalesTeam",
+        "icon": "search",
+        "body": "It checks the inventory and scheduling sources you allow and your dealership rules. Earlier enquiries come from your CRM only where that connection is agreed after an assessment."
+      },
+      {
+        "title": "The shopper hears back",
+        "actor": "agent",
+        "who": "CarSalesTeam",
+        "icon": "pen",
+        "approval": "Your team approves messages to customers",
+        "body": "It drafts a reply with the expected response time from your rules. Your team approves messages to customers before they go out."
+      },
+      {
+        "title": "The right person gets a full brief",
+        "actor": "agent",
+        "who": "CarSalesTeam",
+        "icon": "handoff",
+        "approval": "Managers decide exceptions",
+        "body": "Routine enquiries go to a sales adviser or the service desk with everything they need. Discounts, financing, trade-in valuations and repair authorisations go to the sales manager or service manager to decide."
+      },
+      {
+        "title": "Nothing is left waiting",
+        "actor": "agent",
+        "who": "CarSalesTeam",
+        "icon": "clock",
+        "body": "The enquiry stays open against its expected time. If it slips, CarSalesTeam reminds the owner and escalates to the role you name."
+      },
+      {
+        "title": "Staff confirm, the loop closes",
+        "actor": "team",
+        "who": "Your team",
+        "icon": "check",
+        "body": "Staff confirm the vehicle, the slot or the visit; a reply alone does not close an enquiry. CarSalesTeam prepares the follow-up to the customer for your team’s approval."
+      },
+      {
+        "title": "Logged and reported",
+        "actor": "agent",
+        "who": "CarSalesTeam",
+        "icon": "archive",
+        "body": "The enquiry is logged with who did what and when, and counted in regular reports on response time, enquiries with a confirmed next step, unresolved leads and staff effort."
       }
     ]
   },

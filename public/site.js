@@ -84,12 +84,6 @@ if (pauseBtn && runs.length && !motion.matches) {
     syncAll();
   });
 }
-document.querySelectorAll('.rise-group').forEach(g => {
-  if (motion.matches || !('IntersectionObserver' in window)) return;
-  g.classList.add('is-armed');
-  const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { g.classList.add('is-running'); io.disconnect(); } }, { threshold: 0.25 });
-  io.observe(g);
-});
 
 // Scenario tabs: the scenarios share one place on the page, so switching cross-fades without moving anything,
 // and the chosen one plays from its first step.
