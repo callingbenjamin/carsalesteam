@@ -9,7 +9,7 @@ Website for **carsalesteam.com**. CarSalesTeam is a managed workflow service for
 | Guide pages | `/guides/dealership-vehicle-enquiries` and the others listed in `src/site.mjs` |
 | Privacy | `/privacy` |
 
-The enquiry form opens an email to `sales@actuathron.com` (or downloads a text copy) instead of posting to a server.
+The enquiry form opens an email to `sales@carsalesteam.com` (or downloads a text copy) instead of posting to a server.
 
 ## How it is built
 
