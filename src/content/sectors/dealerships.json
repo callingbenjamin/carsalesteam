@@ -37,28 +37,62 @@
   "workflow": {
     "eyebrow": "THE WORK BETWEEN THE WORK",
     "heading": "A reply is the beginning.",
+    "intro": "One task, start to finish: following up sales and service enquiries, and where your staff decide.",
     "body": "A shopper asks about a vehicle. The answer needs current inventory, a clear owner and a follow-up. The service desk needs the same discipline. Here is every step from the shopper’s enquiry to the closed record, and where your staff decide.",
+    "people": {
+      "customer": "Chris L.",
+      "team": "Nina, sales adviser"
+    },
     "steps": [
       {
         "title": "The enquiry arrives",
         "actor": "customer",
         "who": "Shopper",
         "icon": "inbox",
-        "body": "A shopper asks about a vehicle, a test drive or a service visit through the website form, by phone or by message, on the channels your dealership chose. Every enquiry goes into one shared list."
+        "body": "A shopper asks about a vehicle, a test drive or a service visit through the website form, by phone or by message, on the channels your dealership chose. Every enquiry goes into one shared list.",
+        "label": "Request in",
+        "status": "Received",
+        "does": "Asks about a vehicle on the website form, by phone or by message. It joins one shared list.",
+        "chat": [
+          {
+            "from": "customer",
+            "text": "Is the white hatchback still in? I'd like to see it this week and trade in my sedan."
+          }
+        ]
       },
       {
         "title": "CarSalesTeam reads it",
         "actor": "agent",
         "who": "CarSalesTeam",
         "icon": "tag",
-        "body": "It works out what kind of enquiry it is and how urgent, and picks out the details: the vehicle, the preferred time, the contact details and anything that needs a manager."
+        "body": "It works out what kind of enquiry it is and how urgent, and picks out the details: the vehicle, the preferred time, the contact details and anything that needs a manager.",
+        "label": "Sorted",
+        "status": "Sorted: vehicle enquiry",
+        "does": "Sorts it by type and urgency and picks out the vehicle, the preferred time, the contact details and anything for a manager.",
+        "chat": [
+          {
+            "from": "agent",
+            "note": true,
+            "text": "Sorted as a vehicle enquiry. Vehicle: white hatchback. Time: this week. Trade-in: sedan."
+          }
+        ]
       },
       {
         "title": "CarSalesTeam checks the context",
         "actor": "agent",
         "who": "CarSalesTeam",
         "icon": "search",
-        "body": "It checks the inventory and scheduling sources you allow and your dealership rules. Earlier enquiries come from your CRM only where that connection is agreed after an assessment."
+        "body": "It checks the inventory and scheduling sources you allow and your dealership rules. Earlier enquiries come from your CRM only where that connection is agreed after an assessment.",
+        "label": "Checked",
+        "status": "Context checked",
+        "does": "Checks the inventory, scheduling sources and dealership rules you allow, and your CRM only where that is agreed.",
+        "chat": [
+          {
+            "from": "agent",
+            "note": true,
+            "text": "Checked the stock record: one white hatchback listed. Viewing not yet confirmed."
+          }
+        ]
       },
       {
         "title": "The shopper hears back",
@@ -66,7 +100,20 @@
         "who": "CarSalesTeam",
         "icon": "pen",
         "approval": "Your team approves messages to customers",
-        "body": "It drafts a reply with the expected response time from your rules. Your team approves messages to customers before they go out."
+        "body": "It drafts a reply with the expected response time from your rules. Your team approves messages to customers before they go out.",
+        "label": "Reply drafted",
+        "status": "Reply drafted",
+        "does": "Drafts a reply with the response time from your rules.",
+        "chat": [
+          {
+            "from": "agent",
+            "text": "Thanks, Chris. A sales adviser will confirm the car and a time within 2 hours."
+          },
+          {
+            "from": "team",
+            "text": "Approved. Send it."
+          }
+        ]
       },
       {
         "title": "The right person gets a full brief",
@@ -74,28 +121,72 @@
         "who": "CarSalesTeam",
         "icon": "handoff",
         "approval": "Managers decide exceptions",
-        "body": "Routine enquiries go to a sales adviser or the service desk with everything they need. Discounts, financing, trade-in valuations and repair authorisations go to the sales manager or service manager to decide."
+        "body": "Routine enquiries go to a sales adviser or the service desk with everything they need. Discounts, financing, trade-in valuations and repair authorisations go to the sales manager or service manager to decide.",
+        "label": "Handed off",
+        "status": "Handed to sales adviser",
+        "does": "Briefs a sales adviser or the service desk. Discounts, financing, trade-in valuations and repair authorisations go to the sales or service manager.",
+        "chat": [
+          {
+            "from": "agent",
+            "note": true,
+            "text": "Brief to Nina: white hatchback, this week, Chris's number. Trade-in value to the sales manager."
+          }
+        ]
       },
       {
         "title": "Nothing is left waiting",
         "actor": "agent",
         "who": "CarSalesTeam",
         "icon": "clock",
-        "body": "The enquiry stays open against its expected time. If it slips, CarSalesTeam reminds the owner and escalates to the role you name."
+        "body": "The enquiry stays open against its expected time. If it slips, CarSalesTeam reminds the owner and escalates to the role you name.",
+        "label": "Chased",
+        "status": "Following up",
+        "does": "Keeps the enquiry open against its expected time. If it slips, it reminds the owner, then escalates to the role you name.",
+        "chat": [
+          {
+            "from": "agent",
+            "note": true,
+            "text": "No confirmation after 1 hour. Reminder sent to Nina."
+          }
+        ]
       },
       {
         "title": "Staff confirm, the loop closes",
         "actor": "team",
         "who": "Your team",
         "icon": "check",
-        "body": "Staff confirm the vehicle, the slot or the visit; a reply alone does not close an enquiry. CarSalesTeam prepares the follow-up to the customer for your team’s approval."
+        "body": "Staff confirm the vehicle, the slot or the visit; a reply alone does not close an enquiry. CarSalesTeam prepares the follow-up to the customer for your team’s approval.",
+        "label": "Confirmed",
+        "status": "Confirmed by sales",
+        "approval": "Your team approves the follow-up to the customer",
+        "does": "Staff confirm the vehicle and the slot; a reply alone does not close an enquiry.",
+        "chat": [
+          {
+            "from": "team",
+            "text": "Car is on site. Booked Thursday 5 pm with me; the sales manager will value the sedan."
+          },
+          {
+            "from": "agent",
+            "text": "You're booked: white hatchback, Thursday 5 pm, with Nina. Bring the sedan for a valuation."
+          }
+        ]
       },
       {
         "title": "Logged and reported",
         "actor": "agent",
         "who": "CarSalesTeam",
         "icon": "archive",
-        "body": "The enquiry is logged with who did what and when, and counted in regular reports on response time, enquiries with a confirmed next step, unresolved leads and staff effort."
+        "body": "The enquiry is logged with who did what and when, and counted in regular reports on response time, enquiries with a confirmed next step, unresolved leads and staff effort.",
+        "label": "Closed",
+        "status": "Closed and logged",
+        "does": "Logs who did what and when, and counts it in regular reports on response time, confirmed next steps, unresolved leads and staff effort.",
+        "chat": [
+          {
+            "from": "agent",
+            "note": true,
+            "text": "Logged: viewing booked, each approver recorded. Enquiry closed."
+          }
+        ]
       }
     ]
   },

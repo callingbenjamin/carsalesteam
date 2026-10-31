@@ -13,7 +13,7 @@
 }
 
 /* Dark surfaces (header, hero, example, sign-up panel, footer) switch the same tokens to ivory on graphite. */
-.top,.hero,.demo-section,.start-panel,.footer{--bg:var(--graphite);--ink:var(--ivory);--ink-soft:#d9d6cf;--muted:#b3b7b4;--soft:#2a3438;--panel:#273135;--line:#f5f2eb1f;--signal-ink:var(--amber);--focus:var(--amber);color:var(--ink)}
+.top,.hero,.demo-section,.wf-card,.start-panel,.footer{--bg:var(--graphite);--ink:var(--ivory);--ink-soft:#d9d6cf;--muted:#b3b7b4;--soft:#2a3438;--panel:#273135;--line:#f5f2eb1f;--signal-ink:var(--amber);--focus:var(--amber);color:var(--ink)}
 
 /* Base */
 *{box-sizing:border-box}
@@ -397,7 +397,7 @@ ol.steps{list-style:none;margin:0;padding:0}
 .scenes{display:grid;overflow-anchor:none}
 .scene{grid-area:1/1;min-width:0;transition:opacity .3s ease,visibility 0s}
 .scene:not(.is-active){opacity:0;visibility:hidden;transition:opacity .3s ease,visibility 0s .3s}
-.demo-section,.run,.hero-card{overflow-anchor:none}
+.demo-section,.run,.hero-card,.wf-card{overflow-anchor:none}
 .flow-ctl{visibility:hidden}
 .flow-on .flow-ctl{visibility:visible}
 #flow-pause{width:4.2em;text-align:left}
@@ -422,7 +422,7 @@ ol.steps{list-style:none;margin:0;padding:0}
 .lane-customer{--lane:var(--lane-customer);--lane-ink:var(--lane-customer-ink);--k:0}
 .lane-agent{--lane:var(--lane-agent);--lane-ink:var(--lane-agent-ink);--k:1}
 .lane-team{--lane:var(--lane-team);--lane-ink:var(--lane-team-ink);--k:2}
-.demo-section .lane-customer,.demo-section .lane-agent,.demo-section .lane-team,.hero .lane-customer,.hero .lane-agent,.hero .lane-team{--lane-ink:var(--lane)}
+.demo-section .lane-customer,.demo-section .lane-agent,.demo-section .lane-team,.wf-card .lane-customer,.wf-card .lane-agent,.wf-card .lane-team,.hero .lane-customer,.hero .lane-agent,.hero .lane-team{--lane-ink:var(--lane)}
 .run-ic{width:16px;height:16px;flex:none;display:block}
 .run{--step:3.2s;--pause:.7s;--offset:1.3s;--gap:12px;position:relative}
 .run-compact{--step:2.6s;--gap:8px}
@@ -609,20 +609,21 @@ ol.steps{list-style:none;margin:0;padding:0}
   .run-detail{min-height:0}
 }
 
-/* Workflow overview: eight steps, as on every Actuathron site. */
-.flow-steps{grid-template-columns:repeat(4,1fr);gap:0 34px}
-.flow-steps .step{padding:24px 0 30px;border-bottom:1px solid var(--line);border-top:1px solid var(--line);margin-top:-1px}
-.flow-top{display:flex;align-items:center;gap:10px}
-.flow-icons{display:flex;gap:4px;color:var(--lane-ink)}
-.flow-phase{margin-left:auto;font-size:10px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)}
-.flow-steps .run-who{font-size:12px;font-weight:500;color:var(--ink-soft)}
-.flow-steps h3{font-size:21px;letter-spacing:-.4px;margin:12px 0 8px}
-.flow-approval{display:flex;flex-direction:column;align-items:flex-start;gap:6px;font-size:12px;color:var(--ink);margin:10px 0 0}
-.flow-steps .run-check{border-color:var(--lane-team-ink);background:color-mix(in srgb,var(--lane-team-ink) 10%,transparent)}
-.flow-steps .run-check .run-ic{color:var(--lane-team-ink)}
-@media (max-width:1100px){.flow-steps{grid-template-columns:repeat(2,1fr)}}
+/* Workflow overview: the eight steps play as a run card, the same component as the scenarios. The full wording
+   sits in a closed native <details> under it; opening it is the only thing that moves the page. */
+.wf-card{margin:0 auto;max-width:860px;padding:38px;background:var(--panel);border:1px solid #ffffff16;border-radius:8px;box-shadow:0 30px 80px #0002;overflow:hidden}
+.wf-card figcaption{font-size:10px;color:var(--muted);margin-top:20px}
+.wf-more{max-width:860px;margin:26px auto 0}
+.wf-more summary{cursor:pointer;font-size:15px;font-weight:600;color:var(--ink);padding:8px 0;width:max-content;max-width:100%}
+.wf-more summary:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+.wf-more>p{margin:14px 0 0;color:var(--ink-soft);max-width:690px}
+.wf-steps{list-style:none;margin:20px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:22px 40px}
+.wf-steps h3{font-size:17px;letter-spacing:-.2px;margin:0 0 6px}
+.wf-steps .number{font-size:12px;color:var(--muted);margin-right:4px}
+.wf-who{display:block;font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.wf-steps p{margin:0;font-size:14px;color:var(--ink-soft)}
+.wf-steps .wf-approval{margin-top:6px;color:var(--ink)}
 @media (max-width:760px){
-  .flow-steps{grid-template-columns:1fr}
-  .flow-steps .step{border-top:0;margin-top:0}
-  .flow-steps h3{font-size:20px}
+  .wf-card{padding:22px 18px}
+  .wf-steps{grid-template-columns:1fr}
 }
