@@ -26,7 +26,9 @@ export const ACTOR = { agent: 'Agent', team: 'Human', customer: 'Customer' };
 
 // One end-to-end run of a scenario, as an ordered list. Every step keeps its number, actor, action and status in
 // separate elements, and all of the text is in the HTML; site.js only adds the playback (see .flow in styles.css).
-export const flowList = (steps, { compact = false } = {}) => `<div class="flow${compact ? ' flow-compact' : ''}" style="--n:${steps.length}"><span class="flow-line" aria-hidden="true"><span class="flow-fill"></span></span><ol>${steps.map((st, i) => `<li class="flow-step is-${st.actor}${st.approval ? ' has-approval' : ''}" style="--i:${i}"><span class="flow-num" aria-hidden="true">${pad(i + 1)}</span><span class="flow-head"><span class="flow-actor"><span class="visually-hidden">Step ${i + 1}. </span><b>${ACTOR[st.actor]}</b><span class="flow-who">${esc(st.who)}</span></span>${compact ? '' : `<span class="flow-status">${esc(st.status)}</span>`}</span><span class="flow-do">${esc(compact ? st.short : st.does)}</span>${!compact && st.approval ? `<span class="flow-approval"><b>Human approval</b> ${esc(st.approval)}</span>` : ''}</li>`).join('')}</ol></div>`;
+// No style attributes: the Content-Security-Policy is style-src 'self', so the step index (--i) and the step count
+// (--n) come from styles.css.
+export const flowList = (steps, { compact = false } = {}) => `<div class="flow flow-n${steps.length}${compact ? ' flow-compact' : ''}"><span class="flow-line" aria-hidden="true"><span class="flow-fill"></span></span><ol>${steps.map((st, i) => `<li class="flow-step is-${st.actor}${st.approval ? ' has-approval' : ''}"><span class="flow-num" aria-hidden="true">${pad(i + 1)}</span><span class="flow-head"><span class="flow-actor"><span class="visually-hidden">Step ${i + 1}. </span><b>${ACTOR[st.actor]}</b><span class="flow-who">${esc(st.who)}</span></span>${compact ? '' : `<span class="flow-status">${esc(st.status)}</span>`}</span><span class="flow-do">${esc(compact ? st.short : st.does)}</span>${!compact && st.approval ? `<span class="flow-approval"><b>Human approval</b> ${esc(st.approval)}</span>` : ''}</li>`).join('')}</ol></div>`;
 
 // Each workflow phase lists the steps of the first scenario that belong to it, so the overview and the full run agree.
 const phaseExample = (scene, phase) => scene.steps.map((st, i) => ({ ...st, n: i + 1 })).filter(st => st.phase === phase);
@@ -80,7 +82,7 @@ ${answerBlock({ ...d.summary, link: guide ? { href: `/guides/${guide.slug}`, lab
 <div class="statement"><p>${esc(d.statement[0])} <strong>${esc(d.statement[1])}</strong></p></div>
 <section id="workflow">
 <div class="section-head"><div><div class="eyebrow">${esc(d.workflow.eyebrow)}</div><h2>${esc(d.workflow.heading)}</h2></div><p>This page covers one task: ${esc(d.task)}. ${esc(d.workflow.body)}</p></div>
-<ol class="steps rise-group">${d.workflow.steps.map((s, i) => `<li class="step rise" style="--i:${i}"><span class="number">Phase ${pad(i + 1)}</span><h3>${esc(s.title)}</h3><p>${esc(s.body)}</p><ol class="step-example" aria-label="${esc(first.tab)} example">${phaseExample(first, i + 1).map(st => `<li><span class="se-num">${pad(st.n)}</span><span class="se-actor">${ACTOR[st.actor]}</span><span class="se-status">${esc(st.status)}</span></li>`).join('')}</ol></li>`).join('')}</ol>
+<ol class="steps rise-group">${d.workflow.steps.map((s, i) => `<li class="step rise"><span class="number">Phase ${pad(i + 1)}</span><h3>${esc(s.title)}</h3><p>${esc(s.body)}</p><ol class="step-example" aria-label="${esc(first.tab)} example">${phaseExample(first, i + 1).map(st => `<li><span class="se-num">${pad(st.n)}</span><span class="se-actor">${ACTOR[st.actor]}</span><span class="se-status">${esc(st.status)}</span></li>`).join('')}</ol></li>`).join('')}</ol>
 <p class="micro example-note">Illustrative example · synthetic data. The steps are from the “${esc(first.tab)}” scenario below; it is not a customer record.</p>
 </section>
 </div>
