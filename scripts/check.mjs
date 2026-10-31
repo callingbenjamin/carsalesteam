@@ -114,8 +114,9 @@ for (const f of files) {
   if (/\.(html|css|js|mjs|json|xml|txt|svg|webmanifest)$/.test(f)) for (const w of new Set(retiredTerms(readFileSync(f, 'utf8')))) problems.push(`${f}: mentions a retired term ("${w}"); there is no dental service and no pilot`);
 }
 
-// Request runs: every card (hero and each scene) has a customer step, and its summary and closing line count each
-// step once, by who does it, adding up to the steps on that card. The llms files' summaries must add up too.
+// Request films: every card (the hero, each scene and the workflow) is a film of 4 to 6 shots that opens on the
+// customer's message, has a customer step, and whose summary and closing line count each step once, by who does
+// it, adding up to the steps on that card. The llms files' summaries must add up too.
 {
   const text = h => h.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').trim();
   const sums = (line, count) => {
@@ -127,15 +128,19 @@ for (const f of files) {
     return total === Number(m[1]) && (count === undefined || total === count);
   };
   const home = readFileSync(join(DIST, 'index.html'), 'utf8');
-  const starts = [...home.matchAll(/<div class="run(?: run-compact)? n\d+/g)].map(m => m.index);
-  if (starts.length < 2) problems.push('index.html: expected the hero run and the scenario runs');
+  const starts = [...home.matchAll(/<div class="film(?: film-compact)?" /g)].map(m => m.index);
+  if (starts.length < 5) problems.push(`index.html: expected the hero, workflow and three scenario films (found ${starts.length})`);
   starts.forEach((start, i) => {
-    const chunk = home.slice(start, starts[i + 1] ?? home.length);
-    const count = (chunk.match(/class="run-step /g) || []).length;
-    if (!/class="run-step lane-customer/.test(chunk)) problems.push(`index.html: run ${i + 1} has no customer step`);
-    for (const cls of ['run-summary', 'run-end']) {
-      const m = new RegExp(`<p class="${cls}">([\\s\\S]*?)<\\/p>`).exec(chunk);
-      if (!m || !sums(text(m[1]), count)) problems.push(`index.html: run ${i + 1} ${cls} does not add up to ${count} steps (${m ? text(m[1]) : 'missing'})`);
+    const chunk = home.slice(start, home.indexOf('</ol></div>\n<div class="film-foot">', start));
+    const shots = chunk.split(/<li class="shot k\d/).slice(1);
+    if (shots.length < 4 || shots.length > 6) problems.push(`index.html: film ${i + 1} has ${shots.length} shots (4 to 6 expected)`);
+    if (!/class="film-step lane-customer/.test(shots[0] || '') || !/class="fb fb-customer/.test(shots[0] || '')) problems.push(`index.html: film ${i + 1} does not open on the customer's message`);
+    if (shots.some(sh => !/class="shot-title"/.test(sh))) problems.push(`index.html: film ${i + 1} has a shot without a title line`);
+    const count = (chunk.match(/class="film-step /g) || []).length;
+    const rest = home.slice(start, home.indexOf('</div>\n</div>', home.indexOf('<div class="film-foot">', start)));
+    for (const cls of ['film-summary', 'film-end']) {
+      const m = new RegExp(`<p class="${cls}[^"]*">([\\s\\S]*?)<\\/p>`).exec(rest);
+      if (!m || !sums(text(m[1]), count)) problems.push(`index.html: film ${i + 1} ${cls} does not add up to ${count} steps (${m ? text(m[1]) : 'missing'})`);
     }
   });
   for (const f of ['llms.txt', 'llms-full.txt']) {

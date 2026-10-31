@@ -22,88 +22,57 @@ const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const configEl = $('config');
 const config = configEl ? JSON.parse(configEl.textContent) : null;
 
-// Request runs: each one plays like a live run once it is a quarter on screen, and pauses off screen. The steps
-// and the example conversation are already in the HTML; styles.css hides and reveals them (never with reduced
-// motion), and this only starts, pauses and replays the CSS animations, and keeps the live status in step.
-const runs = [...document.querySelectorAll('.run')];
-// Every step keeps its place in the layout the whole time: only opacity and transform animate, so nothing on
-// the page moves. A replay fades out only the steps and the conversation (never the whole card), restarts them
-// from the first step, and the card's frame, lanes and titles stay still.
-const reset = run => {
-  run.classList.add('is-reset', 'is-looped');
-  void run.offsetWidth; // Restarts the CSS animations from the first step.
-  delete run.dataset.lane;
-  run.classList.remove('is-reset', 'is-done', 'is-fading');
+// Request films: each card is a short product film of six shots cut together in one fixed frame. The shots and
+// every word are already in the HTML (a storyboard without JavaScript or with reduced motion); styles.css plays
+// them on a loop, and this only starts and pauses the CSS animations and replays a film from its first shot. A
+// film plays while a quarter of it is on screen, its scenario is the one shown, and the visitor has not paused it.
+const films = [...document.querySelectorAll('.film')];
+// Replay: the animations restart in place, on the first shot. The first shot is the resting state, so the frame
+// is never empty, and only the shots animate: the card, its frame and its height never change.
+const restart = film => {
+  film.classList.add('is-reset');
+  void film.offsetWidth;
+  film.classList.remove('is-reset');
 };
-const restart = (run, fade = true) => {
-  clearTimeout(run.fadeTimer);
-  clearTimeout(run.holdTimer);
-  clearTimeout(run.loopTimer);
-  if (!fade) return reset(run);
-  run.classList.add('is-fading');
-  run.fadeTimer = setTimeout(() => reset(run), 450); // Matches the .45s fade in styles.css.
-};
-const LANES = ['lane-customer', 'lane-agent', 'lane-team'];
-runs.forEach(run => {
-  const now = run.querySelector('.run-now');
-  const steps = [...run.querySelectorAll('.run-step')];
-  const last = steps[steps.length - 1];
-  // As each step rises, the status line names it and the token moves to the lane that now has the request.
-  // Both only change text inside a fixed, single-line box and a data attribute that styles.css turns into opacity
-  // and transform, so nothing moves.
-  run.addEventListener('animationstart', e => {
-    if (e.animationName !== 'run-rise' || !steps.includes(e.target)) return;
-    const i = steps.indexOf(e.target);
-    if (now) now.textContent = `Step ${i + 1} of ${steps.length} · ${e.target.dataset.label}`;
-    run.dataset.lane = String(LANES.findIndex(c => e.target.classList.contains(c)));
-  });
-  run.addEventListener('animationend', e => {
-    if (e.target !== last || e.animationName !== 'run-rise') return;
-    clearTimeout(run.holdTimer);
-    clearTimeout(run.loopTimer);
-    // Closing beat: holds on the closed record and its summary, offers a replay, then cross-fades into the next
-    // loop. Off screen the new loop waits, paused, until the run is back in view.
-    run.holdTimer = setTimeout(() => run.classList.add('is-done'), 1200);
-    run.loopTimer = setTimeout(() => restart(run), 6000);
-  });
-  run.querySelector('.run-replay').addEventListener('click', () => restart(run));
-});
-// A run plays while a quarter of it is on screen, its scenario is the one shown, and the visitor has not paused.
-let userPaused = false;
 const seen = new Set();
-const sync = run => run.classList.toggle('is-playing', seen.has(run) && !userPaused && !run.closest('.scene:not(.is-active)'));
-const syncAll = () => runs.forEach(sync);
-if (!('IntersectionObserver' in window)) { runs.forEach(run => seen.add(run)); syncAll(); }
+const sync = film => film.classList.toggle('is-playing', seen.has(film) && !film.paused && !film.closest('.scene:not(.is-active)'));
+const syncAll = () => films.forEach(sync);
+films.forEach(film => {
+  const pause = film.querySelector('.film-pause');
+  film.querySelector('.film-replay').addEventListener('click', () => {
+    restart(film);
+    if (film.paused) pause.click();
+  });
+  pause.addEventListener('click', () => {
+    film.paused = !film.paused;
+    pause.textContent = film.paused ? 'Play' : 'Pause';
+    pause.setAttribute('aria-pressed', String(Boolean(film.paused)));
+    sync(film);
+  });
+});
+if (films.length && !motion.matches) document.documentElement.classList.add('flow-on'); // The controls were in the layout already, just invisible.
+if (!('IntersectionObserver' in window)) { films.forEach(f => seen.add(f)); syncAll(); }
 else {
-  // Starts once a quarter of the run is on screen and pauses only when it has left the screen entirely, so a run
-  // sitting at the edge of the window never stutters between playing and paused. Nothing restarts on scroll.
+  // Starts once a quarter of the film is on screen and pauses only when it has left the screen entirely, so a film
+  // at the edge of the window never stutters between playing and paused.
   const io = new IntersectionObserver(entries => entries.forEach(e => {
     if (e.intersectionRatio >= 0.25) seen.add(e.target);
     else if (!e.isIntersecting) seen.delete(e.target);
     sync(e.target);
   }), { threshold: [0, 0.25] });
-  runs.forEach(run => io.observe(run));
-}
-const pauseBtn = $('flow-pause');
-if (pauseBtn && runs.length && !motion.matches) {
-  document.documentElement.classList.add('flow-on'); // The control was in the layout already, just invisible.
-  pauseBtn.addEventListener('click', () => {
-    userPaused = !userPaused;
-    pauseBtn.textContent = userPaused ? 'Play' : 'Pause';
-    syncAll();
-  });
+  films.forEach(f => io.observe(f));
 }
 
-// Scenario tabs: the scenarios share one place on the page, so switching cross-fades without moving anything,
-// and the chosen one plays from its first step.
+// Scenario tabs: the scenarios share one place on the page, so switching is a hard cut that moves nothing, and the
+// chosen film plays from its first shot.
 const scenes = [...document.querySelectorAll('.scene')];
 const tabs = [...document.querySelectorAll('.tab')];
 if (scenes.length && tabs.length) {
   const show = index => {
     tabs.forEach((b, i) => { b.classList.toggle('active', i === index); b.setAttribute('aria-pressed', String(i === index)); });
     scenes.forEach((s, i) => { s.classList.toggle('is-active', i === index); s.inert = i !== index; });
-    const run = scenes[index].querySelector('.run');
-    if (run) restart(run, false);
+    const film = scenes[index].querySelector('.film');
+    if (film) restart(film);
     syncAll();
   };
   scenes.forEach(s => { s.inert = !s.classList.contains('is-active'); });

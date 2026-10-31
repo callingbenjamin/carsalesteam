@@ -188,6 +188,14 @@
           }
         ]
       }
+    ],
+    "titles": [
+      "A shopper writes in.",
+      "Checked in seconds.",
+      "Your team approves.",
+      "Handed off.",
+      "Staff confirm.",
+      "Handed off. Logged."
     ]
   },
   "demo": {
@@ -375,7 +383,15 @@
         "people": {
           "customer": "Maya R.",
           "team": "Sam, sales adviser"
-        }
+        },
+        "titles": [
+          "A shopper writes in.",
+          "Checked in seconds.",
+          "Your team approves.",
+          "Handed to Sam.",
+          "Booked by sales.",
+          "Closed. Logged."
+        ]
       },
       {
         "tab": "Service visit",
@@ -561,7 +577,15 @@
         "people": {
           "customer": "Daniel K.",
           "team": "Priya, service desk"
-        }
+        },
+        "titles": [
+          "A service request lands.",
+          "Sorted and checked.",
+          "Your team approves.",
+          "Briefed to the desk.",
+          "The desk books it.",
+          "Closed. Logged."
+        ]
       },
       {
         "tab": "Price exception",
@@ -743,7 +767,15 @@
         "people": {
           "customer": "Jordan T.",
           "team": "Alex, sales manager"
-        }
+        },
+        "titles": [
+          "A price question arrives.",
+          "A manager decides this.",
+          "Nothing promised yet.",
+          "Handed to Alex.",
+          "Alex makes the call.",
+          "Closed. Logged."
+        ]
       }
     ],
     "stages": [
