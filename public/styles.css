@@ -392,7 +392,7 @@ ol.steps{list-style:none;margin:0;padding:0}
 .is-agent{--c:#10B2A4;--c-ink:#0A7167}
 .is-team{--c:#E98006;--c-ink:#A45A05}
 .step .number{display:inline-block;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;border:1px solid currentColor;border-radius:20px;padding:3px 9px}
-.step-example li{display:grid;grid-template-columns:22px 15px 1fr auto;gap:8px;align-items:center;padding-left:10px;border-left:2px solid var(--c-ink)}
+.step-example li{display:grid;grid-template-columns:22px 15px 1fr auto;gap:8px;align-items:center;padding-left:12px}
 .se-num{font-variant-numeric:tabular-nums;color:var(--muted)}
 .se-ic{width:15px;height:15px;color:var(--c-ink)}
 .se-lbl{font-weight:600;color:var(--ink)}
@@ -435,7 +435,7 @@ ol.steps{list-style:none;margin:0;padding:0}
 .run-step:nth-child(1){grid-row:1}.run-step:nth-child(2){grid-row:2}.run-step:nth-child(3){grid-row:3}.run-step:nth-child(4){grid-row:4}.run-step:nth-child(5){grid-row:5}.run-step:nth-child(6){grid-row:6}.run-step:nth-child(7){grid-row:7}.run-step:nth-child(8){grid-row:8}.run-step:nth-child(9){grid-row:9}.run-step:nth-child(10){grid-row:10}
 .run-step.is-customer{grid-column:1}.run-step.is-agent{grid-column:2}.run-step.is-team{grid-column:3}
 .run-step{position:relative;display:grid;grid-template-columns:30px 1fr;column-gap:11px;row-gap:3px;align-items:start;padding:8px 14px;transition:opacity .35s ease}
-.run-step:before{content:'';position:absolute;inset:0;border-radius:8px;background:#ffffff0c;box-shadow:inset 0 0 0 1px #ffffff14;opacity:0;transition:opacity .35s ease;pointer-events:none}
+.run-step:before{content:'';position:absolute;inset:0;border-radius:8px;box-shadow:inset 0 0 0 1px #ffffff26;opacity:0;transition:opacity .35s ease;pointer-events:none}
 .run-ic{grid-row:span 2;position:relative;z-index:1;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:var(--c);border:1.5px solid var(--c);background:var(--panel)}
 .is-approval .run-ic{border-radius:9px}
 .run-cp{position:absolute;right:-7px;bottom:-7px;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:#D97706;color:#17201f;box-shadow:0 0 0 2px var(--panel)}
@@ -468,10 +468,9 @@ ol.steps{list-style:none;margin:0;padding:0}
 /* One column: the hero card always, and the scenario panel on narrow screens. Lane headers become a legend. */
 .run-compact .run-lanes{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:8px}
 .run-compact .lane-h{display:flex;align-items:center;gap:6px;padding:0;border:0;letter-spacing:1px}
-.run-compact .lane-h:before{content:'';width:3px;height:12px;border-radius:2px;background:var(--c)}
+.run-compact .lane-h:before{content:'';width:7px;height:7px;border-radius:50%;background:var(--c)}
 .run-compact .run-steps{grid-template-columns:1fr}
-.run-compact .run-step{grid-column:1;border-left:3px solid var(--c);border-radius:0 8px 8px 0;padding:6px 10px;grid-template-columns:24px 1fr;column-gap:9px;row-gap:1px}
-.run-compact .run-step:before{border-radius:0 8px 8px 0}
+.run-compact .run-step{grid-column:1;padding:6px 13px;grid-template-columns:24px 1fr;column-gap:9px;row-gap:1px}
 .run-compact .run-ic{width:24px;height:24px}
 .run-compact .run-ic .ic{width:13px;height:13px}
 .run-compact .is-approval .run-ic{border-radius:7px}
@@ -501,10 +500,9 @@ ol.steps{list-style:none;margin:0;padding:0}
   .tab{font-size:13px;padding:11px 13px}
   .run-lanes{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:8px}
   .lane-h{display:flex;align-items:center;gap:6px;padding:0;border:0;letter-spacing:1px}
-  .lane-h:before{content:'';width:3px;height:12px;border-radius:2px;background:var(--c)}
+  .lane-h:before{content:'';width:7px;height:7px;border-radius:50%;background:var(--c)}
   .run-steps{grid-template-columns:1fr}
   .run-step.is-customer,.run-step.is-agent,.run-step.is-team{grid-column:1}
-  .run-step{border-left:3px solid var(--c);border-radius:0 8px 8px 0;padding:8px 12px}
-  .run-step:before{border-radius:0 8px 8px 0}
+  .run-step{padding:8px 15px}
   .run-ph{padding:0}
 }
