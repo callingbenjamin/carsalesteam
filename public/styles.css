@@ -356,7 +356,6 @@ section.page.guide-body{padding-top:20px}
 
 /* Numbered steps are ordered lists; the "0N /" label carries the number visually. */
 ol.steps{list-style:none;margin:0;padding:0}
-.step .step-example{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:6px;font-size:12px;color:var(--muted)}
 .example-note{margin-top:22px;color:var(--muted)}
 .example-note a{color:inherit;text-decoration:underline;text-underline-offset:3px}
 
@@ -388,12 +387,6 @@ ol.steps{list-style:none;margin:0;padding:0}
 .is-customer{--c:#6A94F1;--c-ink:#2563EB}
 .is-agent{--c:#10B2A4;--c-ink:#0A7167}
 .is-team{--c:#E98006;--c-ink:#A45A05}
-.step .number{display:inline-block;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;border:1px solid currentColor;border-radius:20px;padding:3px 9px}
-.step-example li{display:grid;grid-template-columns:22px 15px 1fr auto;gap:8px;align-items:center;padding-left:12px}
-.se-num{font-variant-numeric:tabular-nums;color:var(--muted)}
-.se-ic{width:15px;height:15px;color:var(--c-ink)}
-.se-lbl{font-weight:600;color:var(--ink)}
-.se-actor{font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:var(--c-ink)}
 
 /* Scenario panel: every scene sits in the same grid cell from first paint, so the panel is always the height of
    the tallest one, and switching or replaying is a cross-fade. Nothing is inserted, removed, collapsed or resized,
@@ -404,20 +397,14 @@ ol.steps{list-style:none;margin:0;padding:0}
 .scenes{display:grid;overflow-anchor:none}
 .scene{grid-area:1/1;min-width:0;transition:opacity .3s ease,visibility 0s}
 .scene:not(.is-active){opacity:0;visibility:hidden;transition:opacity .3s ease,visibility 0s .3s}
-.demo-section,.run,.rise-group,.hero-card{overflow-anchor:none}
+.demo-section,.run,.hero-card{overflow-anchor:none}
 .flow-ctl{visibility:hidden}
 .flow-on .flow-ctl{visibility:visible}
 #flow-pause{width:4.2em;text-align:left}
 .demo-actions{margin-top:30px;padding-top:18px;border-top:1px solid #ffffff20}
 
 
-/* Workflow overview cards rise in once, in the style of lucidrail.ai. */
-@keyframes flow-rise{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
-.rise:nth-child(1){--i:0}.rise:nth-child(2){--i:1}.rise:nth-child(3){--i:2}.rise:nth-child(4){--i:3}.rise:nth-child(5){--i:4}.rise:nth-child(6){--i:5}.rise:nth-child(7){--i:6}.rise:nth-child(8){--i:7}.rise:nth-child(9){--i:8}.rise:nth-child(10){--i:9}
-.rise-group.is-armed .rise{opacity:0;animation:flow-rise .36s cubic-bezier(.28,.11,.32,1) forwards paused;animation-delay:calc(var(--i) * 120ms + 40ms)}
-.rise-group.is-armed.is-running .rise{animation-play-state:running}
 @media(prefers-reduced-motion:reduce){
-  .rise-group.is-armed .rise{animation:none!important;opacity:1!important;transform:none!important}
   .scene{transition:none!important}
 }
 @media(max-width:760px){
@@ -463,7 +450,7 @@ ol.steps{list-style:none;margin:0;padding:0}
 .run-chip:after{content:'';position:absolute;inset:0;border-radius:7px;border:1px solid color-mix(in srgb,var(--lane) 70%,transparent);opacity:0;pointer-events:none}
 .run-icons{display:flex;color:var(--lane);margin-top:1px}
 .run-actor-ic{display:none}
-.lane-h .run-actor-ic,.lane-key .run-actor-ic{display:block}
+.lane-h .run-actor-ic,.lane-key .run-actor-ic,.flow-icons .run-actor-ic{display:block}
 .run-text{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;min-width:0}
 .run-label{font-size:13px;font-weight:650;line-height:1.3;color:var(--ink)}
 .run-who{font-size:11px;color:var(--muted)}
@@ -608,4 +595,22 @@ ol.steps{list-style:none;margin:0;padding:0}
   .run-icons{gap:6px}
   .run-step.lane-agent .run-who,.run-compact .run-who{display:inline}
   .run-detail{min-height:0}
+}
+
+/* Workflow overview: eight steps, as on every Actuathron site. */
+.flow-steps{grid-template-columns:repeat(4,1fr);gap:0 34px}
+.flow-steps .step{padding:24px 0 30px;border-bottom:1px solid var(--line);border-top:1px solid var(--line);margin-top:-1px}
+.flow-top{display:flex;align-items:center;gap:10px}
+.flow-icons{display:flex;gap:4px;color:var(--lane-ink)}
+.flow-phase{margin-left:auto;font-size:10px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)}
+.flow-steps .run-who{font-size:12px;font-weight:500;color:var(--ink-soft)}
+.flow-steps h3{font-size:21px;letter-spacing:-.4px;margin:12px 0 8px}
+.flow-approval{display:flex;flex-direction:column;align-items:flex-start;gap:6px;font-size:12px;color:var(--ink);margin:10px 0 0}
+.flow-steps .run-check{border-color:var(--lane-team-ink);background:color-mix(in srgb,var(--lane-team-ink) 10%,transparent)}
+.flow-steps .run-check .run-ic{color:var(--lane-team-ink)}
+@media (max-width:1100px){.flow-steps{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:760px){
+  .flow-steps{grid-template-columns:1fr}
+  .flow-steps .step{border-top:0;margin-top:0}
+  .flow-steps h3{font-size:20px}
 }
