@@ -390,7 +390,10 @@ ol.steps{list-style:none;margin:0;padding:0}
 .se-status{color:var(--ink)}
 .scene+.scene{margin-top:44px;padding-top:34px;border-top:1px solid #ffffff20}
 .js-flow .scene[hidden]{display:none}
-.flow{--step:700ms;--gap:16px;position:relative;margin-top:6px}
+.flow{--step:700ms;--gap:16px;--n:9;position:relative;margin-top:6px}
+/* Step index and count for the playback delays (no inline styles under the site's CSP). */
+.flow-step:nth-child(1),.rise:nth-child(1){--i:0}.flow-step:nth-child(2),.rise:nth-child(2){--i:1}.flow-step:nth-child(3),.rise:nth-child(3){--i:2}.flow-step:nth-child(4),.rise:nth-child(4){--i:3}.flow-step:nth-child(5),.rise:nth-child(5){--i:4}.flow-step:nth-child(6),.rise:nth-child(6){--i:5}.flow-step:nth-child(7),.rise:nth-child(7){--i:6}.flow-step:nth-child(8),.rise:nth-child(8){--i:7}.flow-step:nth-child(9),.rise:nth-child(9){--i:8}.flow-step:nth-child(10),.rise:nth-child(10){--i:9}
+.flow-n1{--n:1}.flow-n2{--n:2}.flow-n3{--n:3}.flow-n4{--n:4}.flow-n5{--n:5}.flow-n6{--n:6}.flow-n7{--n:7}.flow-n8{--n:8}.flow-n9{--n:9}.flow-n10{--n:10}
 .flow ol{list-style:none;margin:0;padding:0;display:grid;gap:var(--gap)}
 .flow-line{position:absolute;left:13px;top:14px;bottom:14px;width:1px;background:#ffffff1f}
 .flow-fill{position:absolute;inset:0;background:var(--signal);transform-origin:top;transform:scaleY(1)}
