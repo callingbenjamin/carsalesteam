@@ -61,7 +61,7 @@ export const flowList = (steps, { compact = false } = {}) => {
   return `<div class="run${compact ? ' run-compact' : ''}">
 <p class="run-sum">${flowSummary(steps)}</p>
 ${compact ? '' : `<div class="run-lanes" aria-hidden="true">${LANES.map(a => `<span class="lane-h is-${a}">${esc(LANE_NAME[a])}</span>`).join('')}</div>`}
-<div class="run-board"><span class="run-bands" aria-hidden="true">${LANES.map(a => `<span class="band is-${a}"></span>`).join('')}</span><span class="run-bar" aria-hidden="true"><span></span></span><span class="run-token" aria-hidden="true"></span>
+<div class="run-board"><span class="run-bar" aria-hidden="true"><span></span></span><span class="run-token" aria-hidden="true"></span>
 ${groups.map(g => `<div class="run-phase"><p class="run-ph">${esc(g.name)}</p><ol class="run-steps" start="${(k += g.steps.length) - g.steps.length + 1}">${g.steps.map(step).join('')}</ol></div>`).join('')}
 </div></div>`;
 };
