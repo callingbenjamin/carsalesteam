@@ -23,12 +23,48 @@ export const startSteps = d => [
 
 const pad = n => String(n).padStart(2, '0');
 export const ACTOR = { agent: 'Agent', team: 'Human', customer: 'Customer' };
+export const LANES = ['customer', 'agent', 'team'];
+export const LANE_NAME = { customer: 'Customer', agent: `${SITE.name} agent`, team: 'Your team' };
+export const STAGES = ['Intake', 'Work', 'Hand-off', 'Close'];
 
-// One end-to-end run of a scenario, as an ordered list. Every step keeps its number, actor, action and status in
-// separate elements, and all of the text is in the HTML; site.js only adds the playback (see .flow in styles.css).
-// No style attributes: the Content-Security-Policy is style-src 'self', so the step index (--i) and the step count
-// (--n) come from styles.css.
-export const flowList = (steps, { compact = false } = {}) => `<div class="flow flow-n${steps.length}${compact ? ' flow-compact' : ''}"><span class="flow-line" aria-hidden="true"><span class="flow-fill"></span></span><ol>${steps.map((st, i) => `<li class="flow-step is-${st.actor}${st.approval ? ' has-approval' : ''}"><span class="flow-num" aria-hidden="true">${pad(i + 1)}</span><span class="flow-head"><span class="flow-actor"><span class="visually-hidden">Step ${i + 1}. </span><b>${ACTOR[st.actor]}</b><span class="flow-who">${esc(st.who)}</span></span>${compact ? '' : `<span class="flow-status">${esc(st.status)}</span>`}</span><span class="flow-do">${esc(compact ? st.short : st.does)}</span>${!compact && st.approval ? `<span class="flow-approval"><b>Human approval</b> ${esc(st.approval)}</span>` : ''}</li>`).join('')}</ol></div>`;
+// Simple line icons, drawn once in an SVG sprite and referenced by each step (no emoji, no images).
+const ICON_PATHS = {
+  inbox: 'M4 13h4l1.5 2.5h5L16 13h4M5.5 5h13L20 13v5.5a.5.5 0 0 1-.5.5h-15a.5.5 0 0 1-.5-.5V13z',
+  tag: 'M3.5 11.5V4h7.5l9 9-7.5 7.5zM7.5 8h.01',
+  search: 'M11 4.5a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13zM20 20l-4.4-4.4',
+  rule: 'M4 7l2 2 3.5-3.5M4 15l2 2 3.5-3.5M13 8h7M13 16h7',
+  pen: 'M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4',
+  handoff: 'M4 9h14l-3.5-3.5M20 15H6l3.5 3.5',
+  clock: 'M12 4a8 8 0 1 1 0 16 8 8 0 0 1 0-16zM12 8v4.5l3 2',
+  check: 'M12 4a8 8 0 1 1 0 16 8 8 0 0 1 0-16zM8.5 12.5l2.5 2.5 4.5-5',
+  send: 'M20 4L4 11l6.5 2.5L13 20zM20 4l-9.5 9.5',
+  archive: 'M4 5h16v4H4zM5.5 9v10h13V9M10 13h4',
+  shield: 'M12 3.5l7 3v5c0 4.3-2.9 7.6-7 9.5-4.1-1.9-7-5.2-7-9.5v-5zM9 12l2 2 4-4',
+};
+export const iconSprite = () => `<svg class="sprite" aria-hidden="true" focusable="false">${Object.entries(ICON_PATHS).map(([k, d]) => `<symbol id="i-${k}" viewBox="0 0 24 24"><path d="${d}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>`).join('')}</svg>`;
+export const icon = (k, cls = '') => `<svg class="ic${cls ? ` ${cls}` : ''}" aria-hidden="true" focusable="false"><use href="#i-${k}"/></svg>`;
+
+// Facts counted from the flow itself; nothing else goes in the summary.
+export const flowSummary = steps => `${steps.length} steps · agent handles ${steps.filter(s => s.actor === 'agent').length} · your team approves ${steps.filter(s => s.approval).length}`;
+
+// One end-to-end run of a scenario, read at a glance: lanes for the customer, the agent and your team (one column
+// with a coloured rail per actor on narrow screens), steps grouped into Intake, Work, Hand-off and Close, a bold
+// 1 to 3 word label and icon per step, and a checkpoint marker where your team approves. All text is in the HTML;
+// site.js only plays it (one step active at a time, a token moving between lanes). Every element keeps its place
+// and size whatever the playback state: only opacity and transform change. No style attributes (CSP style-src
+// 'self'): grid rows come from nth-child rules in styles.css and the token is moved through the CSSOM.
+export const flowList = (steps, { compact = false } = {}) => {
+  const n = steps.length;
+  let k = 0;
+  const groups = STAGES.map((name, g) => ({ name, steps: steps.map((st, i) => ({ ...st, i })).filter(st => st.stage === g + 1) })).filter(g => g.steps.length);
+  const step = st => `<li class="run-step is-${st.actor}${st.approval ? ' is-approval' : ''}"><span class="run-ic">${icon(st.icon)}${st.approval ? `<span class="run-cp">${icon('shield')}</span>` : ''}</span><span class="run-head"><span class="visually-hidden">Step ${st.i + 1} of ${n}, ${LANE_NAME[st.actor]}: </span><b class="run-lbl">${esc(st.label)}</b><span class="run-who">${esc(st.who)}</span>${st.approval ? '<span class="run-ok">Your team approves</span>' : ''}</span><span class="run-say">${esc(st.short)}${st.approval && !compact ? ` <span class="run-why">${esc(st.approval)}</span>` : ''}</span></li>`;
+  return `<div class="run${compact ? ' run-compact' : ''}">
+<p class="run-sum">${flowSummary(steps)}</p>
+${compact ? '' : `<div class="run-lanes" aria-hidden="true">${LANES.map(a => `<span class="lane-h is-${a}">${esc(LANE_NAME[a])}</span>`).join('')}</div>`}
+<div class="run-board"><span class="run-bands" aria-hidden="true">${LANES.map(a => `<span class="band is-${a}"></span>`).join('')}</span><span class="run-bar" aria-hidden="true"><span></span></span><span class="run-token" aria-hidden="true"></span>
+${groups.map(g => `<div class="run-phase"><p class="run-ph">${esc(g.name)}</p><ol class="run-steps" start="${(k += g.steps.length) - g.steps.length + 1}">${g.steps.map(step).join('')}</ol></div>`).join('')}
+</div></div>`;
+};
 
 // Each workflow phase lists the steps of the first scenario that belong to it, so the overview and the full run agree.
 const phaseExample = (scene, phase) => scene.steps.map((st, i) => ({ ...st, n: i + 1 })).filter(st => st.phase === phase);
@@ -53,9 +89,9 @@ export function sectorPage(d, guides = []) {
   const guide = guides.find(g => g.sector === d.key);
   for (const s of d.demo.scenes) {
     if (s.steps.length < 6 || s.steps.length > 9) throw new Error(`${d.key}: scene "${s.tab}" needs 6 to 9 steps`);
-    for (const st of s.steps) if (!ACTOR[st.actor] || !st.status || !st.does || !st.short || !(st.phase >= 1 && st.phase <= d.workflow.steps.length)) throw new Error(`${d.key}: scene "${s.tab}" has an incomplete step`);
+    for (const st of s.steps) if (!ACTOR[st.actor] || !st.status || !st.does || !st.short || !st.label || st.label.split(' ').length > 3 || !ICON_PATHS[st.icon] || !(st.stage >= 1 && st.stage <= STAGES.length) || !(st.phase >= 1 && st.phase <= d.workflow.steps.length)) throw new Error(`${d.key}: scene "${s.tab}" has an incomplete step`);
   }
-  const main = `<section class="hero" aria-labelledby="headline">
+  const main = `${iconSprite()}<section class="hero" aria-labelledby="headline">
 <div class="hero-media" aria-hidden="true">${posterPicture(d.key, { sizes: HERO_SIZES, attrs: 'fetchpriority="high"' })}<video id="hero-video" muted loop playsinline preload="metadata" tabindex="-1"><source src="${asset(`${media}/hero.mp4`)}" type="video/mp4"></video></div>
 <div class="hero-wash" aria-hidden="true"></div>
 <div class="wrap hero-content">
@@ -82,7 +118,7 @@ ${answerBlock({ ...d.summary, link: guide ? { href: `/guides/${guide.slug}`, lab
 <div class="statement"><p>${esc(d.statement[0])} <strong>${esc(d.statement[1])}</strong></p></div>
 <section id="workflow">
 <div class="section-head"><div><div class="eyebrow">${esc(d.workflow.eyebrow)}</div><h2>${esc(d.workflow.heading)}</h2></div><p>This page covers one task: ${esc(d.task)}. ${esc(d.workflow.body)}</p></div>
-<ol class="steps rise-group">${d.workflow.steps.map((s, i) => `<li class="step rise"><span class="number">Phase ${pad(i + 1)}</span><h3>${esc(s.title)}</h3><p>${esc(s.body)}</p><ol class="step-example" aria-label="${esc(first.tab)} example">${phaseExample(first, i + 1).map(st => `<li><span class="se-num">${pad(st.n)}</span><span class="se-actor">${ACTOR[st.actor]}</span><span class="se-status">${esc(st.status)}</span></li>`).join('')}</ol></li>`).join('')}</ol>
+<ol class="steps rise-group">${d.workflow.steps.map((s, i) => `<li class="step rise"><span class="number">Phase ${pad(i + 1)}</span><h3>${esc(s.title)}</h3><p>${esc(s.body)}</p><ol class="step-example" aria-label="${esc(first.tab)} example">${phaseExample(first, i + 1).map(st => `<li class="is-${st.actor}"><span class="se-num">${pad(st.n)}</span>${icon(st.icon, 'se-ic')}<b class="se-lbl">${esc(st.label)}</b><span class="se-actor">${st.actor === 'agent' ? 'Agent' : esc(LANE_NAME[st.actor])}</span></li>`).join('')}</ol></li>`).join('')}</ol>
 <p class="micro example-note">Illustrative example · synthetic data. The steps are from the “${esc(first.tab)}” scenario below; it is not a customer record.</p>
 </section>
 </div>
@@ -92,13 +128,15 @@ ${answerBlock({ ...d.summary, link: guide ? { href: `/guides/${guide.slug}`, lab
 <aside class="demo-side"><div class="label">Choose a scenario</div><div class="tabs" role="group" aria-label="Example scenarios">${d.demo.scenes.map((s, i) => `<button type="button" class="tab${i === 0 ? ' active' : ''}" aria-pressed="${i === 0}" aria-controls="scene-${i}">${esc(s.tab)}</button>`).join('')}</div><p class="micro">Each scenario uses synthetic data to show one enquiry end to end, from the first message to closed and logged. Agent steps are prepared by ${SITE.name}; human steps are your staff.</p></aside>
 <div class="demo-body" id="demo-panel">
 <div class="demo-titlebar"><span>${SITE.name} / Sales and service</span><span>Illustrative example · synthetic data</span></div>
-${d.demo.scenes.map((s, i) => `<article class="scene" id="scene-${i}" aria-label="${esc(s.tab)} scenario">
+<div class="scenes">
+${d.demo.scenes.map((s, i) => `<article class="scene${i === 0 ? ' is-active' : ''}" id="scene-${i}" aria-label="${esc(s.tab)} scenario">
 <div class="demo-meta"><span>${esc(s.source)}</span><span class="pill">Owner: ${esc(s.owner)}</span></div>
 <p class="request">“${esc(s.request)}”</p>
 <div class="rule">${esc(s.rule)}</div>
 ${flowList(s.steps)}
 </article>`).join('\n')}
-<div class="demo-actions"><button class="reset" id="flow-pause" type="button" hidden>Pause</button><button class="reset" id="flow-replay" type="button" hidden>Replay</button><span class="demo-status">A local simulation. No live action is taken.</span></div>
+</div>
+<div class="demo-actions"><button class="reset flow-ctl" id="flow-pause" type="button">Pause</button><button class="reset flow-ctl" id="flow-replay" type="button">Replay</button><span class="demo-status">A local simulation. No live action is taken.</span></div>
 </div>
 </div>
 <noscript><p>All three scenarios are shown in full above. You can contact <a href="mailto:${SITE.email}">${SITE.email}</a> to get started.</p></noscript>

@@ -71,7 +71,10 @@
             "does": "Sends the request through the dealership website form, with a name and a phone number.",
             "status": "Received",
             "short": "Request arrives from the website form.",
-            "phase": 1
+            "phase": 1,
+            "label": "Request in",
+            "icon": "inbox",
+            "stage": 1
           },
           {
             "actor": "agent",
@@ -79,7 +82,10 @@
             "does": "Sorts it as a test-drive request and pulls out the vehicle (blue SUV), the preferred time (Saturday morning) and the contact details.",
             "status": "Sorted: test drive",
             "short": "Sorts it as a test drive and pulls out the details.",
-            "phase": 1
+            "phase": 1,
+            "label": "Sorted",
+            "icon": "tag",
+            "stage": 1
           },
           {
             "actor": "agent",
@@ -87,7 +93,10 @@
             "does": "Checks the inventory and scheduling sources you allow, any earlier enquiries from this shopper in your CRM where access is agreed, and your test-drive rules.",
             "status": "Context checked",
             "short": "Checks the stock, scheduling and test-drive rules you allow.",
-            "phase": 1
+            "phase": 1,
+            "label": "Checked",
+            "icon": "search",
+            "stage": 2
           },
           {
             "actor": "agent",
@@ -96,7 +105,10 @@
             "status": "Reply drafted",
             "short": "Drafts a reply with the expected response time.",
             "phase": 2,
-            "approval": "Your team reviews the reply before it is sent."
+            "approval": "Your team reviews the reply before it is sent.",
+            "label": "Reply drafted",
+            "icon": "pen",
+            "stage": 2
           },
           {
             "actor": "agent",
@@ -104,7 +116,10 @@
             "does": "Hands the enquiry to the sales adviser with a complete brief: vehicle, preferred slot, contact details and what is still unconfirmed.",
             "status": "Handed to sales adviser",
             "short": "Hands it to the sales adviser with a complete brief.",
-            "phase": 2
+            "phase": 2,
+            "label": "Handed off",
+            "icon": "handoff",
+            "stage": 3
           },
           {
             "actor": "agent",
@@ -112,7 +127,10 @@
             "does": "Tracks the handoff. If it is not confirmed within the agreed time, it reminds the adviser, then escalates to the sales manager.",
             "status": "Following up",
             "short": "Follows up, and escalates if it stalls.",
-            "phase": 2
+            "phase": 2,
+            "label": "Chased",
+            "icon": "clock",
+            "stage": 3
           },
           {
             "actor": "team",
@@ -121,7 +139,10 @@
             "status": "Confirmed by sales",
             "short": "Your sales adviser confirms the vehicle and the slot.",
             "phase": 3,
-            "approval": "Only staff confirm availability and appointments."
+            "approval": "Only staff confirm availability and appointments.",
+            "label": "Confirmed",
+            "icon": "check",
+            "stage": 4
           },
           {
             "actor": "agent",
@@ -130,7 +151,10 @@
             "status": "Customer updated",
             "short": "Drafts the confirmation; the adviser approves it.",
             "phase": 3,
-            "approval": "The adviser approves the confirmation before it is sent."
+            "approval": "The adviser approves the confirmation before it is sent.",
+            "label": "Customer told",
+            "icon": "send",
+            "stage": 4
           },
           {
             "actor": "agent",
@@ -138,7 +162,10 @@
             "does": "Records the appointment and who approved each step on the enquiry record. The enquiry counts in the regular report on follow-through and staff time.",
             "status": "Closed and logged",
             "short": "Records the outcome and closes the enquiry.",
-            "phase": 3
+            "phase": 3,
+            "label": "Closed",
+            "icon": "archive",
+            "stage": 4
           }
         ]
       },
@@ -155,7 +182,10 @@
             "does": "Emails the service desk asking for a service slot next week.",
             "status": "Received",
             "short": "Request arrives by email.",
-            "phase": 1
+            "phase": 1,
+            "label": "Request in",
+            "icon": "inbox",
+            "stage": 1
           },
           {
             "actor": "agent",
@@ -163,7 +193,10 @@
             "does": "Sorts it as a routine service visit, notes the preferred week and flags the missing details: the vehicle and its mileage.",
             "status": "Sorted: service visit",
             "short": "Sorts it as a routine service and flags what is missing.",
-            "phase": 1
+            "phase": 1,
+            "label": "Sorted",
+            "icon": "tag",
+            "stage": 1
           },
           {
             "actor": "agent",
@@ -171,7 +204,10 @@
             "does": "Checks the approved service categories, the scheduling access you allow and any service history it is permitted to read. It does not diagnose a fault.",
             "status": "Context checked",
             "short": "Checks service categories and scheduling access.",
-            "phase": 1
+            "phase": 1,
+            "label": "Checked",
+            "icon": "search",
+            "stage": 2
           },
           {
             "actor": "agent",
@@ -180,7 +216,10 @@
             "status": "Reply drafted",
             "short": "Drafts a reply and asks for the missing details.",
             "phase": 2,
-            "approval": "Your team reviews the reply before it is sent."
+            "approval": "Your team reviews the reply before it is sent.",
+            "label": "Reply drafted",
+            "icon": "pen",
+            "stage": 2
           },
           {
             "actor": "agent",
@@ -188,7 +227,10 @@
             "does": "Once the details arrive, sends the service desk a complete brief: vehicle, service category, mileage and preferred dates.",
             "status": "Handed to service desk",
             "short": "Hands it to the service desk with a complete brief.",
-            "phase": 2
+            "phase": 2,
+            "label": "Handed off",
+            "icon": "handoff",
+            "stage": 3
           },
           {
             "actor": "agent",
@@ -196,7 +238,10 @@
             "does": "Tracks the request. If no slot is confirmed within the agreed time, it reminds the desk, then escalates to the service manager.",
             "status": "Following up",
             "short": "Follows up, and escalates if it stalls.",
-            "phase": 2
+            "phase": 2,
+            "label": "Chased",
+            "icon": "clock",
+            "stage": 3
           },
           {
             "actor": "team",
@@ -205,7 +250,10 @@
             "status": "Slot confirmed",
             "short": "Your service desk confirms the slot.",
             "phase": 3,
-            "approval": "Only the service desk confirms slots and authorises repairs."
+            "approval": "Only the service desk confirms slots and authorises repairs.",
+            "label": "Slot confirmed",
+            "icon": "check",
+            "stage": 4
           },
           {
             "actor": "agent",
@@ -214,7 +262,10 @@
             "status": "Customer updated",
             "short": "Drafts the confirmation; the desk approves it.",
             "phase": 3,
-            "approval": "The desk approves the confirmation before it is sent."
+            "approval": "The desk approves the confirmation before it is sent.",
+            "label": "Customer told",
+            "icon": "send",
+            "stage": 4
           },
           {
             "actor": "agent",
@@ -222,7 +273,10 @@
             "does": "Records the booking and who approved each step on the request record, and includes it in the regular report on follow-through and staff time.",
             "status": "Closed and logged",
             "short": "Records the outcome and closes the request.",
-            "phase": 3
+            "phase": 3,
+            "label": "Closed",
+            "icon": "archive",
+            "stage": 4
           }
         ]
       },
@@ -239,7 +293,10 @@
             "does": "Leaves a phone message for the sales team asking for a discount and a guaranteed trade-in value.",
             "status": "Received",
             "short": "Request arrives as a phone message.",
-            "phase": 1
+            "phase": 1,
+            "label": "Request in",
+            "icon": "inbox",
+            "stage": 1
           },
           {
             "actor": "agent",
@@ -247,7 +304,10 @@
             "does": "Sorts it as a price and trade-in exception and pulls out the requested discount, the vehicle of interest and the trade-in vehicle.",
             "status": "Sorted: exception",
             "short": "Sorts it as a price exception.",
-            "phase": 1
+            "phase": 1,
+            "label": "Sorted",
+            "icon": "tag",
+            "stage": 1
           },
           {
             "actor": "agent",
@@ -255,7 +315,10 @@
             "does": "Checks the enquiry history it is permitted to read and your approval rules: discounts, trade-in valuations and financing need authorised staff.",
             "status": "Rule matched: manager decides",
             "short": "Matches the rule: a manager decides.",
-            "phase": 1
+            "phase": 1,
+            "label": "Rule matched",
+            "icon": "rule",
+            "stage": 2
           },
           {
             "actor": "agent",
@@ -264,7 +327,10 @@
             "status": "Reply drafted",
             "short": "Drafts a holding reply that promises nothing.",
             "phase": 2,
-            "approval": "Your team reviews the reply before it is sent."
+            "approval": "Your team reviews the reply before it is sent.",
+            "label": "Holding reply",
+            "icon": "pen",
+            "stage": 2
           },
           {
             "actor": "agent",
@@ -272,7 +338,10 @@
             "does": "Routes the case to the sales manager with a complete brief and makes no commitment of its own.",
             "status": "Handed to sales manager",
             "short": "Hands it to the sales manager with a complete brief.",
-            "phase": 2
+            "phase": 2,
+            "label": "Handed off",
+            "icon": "handoff",
+            "stage": 3
           },
           {
             "actor": "agent",
@@ -280,7 +349,10 @@
             "does": "Tracks the decision. If it is still open at the agreed time, it reminds the manager, then escalates to the next person in your approval rules.",
             "status": "Waiting for approval",
             "short": "Follows up until the manager decides.",
-            "phase": 2
+            "phase": 2,
+            "label": "Chased",
+            "icon": "clock",
+            "stage": 3
           },
           {
             "actor": "team",
@@ -289,7 +361,10 @@
             "status": "Decision recorded",
             "short": "Your sales manager decides the price and the trade-in.",
             "phase": 3,
-            "approval": "Money, discounts and trade-in values need the manager’s approval."
+            "approval": "Money, discounts and trade-in values need the manager’s approval.",
+            "label": "Decided",
+            "icon": "check",
+            "stage": 4
           },
           {
             "actor": "agent",
@@ -298,7 +373,10 @@
             "status": "Customer updated",
             "short": "Drafts the reply; the manager approves it.",
             "phase": 3,
-            "approval": "The manager approves the reply before it is sent."
+            "approval": "The manager approves the reply before it is sent.",
+            "label": "Customer told",
+            "icon": "send",
+            "stage": 4
           },
           {
             "actor": "agent",
@@ -306,11 +384,25 @@
             "does": "Records the decision, the approver and the reply on the enquiry record as an exception, and counts it in the regular report.",
             "status": "Closed and logged",
             "short": "Records the decision and closes the case.",
-            "phase": 3
+            "phase": 3,
+            "label": "Closed",
+            "icon": "archive",
+            "stage": 4
           }
         ]
       }
-    ]
+    ],
+    "stages": [
+      "Intake",
+      "Work",
+      "Hand-off",
+      "Close"
+    ],
+    "lanes": {
+      "customer": "Customer",
+      "agent": "CarSalesTeam agent",
+      "team": "Your team"
+    }
   },
   "card": {
     "scene": "Test drive"

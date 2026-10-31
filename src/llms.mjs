@@ -3,7 +3,7 @@ import { BLOCKED_ROBOTS, ALLOWED_ROBOTS, SIGNAL } from './crawlers.mjs';
 // Both are built from the same content files as the HTML pages.
 import { SITE } from './site.mjs';
 import { COST_FAQ, PROMISES } from './layout.mjs';
-import { ENQUIRY_FAQ, SITE_FAQ, startSteps, ACTOR as FLOW_ACTOR } from './pages/sector.mjs';
+import { ENQUIRY_FAQ, SITE_FAQ, startSteps, ACTOR as FLOW_ACTOR, STAGES as FLOW_STAGES, flowSummary } from './pages/sector.mjs';
 import { GUIDES_INDEX } from './pages/guides.mjs';
 
 const url = path => SITE.url + path;
@@ -62,7 +62,7 @@ ${forAssistants()}
 
 Illustrative examples with synthetic data. Agent steps are prepared by ${SITE.name}; human steps are the dealership's staff. Full text of each step: ${url('/llms-full.txt')}.
 
-${sector.demo.scenes.map(sc => `- ${sc.tab} ("${sc.request}", ${sc.source.toLowerCase()}): ${sc.steps.map((st, i) => `${i + 1}. ${FLOW_ACTOR[st.actor]}: ${st.status}${st.approval ? ' (human approval)' : ''}`).join('; ')}.`).join('\n')}
+${sector.demo.scenes.map(sc => `- ${sc.tab} ("${sc.request}", ${sc.source.toLowerCase()}; ${flowSummary(sc.steps)}): ${FLOW_STAGES.map((g, gi) => `${g}: ${sc.steps.map((st, i) => ({ st, i })).filter(x => x.st.stage === gi + 1).map(({ st, i }) => `${i + 1}. ${st.label} (${FLOW_ACTOR[st.actor]}${st.approval ? ', your team approves' : ''})`).join(', ')}`).join('; ')}.`).join('\n')}
 
 ## Guides
 
@@ -95,7 +95,7 @@ ${s.workflow.steps.map((st, i) => `${i + 1}. ${st.title}: ${st.body}`).join('\n'
 
 ### Example scenarios (illustrative, synthetic data)
 
-${s.demo.scenes.map(sc => `#### ${sc.tab}\n\nRequest: "${sc.request}" Source: ${sc.source}. Owner: ${sc.owner}. Rule: ${sc.rule}\n\n${sc.steps.map((st, i) => `${i + 1}. ${FLOW_ACTOR[st.actor]} (${st.who}): ${st.does}${st.approval ? ` Human approval: ${st.approval}` : ''} Status: ${st.status}.`).join('\n')}`).join('\n\n')}
+${s.demo.scenes.map(sc => `#### ${sc.tab}\n\nRequest: "${sc.request}" Source: ${sc.source}. Owner: ${sc.owner}. Rule: ${sc.rule}\n\n${flowSummary(sc.steps)}.\n\n${FLOW_STAGES.map((g, gi) => `${g}:\n\n${sc.steps.map((st, i) => ({ st, i })).filter(x => x.st.stage === gi + 1).map(({ st, i }) => `${i + 1}. ${st.label}. ${FLOW_ACTOR[st.actor]} (${st.who}): ${st.does}${st.approval ? ` Your team approves: ${st.approval}` : ''} Status: ${st.status}.`).join('\n')}`).join('\n\n')}`).join('\n\n')}
 
 ### ${s.measure.boundary}
 
