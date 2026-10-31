@@ -48,16 +48,25 @@ const ICON_PATHS = {
 export const iconSprite = () => `<svg class="sprite" aria-hidden="true" focusable="false">${Object.entries(ICON_PATHS).map(([k, d]) => `<symbol id="i-${k}" viewBox="0 0 24 24"><path d="${d}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>`).join('')}</svg>`;
 export const icon = (k, cls = '') => `<svg class="ic${cls ? ` ${cls}` : ''}" aria-hidden="true" focusable="false"><use href="#i-${k}"/></svg>`;
 
-// Facts counted from the flow itself; nothing else goes in the summary.
-export const flowSummary = steps => `${steps.length} steps · ${SITE.name} handles ${steps.filter(s => s.actor === 'agent').length} · your team approves ${steps.filter(s => s.approval).length}`;
-// The closing line of a run, also counted from the flow.
-export const flowEnd = steps => { const a = steps.filter(s => s.approval).length; return `${steps.length} steps · ${a} approval${a === 1 ? '' : 's'} · closed and logged`; };
+// Who does each step: every summary counts each step once, by who does it, so the parts always add up to the step
+// total. Approvals are not counted here: they mark steps already counted, so a separate number would read as a share.
+const BY = [['agent', `by ${SITE.name}`], ['customer', 'by the customer'], ['team', 'by your team']];
+export const flowSummary = steps => {
+  const parts = BY.map(([actor, who]) => [steps.filter(s => s.actor === actor).length, who]).filter(([n]) => n > 0);
+  if (parts.reduce((sum, [n]) => sum + n, 0) !== steps.length) throw new Error('Summary counts do not add up to the step total');
+  return `${steps.length} steps: ${parts.map(([n, who]) => `${n} ${who}`).join(', ')}`;
+};
+// The closing line of a run repeats the summary with the enquiry's final status.
+export const flowEnd = steps => {
+  const last = steps[steps.length - 1].status;
+  return `${flowSummary(steps)} · ${last.charAt(0).toLowerCase()}${last.slice(1)}`;
+};
 
 // A request run, built the same way on every Actuathron site: three lanes (customer, CarSalesTeam, your team), a
 // bold one-to-three-word label and an icon per step, phase headers, a checkpoint marker wherever your team
 // approves, and an example conversation. Every word is in the HTML, so it reads the same without JavaScript, to
 // screen readers and to crawlers; styles.css plays it in order and site.js only starts, pauses and replays it.
-// The layout is fixed from first paint: playing only changes opacity, transform and a slight blur. No style
+// The layout is fixed from first paint: playing only changes opacity and transform, never a filter or a scale on text. No style
 // attributes (CSP style-src 'self'): timing comes from the sN/pK classes below.
 const LANE_KEYS = [['customer', 'Customer'], ['agent', SITE.name], ['team', 'Your team']];
 export const checkpoint = `<span class="run-check">${icon('shield', 'run-ic')}Your team approves</span>`;
@@ -123,6 +132,7 @@ export function sectorPage(d, guides = []) {
   if (d.workflow.steps.length !== FLOW_PHASE.length || d.workflow.steps.some(s => !ACTOR[s.actor] || !s.who || !s.title || !s.body || !ICON_PATHS[s.icon])) throw new Error(`${d.key}: the workflow needs 8 complete steps`);
   for (const s of d.demo.scenes) {
     if (s.steps.length < 6 || s.steps.length > 9) throw new Error(`${d.key}: scene "${s.tab}" needs 6 to 9 steps`);
+    if (!s.steps.some(st => st.actor === 'customer')) throw new Error(`${d.key}: scene "${s.tab}" needs a customer step`);
     if (!s.people?.customer || !s.people?.team) throw new Error(`${d.key}: scene "${s.tab}" needs people`);
     for (const st of s.steps) if (!Array.isArray(st.chat) || st.chat.length < 1 || st.chat.length > 2 || st.chat.some(m => !ACTOR[m.from] || !m.text || m.text.length > 100)) throw new Error(`${d.key}: scene "${s.tab}" needs 1 or 2 short messages per step`);
     for (const st of s.steps) if (!ACTOR[st.actor] || !st.status || !st.does || !st.short || !st.label || st.label.split(' ').length > 3 || !ICON_PATHS[st.icon] || !(st.stage >= 1 && st.stage <= STAGES.length)) throw new Error(`${d.key}: scene "${s.tab}" has an incomplete step`);

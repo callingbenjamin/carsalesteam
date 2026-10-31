@@ -114,6 +114,36 @@ for (const f of files) {
   if (/\.(html|css|js|mjs|json|xml|txt|svg|webmanifest)$/.test(f)) for (const w of new Set(retiredTerms(readFileSync(f, 'utf8')))) problems.push(`${f}: mentions a retired term ("${w}"); there is no dental service and no pilot`);
 }
 
+// Request runs: every card (hero and each scene) has a customer step, and its summary and closing line count each
+// step once, by who does it, adding up to the steps on that card. The llms files' summaries must add up too.
+{
+  const text = h => h.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').trim();
+  const sums = (line, count) => {
+    const m = /^(\d+) steps: ([^·]+?)(?: · .+)?\.?$/.exec(line || '');
+    if (!m) return false;
+    const parts = m[2].split(', ').map(p => /^(\d+) by \S/.exec(p));
+    if (parts.some(p => !p)) return false;
+    const total = parts.reduce((t, p) => t + Number(p[1]), 0);
+    return total === Number(m[1]) && (count === undefined || total === count);
+  };
+  const home = readFileSync(join(DIST, 'index.html'), 'utf8');
+  const starts = [...home.matchAll(/<div class="run(?: run-compact)? n\d+/g)].map(m => m.index);
+  if (starts.length < 2) problems.push('index.html: expected the hero run and the scenario runs');
+  starts.forEach((start, i) => {
+    const chunk = home.slice(start, starts[i + 1] ?? home.length);
+    const count = (chunk.match(/class="run-step /g) || []).length;
+    if (!/class="run-step lane-customer/.test(chunk)) problems.push(`index.html: run ${i + 1} has no customer step`);
+    for (const cls of ['run-summary', 'run-end']) {
+      const m = new RegExp(`<p class="${cls}">([\\s\\S]*?)<\\/p>`).exec(chunk);
+      if (!m || !sums(text(m[1]), count)) problems.push(`index.html: run ${i + 1} ${cls} does not add up to ${count} steps (${m ? text(m[1]) : 'missing'})`);
+    }
+  });
+  for (const f of ['llms.txt', 'llms-full.txt']) {
+    const body = readFileSync(join(DIST, f), 'utf8');
+    for (const m of body.matchAll(/(\d+ steps: [^.;)\n]+)/g)) if (!sums(m[1])) problems.push(`${f}: summary does not add up (${m[1]})`);
+  }
+}
+
 if (problems.length) {
   console.error(problems.join('\n'));
   process.exit(1);
