@@ -17,178 +17,72 @@ const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const configEl = $('config');
 const config = configEl ? JSON.parse(configEl.textContent) : null;
 
-// Workflow runs: every step and every message is already in the HTML (see .run and .convo in styles.css). This only
-// plays them like a short film of one enquiry. Opening: the run fades up and its headings arrive in a stagger.
-// Then one step at a time comes into focus, a token glides to whoever has the request, and the example conversation
-// follows: a typing indicator, then the message rises in, and earlier messages fade back. Hand-offs and approvals
-// get a short pause. Closing: a check draws in with the closing line, holds, and the run cross-fades back to the
-// start. Only classes, opacity and transforms change, so nothing on the page moves or resizes. A run plays while at
-// least a quarter of it is on screen and pauses off screen. Reduced motion leaves the whole run and conversation
-// static. No scrolling and no focus changes happen during playback.
+// Request runs: each one plays like a live run once it is a quarter on screen, and pauses off screen. The steps
+// and the example conversation are already in the HTML; styles.css hides and reveals them (never with reduced
+// motion), and this only starts, pauses and replays the CSS animations, and keeps the live status in step.
 const runs = [...document.querySelectorAll('.run')];
-const HOLD = 3500;
-const FADE = 450;
-const TYPE = 750;
-const INTRO = 1100;
-const PAUSE = 700;
-const players = new Map();
+// Every step keeps its place in the layout the whole time: only opacity and transform animate, so nothing on
+// the page moves. A replay fades the finished run out, then starts again from the first step.
+const reset = run => {
+  run.classList.add('is-reset');
+  void run.offsetWidth; // Restarts the CSS animations from the first step.
+  delete run.dataset.lane;
+  run.classList.remove('is-reset', 'is-done', 'is-fading');
+};
+const restart = (run, fade = true) => {
+  clearTimeout(run.fadeTimer);
+  clearTimeout(run.holdTimer);
+  clearTimeout(run.loopTimer);
+  if (!fade) return reset(run);
+  run.classList.add('is-fading');
+  run.fadeTimer = setTimeout(() => reset(run), 450); // Matches the .45s fade in styles.css.
+};
+const LANES = ['lane-customer', 'lane-agent', 'lane-team'];
+runs.forEach(run => {
+  const now = run.querySelector('.run-now');
+  const steps = [...run.querySelectorAll('.run-step')];
+  const last = steps[steps.length - 1];
+  // As each step rises, the status line names it and the token moves to the lane that now has the request.
+  // Both only change text inside a fixed, single-line box and a data attribute that styles.css turns into opacity
+  // and transform, so nothing moves.
+  run.addEventListener('animationstart', e => {
+    if (e.animationName !== 'run-rise' || !steps.includes(e.target)) return;
+    const i = steps.indexOf(e.target);
+    if (now) now.textContent = `Step ${i + 1} of ${steps.length} · ${e.target.dataset.label}`;
+    run.dataset.lane = String(LANES.findIndex(c => e.target.classList.contains(c)));
+  });
+  run.addEventListener('animationend', e => {
+    if (e.target !== last || e.animationName !== 'run-rise') return;
+    clearTimeout(run.holdTimer);
+    clearTimeout(run.loopTimer);
+    // Closing beat: holds on the closed record and its summary, offers a replay, then cross-fades into the next
+    // loop. Off screen the new loop waits, paused, until the run is back in view.
+    run.holdTimer = setTimeout(() => run.classList.add('is-done'), 1200);
+    run.loopTimer = setTimeout(() => restart(run), 5200);
+  });
+  run.querySelector('.run-replay').addEventListener('click', () => restart(run));
+});
+// A run plays while a quarter of it is on screen, its scenario is the one shown, and the visitor has not paused.
 let userPaused = false;
-const pauseBtn = $('flow-pause');
-const replayBtn = $('flow-replay');
-const actorOf = el => (el.className.match(/is-(customer|agent|team)/) || [''])[0];
-// Layout position inside a box, unaffected by transforms (the step in focus is slightly scaled).
-const offsetIn = (el, box) => {
-  let x = 0, y = 0;
-  for (let e = el; e && e !== box; e = e.offsetParent) { x += e.offsetLeft; y += e.offsetTop; }
-  return [x, y];
-};
-const setToken = (p, jump) => {
-  const step = p.steps[Math.max(p.idx, 0)];
-  if (!step) return;
-  const ic = step.querySelector('.run-ic');
-  const [x, y] = offsetIn(ic, p.board);
-  p.token.className = 'run-token ' + actorOf(step) + (jump ? ' no-tr' : '');
-  p.token.style.transform = `translate(${Math.round(x + ic.offsetWidth / 2)}px,${Math.round(y + ic.offsetHeight / 2)}px)`;
-  if (jump) { void p.token.offsetWidth; p.token.classList.remove('no-tr'); }
-};
-const showStep = (p, k, jump) => {
-  p.idx = k;
-  p.steps.forEach((s, i) => { s.classList.toggle('is-now', i === k); s.classList.toggle('is-done', i < k); });
-  p.bar.style.transform = `scaleX(${(k + 1) / p.steps.length})`;
-  p.el.classList.add('has-step');
-  setToken(p, jump);
-};
-// Keep the newest message just above the typing indicator by moving the list inside its clipped panel.
-const follow = p => {
-  if (!p.list || !p.latest) return;
-  const y = Math.max(0, p.latest.offsetTop + p.latest.offsetHeight - (p.view.clientHeight - 44));
-  p.list.style.transform = y ? `translateY(${-y}px)` : '';
-};
-const typeOn = (p, m) => {
-  p.typing.className = `convo-typing is-on ${actorOf(m)}${m.classList.contains('is-customer') ? '' : ' is-right'}`;
-};
-const reveal = (p, m) => {
-  p.typing.classList.remove('is-on');
-  if (p.latest) p.latest.classList.remove('is-latest');
-  m.classList.add('is-in', 'is-latest');
-  p.latest = m;
-  follow(p);
-};
-// The film as a list of beats: [wait before it, what happens].
-const build = p => {
-  const t = [];
-  let gap = 0;
-  p.steps.forEach((st, k) => {
-    t.push([gap, () => showStep(p, k)]);
-    gap = 0;
-    const ms = p.byStep[k] || [];
-    if (!ms.length) gap = p.base;
-    ms.forEach(m => {
-      if (m.classList.contains('is-team')) t.push([gap + 450, () => reveal(p, m)]);
-      else { t.push([gap + 350, () => typeOn(p, m)]); t.push([TYPE, () => reveal(p, m)]); }
-      gap = Math.min(2600, 900 + m.querySelector('.msg-text').textContent.length * 16);
-    });
-    if (st.classList.contains('is-approval') || st.classList.contains('is-handoff')) gap += PAUSE;
-  });
-  t.push([gap, () => p.el.classList.add('is-end')]);
-  t.push([HOLD, () => restart(p, true)]);
-  return t;
-};
-const tick = p => {
-  clearTimeout(p.timer);
-  p.timer = null;
-  if (!p.playing || p.busy) return;
-  const [wait, beat] = p.tl[p.i];
-  p.timer = setTimeout(() => { p.timer = null; p.i += 1; beat(); tick(p); }, wait);
-};
-// Back to the first step, with every change applied at once (the run is faded out or not yet open).
-const reset = p => {
-  p.el.classList.add('is-reset');
-  p.el.classList.remove('is-end');
-  p.msgs.forEach(m => m.classList.remove('is-in', 'is-latest'));
-  p.latest = null;
-  if (p.list) { p.typing.classList.remove('is-on'); p.list.style.transform = ''; }
-  showStep(p, 0, true);
-  void p.el.offsetWidth;
-  p.el.classList.remove('is-reset');
-  p.i = 0;
-};
-const restart = (p, fade) => {
-  if (!p.opened) return; // The opening beat starts it.
-  clearTimeout(p.timer);
-  clearTimeout(p.fadeTimer);
-  p.timer = null;
-  const begin = () => { reset(p); p.busy = false; p.el.classList.remove('is-fading'); tick(p); };
-  if (!fade) { begin(); return; }
-  p.busy = true;
-  p.el.classList.add('is-fading');
-  p.fadeTimer = setTimeout(begin, FADE);
-};
-const sync = p => {
-  const play = p.visible && !userPaused && !document.hidden && !p.el.closest('.scene:not(.is-active)');
-  if (play === p.playing) return;
-  p.playing = play;
-  if (!play) { clearTimeout(p.timer); p.timer = null; return; }
-  if (!p.opened) {
-    p.opened = true;
-    p.busy = true;
-    p.el.classList.add('is-open');
-    p.fadeTimer = setTimeout(() => { p.busy = false; tick(p); }, INTRO);
-    return;
-  }
-  tick(p);
-};
-const syncAll = () => players.forEach(sync);
-if (runs.length && 'IntersectionObserver' in window && !motion.matches) {
+const seen = new Set();
+const sync = run => run.classList.toggle('is-playing', seen.has(run) && !userPaused && !run.closest('.scene:not(.is-active)'));
+const syncAll = () => runs.forEach(sync);
+if (!('IntersectionObserver' in window)) { runs.forEach(run => seen.add(run)); syncAll(); }
+else {
   const io = new IntersectionObserver(entries => entries.forEach(e => {
-    const p = players.get(e.target);
-    p.visible = e.isIntersecting;
-    sync(p);
+    if (e.isIntersecting) seen.add(e.target); else seen.delete(e.target);
+    sync(e.target);
   }), { threshold: 0.25 });
-  runs.forEach(el => {
-    const msgs = [...el.querySelectorAll('.msg')];
-    const byStep = [];
-    msgs.forEach(m => { const s = Number(m.dataset.s); (byStep[s] = byStep[s] || []).push(m); });
-    const p = {
-      el, steps: [...el.querySelectorAll('.run-step')], board: el.querySelector('.run-board'), token: el.querySelector('.run-token'),
-      bar: el.querySelector('.run-bar span'), list: el.querySelector('.convo-list'), view: el.querySelector('.convo-view'),
-      typing: el.querySelector('.convo-typing'), msgs, byStep, latest: null,
-      base: el.classList.contains('run-compact') ? 1300 : 1700,
-      i: 0, idx: -1, visible: false, playing: false, opened: false, busy: false, timer: null, fadeTimer: null,
-    };
-    p.tl = build(p);
-    players.set(el, p);
-    el.classList.add('is-live');
-    // Nothing is in focus until the opening beat has played; the token waits on the first step.
-    p.bar.style.transform = 'scaleX(0)';
-    setToken(p, true);
-    io.observe(el);
+  runs.forEach(run => io.observe(run));
+}
+const pauseBtn = $('flow-pause');
+if (pauseBtn && runs.length && !motion.matches) {
+  document.documentElement.classList.add('flow-on'); // The control was in the layout already, just invisible.
+  pauseBtn.addEventListener('click', () => {
+    userPaused = !userPaused;
+    pauseBtn.textContent = userPaused ? 'Play' : 'Pause';
+    syncAll();
   });
-  // The token and the conversation follow their place if a card is resized (for example on rotation).
-  window.addEventListener('resize', () => players.forEach(p => { setToken(p, true); follow(p); }), { passive: true });
-  document.addEventListener('visibilitychange', syncAll);
-  motion.addEventListener('change', () => {
-    if (!motion.matches) return;
-    players.forEach(p => {
-      clearTimeout(p.timer); clearTimeout(p.fadeTimer); p.playing = false;
-      p.el.classList.remove('is-live', 'is-fading', 'is-end', 'is-open');
-      if (p.list) p.list.style.transform = '';
-    });
-  });
-  if (pauseBtn && replayBtn) {
-    document.documentElement.classList.add('flow-on'); // The controls were in the layout already, just invisible.
-    pauseBtn.addEventListener('click', () => {
-      userPaused = !userPaused;
-      pauseBtn.textContent = userPaused ? 'Play' : 'Pause';
-      syncAll();
-    });
-    replayBtn.addEventListener('click', () => {
-      userPaused = false;
-      pauseBtn.textContent = 'Pause';
-      syncAll();
-      document.querySelectorAll('.scene.is-active .run').forEach(el => restart(players.get(el), true));
-    });
-  }
 }
 document.querySelectorAll('.rise-group').forEach(g => {
   if (motion.matches || !('IntersectionObserver' in window)) return;
@@ -197,18 +91,19 @@ document.querySelectorAll('.rise-group').forEach(g => {
   io.observe(g);
 });
 
-// Scenario tabs: show one scenario's full run at a time and play it from the start.
+// Scenario tabs: the scenarios share one place on the page, so switching cross-fades without moving anything,
+// and the chosen one plays from its first step.
 const scenes = [...document.querySelectorAll('.scene')];
 const tabs = [...document.querySelectorAll('.tab')];
 if (scenes.length && tabs.length) {
-  // Scenes are stacked in one grid cell (styles.css), so switching is a cross-fade at a constant height.
   const show = index => {
     tabs.forEach((b, i) => { b.classList.toggle('active', i === index); b.setAttribute('aria-pressed', String(i === index)); });
-    scenes.forEach((s, i) => s.classList.toggle('is-active', i === index));
+    scenes.forEach((s, i) => { s.classList.toggle('is-active', i === index); s.inert = i !== index; });
+    const run = scenes[index].querySelector('.run');
+    if (run) restart(run, false);
     syncAll();
-    const el = scenes[index].querySelector('.run');
-    if (players.has(el)) restart(players.get(el));
   };
+  scenes.forEach(s => { s.inert = !s.classList.contains('is-active'); });
   tabs.forEach((b, i) => b.addEventListener('click', () => show(i)));
 }
 
