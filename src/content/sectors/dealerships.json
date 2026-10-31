@@ -74,7 +74,13 @@
             "phase": 1,
             "label": "Request in",
             "icon": "inbox",
-            "stage": 1
+            "stage": 1,
+            "chat": [
+              {
+                "from": "customer",
+                "text": "Hi, can I test-drive the blue SUV on Saturday morning? Maya, 555-0142."
+              }
+            ]
           },
           {
             "actor": "agent",
@@ -85,7 +91,14 @@
             "phase": 1,
             "label": "Sorted",
             "icon": "tag",
-            "stage": 1
+            "stage": 1,
+            "chat": [
+              {
+                "from": "agent",
+                "note": true,
+                "text": "Sorted as a test drive. Vehicle: blue SUV. Time: Saturday morning."
+              }
+            ]
           },
           {
             "actor": "agent",
@@ -96,7 +109,14 @@
             "phase": 1,
             "label": "Checked",
             "icon": "search",
-            "stage": 2
+            "stage": 2,
+            "chat": [
+              {
+                "from": "agent",
+                "note": true,
+                "text": "Checked the stock record: one blue SUV listed. Slot not yet confirmed by staff."
+              }
+            ]
           },
           {
             "actor": "agent",
@@ -108,7 +128,17 @@
             "approval": "Your team reviews the reply before it is sent.",
             "label": "Reply drafted",
             "icon": "pen",
-            "stage": 2
+            "stage": 2,
+            "chat": [
+              {
+                "from": "agent",
+                "text": "Thanks, Maya. A sales adviser will confirm the car and a Saturday time within 2 hours."
+              },
+              {
+                "from": "team",
+                "text": "Approved. Send it."
+              }
+            ]
           },
           {
             "actor": "agent",
@@ -119,7 +149,14 @@
             "phase": 2,
             "label": "Handed off",
             "icon": "handoff",
-            "stage": 3
+            "stage": 3,
+            "chat": [
+              {
+                "from": "agent",
+                "note": true,
+                "text": "Brief to Sam: blue SUV, Saturday morning, Maya's number. Vehicle and time unconfirmed."
+              }
+            ]
           },
           {
             "actor": "agent",
@@ -130,7 +167,14 @@
             "phase": 2,
             "label": "Chased",
             "icon": "clock",
-            "stage": 3
+            "stage": 3,
+            "chat": [
+              {
+                "from": "agent",
+                "note": true,
+                "text": "No confirmation after 1 hour. Reminder sent to Sam."
+              }
+            ]
           },
           {
             "actor": "team",
@@ -142,7 +186,13 @@
             "approval": "Only staff confirm availability and appointments.",
             "label": "Confirmed",
             "icon": "check",
-            "stage": 4
+            "stage": 4,
+            "chat": [
+              {
+                "from": "team",
+                "text": "Car is on site. Booked Saturday 10:30 with me."
+              }
+            ]
           },
           {
             "actor": "agent",
@@ -154,7 +204,17 @@
             "approval": "The adviser approves the confirmation before it is sent.",
             "label": "Customer told",
             "icon": "send",
-            "stage": 4
+            "stage": 4,
+            "chat": [
+              {
+                "from": "agent",
+                "text": "You're booked: blue SUV test drive, Saturday 10:30, with Sam."
+              },
+              {
+                "from": "team",
+                "text": "Approved. Send it."
+              }
+            ]
           },
           {
             "actor": "agent",
@@ -165,9 +225,20 @@
             "phase": 3,
             "label": "Closed",
             "icon": "archive",
-            "stage": 4
+            "stage": 4,
+            "chat": [
+              {
+                "from": "agent",
+                "note": true,
+                "text": "Logged: test drive booked, each step's approver recorded. Enquiry closed."
+              }
+            ]
           }
-        ]
+        ],
+        "people": {
+          "customer": "Maya R.",
+          "team": "Sam, sales adviser"
+        }
       },
       {
         "tab": "Service visit",
@@ -185,7 +256,13 @@
             "phase": 1,
             "label": "Request in",
             "icon": "inbox",
-            "stage": 1
+            "stage": 1,
+            "chat": [
+              {
+                "from": "customer",
+                "text": "My car is due for a service. Do you have a slot next week?"
+              }
+            ]
           },
           {
             "actor": "agent",
@@ -196,7 +273,14 @@
             "phase": 1,
             "label": "Sorted",
             "icon": "tag",
-            "stage": 1
+            "stage": 1,
+            "chat": [
+              {
+                "from": "agent",
+                "note": true,
+                "text": "Sorted as a routine service. Missing: which vehicle, and its mileage."
+              }
+            ]
           },
           {
             "actor": "agent",
@@ -207,7 +291,14 @@
             "phase": 1,
             "label": "Checked",
             "icon": "search",
-            "stage": 2
+            "stage": 2,
+            "chat": [
+              {
+                "from": "agent",
+                "note": true,
+                "text": "Checked the service categories: routine service. No fault reported, nothing to diagnose."
+              }
+            ]
           },
           {
             "actor": "agent",
@@ -219,7 +310,17 @@
             "approval": "Your team reviews the reply before it is sent.",
             "label": "Reply drafted",
             "icon": "pen",
-            "stage": 2
+            "stage": 2,
+            "chat": [
+              {
+                "from": "agent",
+                "text": "Thanks, Daniel. Which vehicle is it, and roughly what mileage? The desk will confirm a slot."
+              },
+              {
+                "from": "team",
+                "text": "Approved. Send it."
+              }
+            ]
           },
           {
             "actor": "agent",
@@ -230,7 +331,18 @@
             "phase": 2,
             "label": "Handed off",
             "icon": "handoff",
-            "stage": 3
+            "stage": 3,
+            "chat": [
+              {
+                "from": "customer",
+                "text": "The grey hatchback, about 48,000 km."
+              },
+              {
+                "from": "agent",
+                "note": true,
+                "text": "Brief to the service desk: grey hatchback, routine service, 48,000 km, next week."
+              }
+            ]
           },
           {
             "actor": "agent",
@@ -241,7 +353,14 @@
             "phase": 2,
             "label": "Chased",
             "icon": "clock",
-            "stage": 3
+            "stage": 3,
+            "chat": [
+              {
+                "from": "agent",
+                "note": true,
+                "text": "No slot confirmed by midday. Reminder sent to the service desk."
+              }
+            ]
           },
           {
             "actor": "team",
@@ -253,7 +372,13 @@
             "approval": "Only the service desk confirms slots and authorises repairs.",
             "label": "Slot confirmed",
             "icon": "check",
-            "stage": 4
+            "stage": 4,
+            "chat": [
+              {
+                "from": "team",
+                "text": "Booked Tuesday 8:00, routine service. Any repair needs our sign-off first."
+              }
+            ]
           },
           {
             "actor": "agent",
@@ -265,7 +390,17 @@
             "approval": "The desk approves the confirmation before it is sent.",
             "label": "Customer told",
             "icon": "send",
-            "stage": 4
+            "stage": 4,
+            "chat": [
+              {
+                "from": "agent",
+                "text": "You're booked for Tuesday at 8:00, Daniel. We'll call before any extra work."
+              },
+              {
+                "from": "team",
+                "text": "Approved. Send it."
+              }
+            ]
           },
           {
             "actor": "agent",
@@ -276,9 +411,20 @@
             "phase": 3,
             "label": "Closed",
             "icon": "archive",
-            "stage": 4
+            "stage": 4,
+            "chat": [
+              {
+                "from": "agent",
+                "note": true,
+                "text": "Logged: service booked, approved by the service desk. Request closed."
+              }
+            ]
           }
-        ]
+        ],
+        "people": {
+          "customer": "Daniel K.",
+          "team": "Priya, service desk"
+        }
       },
       {
         "tab": "Price exception",
@@ -296,7 +442,13 @@
             "phase": 1,
             "label": "Request in",
             "icon": "inbox",
-            "stage": 1
+            "stage": 1,
+            "chat": [
+              {
+                "from": "customer",
+                "text": "Can you take $2,000 off and guarantee my trade-in value?"
+              }
+            ]
           },
           {
             "actor": "agent",
@@ -307,7 +459,14 @@
             "phase": 1,
             "label": "Sorted",
             "icon": "tag",
-            "stage": 1
+            "stage": 1,
+            "chat": [
+              {
+                "from": "agent",
+                "note": true,
+                "text": "Sorted as a price and trade-in exception. Vehicle of interest and trade-in noted."
+              }
+            ]
           },
           {
             "actor": "agent",
@@ -318,7 +477,14 @@
             "phase": 1,
             "label": "Rule matched",
             "icon": "rule",
-            "stage": 2
+            "stage": 2,
+            "chat": [
+              {
+                "from": "agent",
+                "note": true,
+                "text": "Rule matched: discounts and trade-in values are for the sales manager to decide."
+              }
+            ]
           },
           {
             "actor": "agent",
@@ -330,7 +496,17 @@
             "approval": "Your team reviews the reply before it is sent.",
             "label": "Holding reply",
             "icon": "pen",
-            "stage": 2
+            "stage": 2,
+            "chat": [
+              {
+                "from": "agent",
+                "text": "Thanks, Jordan. Our sales manager will reply by tomorrow. No price or value is set yet."
+              },
+              {
+                "from": "team",
+                "text": "Approved. Send it."
+              }
+            ]
           },
           {
             "actor": "agent",
@@ -341,7 +517,14 @@
             "phase": 2,
             "label": "Handed off",
             "icon": "handoff",
-            "stage": 3
+            "stage": 3,
+            "chat": [
+              {
+                "from": "agent",
+                "note": true,
+                "text": "Case to Alex: requested discount, trade-in vehicle, enquiry history. Nothing promised."
+              }
+            ]
           },
           {
             "actor": "agent",
@@ -352,7 +535,14 @@
             "phase": 2,
             "label": "Chased",
             "icon": "clock",
-            "stage": 3
+            "stage": 3,
+            "chat": [
+              {
+                "from": "agent",
+                "note": true,
+                "text": "Decision still open. Reminder sent to Alex, reply due tomorrow."
+              }
+            ]
           },
           {
             "actor": "team",
@@ -364,7 +554,13 @@
             "approval": "Money, discounts and trade-in values need the manager’s approval.",
             "label": "Decided",
             "icon": "check",
-            "stage": 4
+            "stage": 4,
+            "chat": [
+              {
+                "from": "team",
+                "text": "Offer a trade-in appraisal on Thursday. I'll discuss the price in person."
+              }
+            ]
           },
           {
             "actor": "agent",
@@ -376,7 +572,17 @@
             "approval": "The manager approves the reply before it is sent.",
             "label": "Customer told",
             "icon": "send",
-            "stage": 4
+            "stage": 4,
+            "chat": [
+              {
+                "from": "agent",
+                "text": "Hi Jordan, Alex can appraise your trade-in on Thursday and go through the price then."
+              },
+              {
+                "from": "team",
+                "text": "Approved. Send it."
+              }
+            ]
           },
           {
             "actor": "agent",
@@ -387,9 +593,20 @@
             "phase": 3,
             "label": "Closed",
             "icon": "archive",
-            "stage": 4
+            "stage": 4,
+            "chat": [
+              {
+                "from": "agent",
+                "note": true,
+                "text": "Logged as an exception: Alex's decision and the approved reply. Case closed."
+              }
+            ]
           }
-        ]
+        ],
+        "people": {
+          "customer": "Jordan T.",
+          "team": "Alex, sales manager"
+        }
       }
     ],
     "stages": [
