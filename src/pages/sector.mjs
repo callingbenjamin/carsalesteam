@@ -47,23 +47,38 @@ export const icon = (k, cls = '') => `<svg class="ic${cls ? ` ${cls}` : ''}" ari
 // Facts counted from the flow itself; nothing else goes in the summary.
 export const flowSummary = steps => `${steps.length} steps · agent handles ${steps.filter(s => s.actor === 'agent').length} · your team approves ${steps.filter(s => s.approval).length}`;
 
+// The closing line of a run, also counted from the flow.
+export const flowEnd = steps => { const a = steps.filter(s => s.approval).length; return `${steps.length} steps, ${a} approval${a === 1 ? '' : 's'}, closed and logged`; };
+
+// The example conversation beside a full run: each step's messages, in order, as chat bubbles. Customer messages
+// sit on the left; the agent and your team on the right. Internal notes and approvals say so in words, and a dot
+// in the speaker's colour marks who is talking (no tinted boxes). Every message is in the HTML; site.js reveals
+// them one by one in step with the run, inside a panel whose height never changes.
+const convoPanel = (steps, people) => {
+  const who = m => m.from === 'customer' ? people.customer : m.from === 'team' ? people.team : `${SITE.name} agent`;
+  const msgs = steps.flatMap((st, i) => (st.chat || []).map(m => `<li class="msg is-${m.from}${m.note ? ' is-note' : ''}" data-s="${i}"><span class="msg-who"><span class="msg-dot" aria-hidden="true"></span>${esc(who(m))}${m.note ? ' <span class="msg-kind">internal note</span>' : ''}${m.from === 'team' && st.approval ? ' <span class="msg-ok">Approval</span>' : ''}${m.from === 'agent' && !m.note && st.approval ? ' <span class="msg-kind">draft for review</span>' : ''}</span><span class="msg-text">${esc(m.text)}</span></li>`));
+  return `<div class="convo"><p class="convo-h">Example conversation</p><div class="convo-view"><ol class="convo-list" aria-label="Example conversation, ${msgs.length} messages">${msgs.join('')}</ol><span class="convo-typing" aria-hidden="true"><i></i><i></i><i></i></span></div></div>`;
+};
+
 // One end-to-end run of a scenario, read at a glance: lanes for the customer, the agent and your team (one column
-// with a coloured rail per actor on narrow screens), steps grouped into Intake, Work, Hand-off and Close, a bold
-// 1 to 3 word label and icon per step, and a checkpoint marker where your team approves. All text is in the HTML;
-// site.js only plays it (one step active at a time, a token moving between lanes). Every element keeps its place
-// and size whatever the playback state: only opacity and transform change. No style attributes (CSP style-src
-// 'self'): grid rows come from nth-child rules in styles.css and the token is moved through the CSSOM.
-export const flowList = (steps, { compact = false } = {}) => {
+// on narrow screens), steps grouped into Intake, Work, Hand-off and Close, a bold 1 to 3 word label and icon per
+// step, and a checkpoint marker where your team approves. Full runs add the example conversation. All text is in
+// the HTML; site.js only plays it (one step active at a time, a token moving between lanes, the conversation
+// following along). Every element keeps its place and size whatever the playback state: only opacity, transform
+// and a slight blur change. No style attributes (CSP style-src 'self'): grid rows come from nth-child rules in
+// styles.css and moving parts are positioned through the CSSOM.
+export const flowList = (steps, { compact = false, people = null } = {}) => {
   const n = steps.length;
   let k = 0;
   const groups = STAGES.map((name, g) => ({ name, steps: steps.map((st, i) => ({ ...st, i })).filter(st => st.stage === g + 1) })).filter(g => g.steps.length);
-  const step = st => `<li class="run-step is-${st.actor}${st.approval ? ' is-approval' : ''}"><span class="run-ic">${icon(st.icon)}${st.approval ? `<span class="run-cp">${icon('shield')}</span>` : ''}</span><span class="run-head"><span class="visually-hidden">Step ${st.i + 1} of ${n}, ${LANE_NAME[st.actor]}: </span><b class="run-lbl">${esc(st.label)}</b><span class="run-who">${esc(st.who)}</span>${st.approval ? '<span class="run-ok">Your team approves</span>' : ''}</span><span class="run-say">${esc(st.short)}${st.approval && !compact ? ` <span class="run-why">${esc(st.approval)}</span>` : ''}</span></li>`;
-  return `<div class="run${compact ? ' run-compact' : ''}">
-<p class="run-sum">${flowSummary(steps)}</p>
+  const step = st => `<li class="run-step is-${st.actor}${st.approval ? ' is-approval' : ''}${st.icon === 'handoff' ? ' is-handoff' : ''}"><span class="run-ic">${icon(st.icon)}${st.approval ? `<span class="run-cp">${icon('shield')}</span>` : ''}</span><span class="run-head"><span class="visually-hidden">Step ${st.i + 1} of ${n}, ${LANE_NAME[st.actor]}: </span><b class="run-lbl">${esc(st.label)}</b><span class="run-who">${esc(st.who)}</span>${st.approval ? '<span class="run-ok">Your team approves</span>' : ''}</span><span class="run-say">${esc(st.short)}${st.approval && !compact ? ` <span class="run-why">${esc(st.approval)}</span>` : ''}</span></li>`;
+  return `<div class="run${compact ? ' run-compact' : ' run-full'}">
+<div class="run-main">
+<div class="run-top"><p class="run-sum">${flowSummary(steps)}</p><p class="run-end" aria-hidden="true"><span class="run-check">${icon('check')}</span>${flowEnd(steps)}</p></div>
 ${compact ? '' : `<div class="run-lanes" aria-hidden="true">${LANES.map(a => `<span class="lane-h is-${a}">${esc(LANE_NAME[a])}</span>`).join('')}</div>`}
 <div class="run-board"><span class="run-bar" aria-hidden="true"><span></span></span><span class="run-token" aria-hidden="true"></span>
 ${groups.map(g => `<div class="run-phase"><p class="run-ph">${esc(g.name)}</p><ol class="run-steps" start="${(k += g.steps.length) - g.steps.length + 1}">${g.steps.map(step).join('')}</ol></div>`).join('')}
-</div></div>`;
+</div></div>${!compact && people ? convoPanel(steps, people) : ''}</div>`;
 };
 
 // Each workflow phase lists the steps of the first scenario that belong to it, so the overview and the full run agree.
@@ -89,6 +104,8 @@ export function sectorPage(d, guides = []) {
   const guide = guides.find(g => g.sector === d.key);
   for (const s of d.demo.scenes) {
     if (s.steps.length < 6 || s.steps.length > 9) throw new Error(`${d.key}: scene "${s.tab}" needs 6 to 9 steps`);
+    if (!s.people?.customer || !s.people?.team) throw new Error(`${d.key}: scene "${s.tab}" needs people`);
+    for (const st of s.steps) if (!Array.isArray(st.chat) || st.chat.length < 1 || st.chat.length > 2 || st.chat.some(m => !ACTOR[m.from] || !m.text || m.text.length > 100)) throw new Error(`${d.key}: scene "${s.tab}" needs 1 or 2 short messages per step`);
     for (const st of s.steps) if (!ACTOR[st.actor] || !st.status || !st.does || !st.short || !st.label || st.label.split(' ').length > 3 || !ICON_PATHS[st.icon] || !(st.stage >= 1 && st.stage <= STAGES.length) || !(st.phase >= 1 && st.phase <= d.workflow.steps.length)) throw new Error(`${d.key}: scene "${s.tab}" has an incomplete step`);
   }
   const main = `${iconSprite()}<section class="hero" aria-labelledby="headline">
@@ -133,7 +150,7 @@ ${d.demo.scenes.map((s, i) => `<article class="scene${i === 0 ? ' is-active' : '
 <div class="demo-meta"><span>${esc(s.source)}</span><span class="pill">Owner: ${esc(s.owner)}</span></div>
 <p class="request">“${esc(s.request)}”</p>
 <div class="rule">${esc(s.rule)}</div>
-${flowList(s.steps)}
+${flowList(s.steps, { people: s.people })}
 </article>`).join('\n')}
 </div>
 <div class="demo-actions"><button class="reset flow-ctl" id="flow-pause" type="button">Pause</button><button class="reset flow-ctl" id="flow-replay" type="button">Replay</button><span class="demo-status">A local simulation. No live action is taken.</span></div>
