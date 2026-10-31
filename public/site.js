@@ -17,30 +17,79 @@ const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const configEl = $('config');
 const config = configEl ? JSON.parse(configEl.textContent) : null;
 
-// Workflow demo: a local simulation; nothing leaves the page.
-if (config && $('demo-panel')) {
-  let current = 0;
-  const tabs = document.querySelectorAll('.tab');
+// Workflow flows: every step is already in the HTML. This only plays them like a live run (see .flow in
+// styles.css): while at least a quarter of a flow is on screen it plays; off screen it pauses. At the end it holds,
+// then plays again. Reduced motion leaves everything static.
+const flows = [...document.querySelectorAll('.flow')];
+const HOLD = 4000;
+const players = new Map();
+let userPaused = false;
+const pauseBtn = $('flow-pause');
+const replayBtn = $('flow-replay');
+const restart = el => {
+  const p = players.get(el);
+  clearTimeout(p.timer);
+  p.ended = false;
+  el.classList.remove('is-armed');
+  void el.offsetWidth; // Restart the CSS animations from the first step.
+  el.classList.add('is-armed');
+  sync(el);
+};
+const sync = el => {
+  const p = players.get(el);
+  const play = p.visible && !userPaused && !document.hidden && !el.closest('[hidden]');
+  el.classList.toggle('is-running', play && !p.ended);
+  if (play && p.ended && !p.timer) p.timer = setTimeout(() => { p.timer = null; restart(el); }, HOLD);
+  if (!play && p.timer) { clearTimeout(p.timer); p.timer = null; }
+};
+const syncAll = () => flows.forEach(sync);
+if (flows.length && 'IntersectionObserver' in window && !motion.matches) {
+  const io = new IntersectionObserver(entries => entries.forEach(e => {
+    players.get(e.target).visible = e.isIntersecting;
+    sync(e.target);
+  }), { threshold: 0.25 });
+  flows.forEach(el => {
+    players.set(el, { visible: false, ended: false, timer: null });
+    el.classList.add('is-armed');
+    el.querySelector('.flow-fill').addEventListener('animationend', () => { players.get(el).ended = true; sync(el); });
+    io.observe(el);
+  });
+  document.addEventListener('visibilitychange', syncAll);
+  motion.addEventListener('change', () => { if (motion.matches) flows.forEach(el => { el.classList.remove('is-armed', 'is-running'); clearTimeout(players.get(el).timer); }); });
+  if (pauseBtn && replayBtn) {
+    pauseBtn.hidden = replayBtn.hidden = false;
+    pauseBtn.addEventListener('click', () => {
+      userPaused = !userPaused;
+      pauseBtn.textContent = userPaused ? 'Play' : 'Pause';
+      syncAll();
+    });
+    replayBtn.addEventListener('click', () => {
+      userPaused = false;
+      pauseBtn.textContent = 'Pause';
+      document.querySelectorAll('.scene:not([hidden]) .flow').forEach(restart);
+    });
+  }
+}
+document.querySelectorAll('.rise-group').forEach(g => {
+  if (motion.matches || !('IntersectionObserver' in window)) return;
+  g.classList.add('is-armed');
+  const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { g.classList.add('is-running'); io.disconnect(); } }, { threshold: 0.25 });
+  io.observe(g);
+});
+
+// Scenario tabs: show one scenario's full run at a time and play it from the start.
+const scenes = [...document.querySelectorAll('.scene')];
+const tabs = [...document.querySelectorAll('.tab')];
+if (scenes.length && tabs.length) {
+  document.documentElement.classList.add('js-flow');
   const show = index => {
-    current = index;
-    const s = config.scenes[index];
     tabs.forEach((b, i) => { b.classList.toggle('active', i === index); b.setAttribute('aria-pressed', String(i === index)); });
-    $('demo-source').textContent = s.source;
-    $('demo-owner').textContent = s.owner;
-    $('demo-request').textContent = s.request;
-    $('demo-rule').textContent = s.rule;
-    $('demo-draft').textContent = s.draft;
-    $('demo-act').textContent = s.action;
-    $('demo-act').disabled = false;
-    $('demo-status').textContent = 'Ready for a human decision. This is a local simulation.';
+    scenes.forEach((s, i) => { s.hidden = i !== index; });
+    const el = scenes[index].querySelector('.flow');
+    if (players.has(el)) restart(el);
   };
   tabs.forEach((b, i) => b.addEventListener('click', () => show(i)));
-  $('demo-act').addEventListener('click', () => {
-    $('demo-status').textContent = config.scenes[current].result + ' No live action was taken.';
-    $('demo-act').disabled = true;
-  });
-  $('demo-reset').addEventListener('click', () => show(current));
-  show(0);
+  scenes.forEach((s, i) => { s.hidden = i !== 0; });
 }
 
 // Enquiry: prepared in the browser, then sent by the visitor's own email app or saved as a file.

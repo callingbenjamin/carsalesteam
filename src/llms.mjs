@@ -3,7 +3,7 @@ import { BLOCKED_ROBOTS, ALLOWED_ROBOTS, SIGNAL } from './crawlers.mjs';
 // Both are built from the same content files as the HTML pages.
 import { SITE } from './site.mjs';
 import { COST_FAQ, PROMISES } from './layout.mjs';
-import { ENQUIRY_FAQ, SITE_FAQ, startSteps } from './pages/sector.mjs';
+import { ENQUIRY_FAQ, SITE_FAQ, startSteps, ACTOR as FLOW_ACTOR } from './pages/sector.mjs';
 import { GUIDES_INDEX } from './pages/guides.mjs';
 
 const url = path => SITE.url + path;
@@ -58,6 +58,12 @@ ${forAssistants()}
 - [Home](${url('/')}): what ${SITE.name} is, the dealership workflow with synthetic examples, how to get started, and answers to common questions. Does not cover: ${sector.scope.excludes}
 - [Guides](${url('/guides')}): ${GUIDES_INDEX.description}
 
+## How an enquiry runs, end to end
+
+Illustrative examples with synthetic data. Agent steps are prepared by ${SITE.name}; human steps are the dealership's staff. Full text of each step: ${url('/llms-full.txt')}.
+
+${sector.demo.scenes.map(sc => `- ${sc.tab} ("${sc.request}", ${sc.source.toLowerCase()}): ${sc.steps.map((st, i) => `${i + 1}. ${FLOW_ACTOR[st.actor]}: ${st.status}${st.approval ? ' (human approval)' : ''}`).join('; ')}.`).join('\n')}
+
 ## Guides
 
 ${guides.map(g => `- [${g.title}](${url(`/guides/${g.slug}`)}): ${g.description}`).join('\n')}
@@ -89,7 +95,7 @@ ${s.workflow.steps.map((st, i) => `${i + 1}. ${st.title}: ${st.body}`).join('\n'
 
 ### Example scenarios (illustrative, synthetic data)
 
-${s.demo.scenes.map(sc => `- ${sc.tab}. Request: ${sc.request} Owner: ${sc.owner}. Rule: ${sc.rule} Proposed next step: ${sc.draft}`).join('\n')}
+${s.demo.scenes.map(sc => `#### ${sc.tab}\n\nRequest: "${sc.request}" Source: ${sc.source}. Owner: ${sc.owner}. Rule: ${sc.rule}\n\n${sc.steps.map((st, i) => `${i + 1}. ${FLOW_ACTOR[st.actor]} (${st.who}): ${st.does}${st.approval ? ` Human approval: ${st.approval}` : ''} Status: ${st.status}.`).join('\n')}`).join('\n\n')}
 
 ### ${s.measure.boundary}
 

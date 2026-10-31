@@ -13,17 +13,6 @@
     ],
     "intro": "CarSalesTeam is a managed workflow service for dealer groups and their dealerships that brings vehicle enquiries, test-drive requests and service follow-ups into one workflow, with your sales and service teams in control.",
     "audience": "For dealer groups & their dealerships",
-    "request": "Is the SUV still available? Can I test-drive it Saturday?",
-    "next": [
-      {
-        "who": "CarSalesTeam",
-        "does": "Prepares the enquiry and requests an availability check."
-      },
-      {
-        "who": "Your team",
-        "does": "Confirms the vehicle and appointment."
-      }
-    ],
     "foot": "For the people behind every sale."
   },
   "summary": {
@@ -51,53 +40,275 @@
     "body": "A shopper asks about a vehicle. The answer needs current inventory, a clear owner and a follow-up. The service desk needs the same discipline.",
     "steps": [
       {
-        "title": "Capture the enquiry",
-        "body": "Collect the vehicle or service request, contact details and preferred timing."
+        "title": "Receive and understand",
+        "body": "Take the request from the channel it arrived on, sort it by type and urgency, and check the sources and rules you allow."
       },
       {
-        "title": "Prepare the next step",
-        "body": "Check permitted inventory and scheduling sources. Ask staff when information is missing."
+        "title": "Acknowledge and hand off",
+        "body": "Draft a reply with the expected response time for your team to approve, brief the right person, and follow up until it is answered."
       },
       {
-        "title": "Confirm and follow through",
-        "body": "Record staff-approved appointments and follow-ups. Keep unresolved enquiries visible."
+        "title": "Confirm, close and record",
+        "body": "Your staff confirm or decide. The customer is updated with what was approved, and the outcome is recorded and reported."
       }
     ]
   },
   "demo": {
     "eyebrow": "EXPLORE A WORKFLOW",
-    "heading": "From interested to scheduled.",
-    "body": "Explore sales, service and commercial approval examples. Every enquiry goes to a responsible team.",
+    "heading": "From first message to closed and logged.",
+    "body": "Follow each enquiry end to end: how it arrives, what is checked, who is told, where your team approves, and how it is closed and recorded. Every step names who acts.",
     "scenes": [
       {
         "tab": "Test drive",
-        "request": "Can I test-drive the blue SUV on Saturday morning?",
-        "source": "Sample customer message",
+        "source": "Website enquiry form",
         "owner": "Sales adviser",
+        "request": "Can I test-drive the blue SUV on Saturday morning?",
         "rule": "Verify vehicle availability and appointment capacity before confirming.",
-        "draft": "Prepare a test-drive request for Saturday morning. Vehicle and time remain unconfirmed.",
-        "action": "Confirm next step",
-        "result": "Sales handoff prepared. Staff still need to verify inventory and confirm a slot."
+        "steps": [
+          {
+            "actor": "customer",
+            "who": "Shopper",
+            "does": "Sends the request through the dealership website form, with a name and a phone number.",
+            "status": "Received",
+            "short": "Request arrives from the website form.",
+            "phase": 1
+          },
+          {
+            "actor": "agent",
+            "who": "CarSalesTeam",
+            "does": "Sorts it as a test-drive request and pulls out the vehicle (blue SUV), the preferred time (Saturday morning) and the contact details.",
+            "status": "Sorted: test drive",
+            "short": "Sorts it as a test drive and pulls out the details.",
+            "phase": 1
+          },
+          {
+            "actor": "agent",
+            "who": "CarSalesTeam",
+            "does": "Checks the inventory and scheduling sources you allow, any earlier enquiries from this shopper in your CRM where access is agreed, and your test-drive rules.",
+            "status": "Context checked",
+            "short": "Checks the stock, scheduling and test-drive rules you allow.",
+            "phase": 1
+          },
+          {
+            "actor": "agent",
+            "who": "CarSalesTeam",
+            "does": "Drafts a reply: the request is received and a sales adviser will confirm the vehicle and a Saturday time within the response time you set.",
+            "status": "Reply drafted",
+            "short": "Drafts a reply with the expected response time.",
+            "phase": 2,
+            "approval": "Your team reviews the reply before it is sent."
+          },
+          {
+            "actor": "agent",
+            "who": "CarSalesTeam",
+            "does": "Hands the enquiry to the sales adviser with a complete brief: vehicle, preferred slot, contact details and what is still unconfirmed.",
+            "status": "Handed to sales adviser",
+            "short": "Hands it to the sales adviser with a complete brief.",
+            "phase": 2
+          },
+          {
+            "actor": "agent",
+            "who": "CarSalesTeam",
+            "does": "Tracks the handoff. If it is not confirmed within the agreed time, it reminds the adviser, then escalates to the sales manager.",
+            "status": "Following up",
+            "short": "Follows up, and escalates if it stalls.",
+            "phase": 2
+          },
+          {
+            "actor": "team",
+            "who": "Sales adviser",
+            "does": "Verifies the vehicle is available and books a Saturday morning slot.",
+            "status": "Confirmed by sales",
+            "short": "Your sales adviser confirms the vehicle and the slot.",
+            "phase": 3,
+            "approval": "Only staff confirm availability and appointments."
+          },
+          {
+            "actor": "agent",
+            "who": "CarSalesTeam",
+            "does": "Drafts the confirmation for the shopper with the agreed time.",
+            "status": "Customer updated",
+            "short": "Drafts the confirmation; the adviser approves it.",
+            "phase": 3,
+            "approval": "The adviser approves the confirmation before it is sent."
+          },
+          {
+            "actor": "agent",
+            "who": "CarSalesTeam",
+            "does": "Records the appointment and who approved each step on the enquiry record. The enquiry counts in the regular report on follow-through and staff time.",
+            "status": "Closed and logged",
+            "short": "Records the outcome and closes the enquiry.",
+            "phase": 3
+          }
+        ]
       },
       {
         "tab": "Service visit",
-        "request": "My car is due for a service. Do you have a slot next week?",
-        "source": "Sample customer message",
+        "source": "Email to the service desk",
         "owner": "Service desk",
+        "request": "My car is due for a service. Do you have a slot next week?",
         "rule": "Use approved service categories and scheduling access. Do not diagnose a fault.",
-        "draft": "Collect vehicle details and preferred dates, then request service-desk confirmation.",
-        "action": "Confirm next step",
-        "result": "Service request prepared. No appointment or diagnosis has been promised."
+        "steps": [
+          {
+            "actor": "customer",
+            "who": "Customer",
+            "does": "Emails the service desk asking for a service slot next week.",
+            "status": "Received",
+            "short": "Request arrives by email.",
+            "phase": 1
+          },
+          {
+            "actor": "agent",
+            "who": "CarSalesTeam",
+            "does": "Sorts it as a routine service visit, notes the preferred week and flags the missing details: the vehicle and its mileage.",
+            "status": "Sorted: service visit",
+            "short": "Sorts it as a routine service and flags what is missing.",
+            "phase": 1
+          },
+          {
+            "actor": "agent",
+            "who": "CarSalesTeam",
+            "does": "Checks the approved service categories, the scheduling access you allow and any service history it is permitted to read. It does not diagnose a fault.",
+            "status": "Context checked",
+            "short": "Checks service categories and scheduling access.",
+            "phase": 1
+          },
+          {
+            "actor": "agent",
+            "who": "CarSalesTeam",
+            "does": "Drafts a reply that confirms receipt, gives the expected response time and asks for the vehicle and mileage.",
+            "status": "Reply drafted",
+            "short": "Drafts a reply and asks for the missing details.",
+            "phase": 2,
+            "approval": "Your team reviews the reply before it is sent."
+          },
+          {
+            "actor": "agent",
+            "who": "CarSalesTeam",
+            "does": "Once the details arrive, sends the service desk a complete brief: vehicle, service category, mileage and preferred dates.",
+            "status": "Handed to service desk",
+            "short": "Hands it to the service desk with a complete brief.",
+            "phase": 2
+          },
+          {
+            "actor": "agent",
+            "who": "CarSalesTeam",
+            "does": "Tracks the request. If no slot is confirmed within the agreed time, it reminds the desk, then escalates to the service manager.",
+            "status": "Following up",
+            "short": "Follows up, and escalates if it stalls.",
+            "phase": 2
+          },
+          {
+            "actor": "team",
+            "who": "Service desk",
+            "does": "Confirms a slot next week. Fault diagnosis and repair authorisations stay with the desk.",
+            "status": "Slot confirmed",
+            "short": "Your service desk confirms the slot.",
+            "phase": 3,
+            "approval": "Only the service desk confirms slots and authorises repairs."
+          },
+          {
+            "actor": "agent",
+            "who": "CarSalesTeam",
+            "does": "Drafts the booking confirmation for the customer.",
+            "status": "Customer updated",
+            "short": "Drafts the confirmation; the desk approves it.",
+            "phase": 3,
+            "approval": "The desk approves the confirmation before it is sent."
+          },
+          {
+            "actor": "agent",
+            "who": "CarSalesTeam",
+            "does": "Records the booking and who approved each step on the request record, and includes it in the regular report on follow-through and staff time.",
+            "status": "Closed and logged",
+            "short": "Records the outcome and closes the request.",
+            "phase": 3
+          }
+        ]
       },
       {
         "tab": "Price exception",
-        "request": "Can you take $2,000 off and guarantee my trade-in value?",
-        "source": "Sample customer message",
+        "source": "Phone message to sales",
         "owner": "Sales manager",
+        "request": "Can you take $2,000 off and guarantee my trade-in value?",
         "rule": "Discounts, trade-in valuations and financing commitments require authorised staff.",
-        "draft": "Route the requested discount and trade-in appraisal to the sales manager.",
-        "action": "Confirm next step",
-        "result": "Manager review requested. No price, financing or trade-in commitment was made."
+        "steps": [
+          {
+            "actor": "customer",
+            "who": "Shopper",
+            "does": "Leaves a phone message for the sales team asking for a discount and a guaranteed trade-in value.",
+            "status": "Received",
+            "short": "Request arrives as a phone message.",
+            "phase": 1
+          },
+          {
+            "actor": "agent",
+            "who": "CarSalesTeam",
+            "does": "Sorts it as a price and trade-in exception and pulls out the requested discount, the vehicle of interest and the trade-in vehicle.",
+            "status": "Sorted: exception",
+            "short": "Sorts it as a price exception.",
+            "phase": 1
+          },
+          {
+            "actor": "agent",
+            "who": "CarSalesTeam",
+            "does": "Checks the enquiry history it is permitted to read and your approval rules: discounts, trade-in valuations and financing need authorised staff.",
+            "status": "Rule matched: manager decides",
+            "short": "Matches the rule: a manager decides.",
+            "phase": 1
+          },
+          {
+            "actor": "agent",
+            "who": "CarSalesTeam",
+            "does": "Drafts a holding reply that promises no price or value and says the sales manager will respond within the agreed time.",
+            "status": "Reply drafted",
+            "short": "Drafts a holding reply that promises nothing.",
+            "phase": 2,
+            "approval": "Your team reviews the reply before it is sent."
+          },
+          {
+            "actor": "agent",
+            "who": "CarSalesTeam",
+            "does": "Routes the case to the sales manager with a complete brief and makes no commitment of its own.",
+            "status": "Handed to sales manager",
+            "short": "Hands it to the sales manager with a complete brief.",
+            "phase": 2
+          },
+          {
+            "actor": "agent",
+            "who": "CarSalesTeam",
+            "does": "Tracks the decision. If it is still open at the agreed time, it reminds the manager, then escalates to the next person in your approval rules.",
+            "status": "Waiting for approval",
+            "short": "Follows up until the manager decides.",
+            "phase": 2
+          },
+          {
+            "actor": "team",
+            "who": "Sales manager",
+            "does": "Decides on any discount and arranges a trade-in appraisal. The decision is the manager’s alone.",
+            "status": "Decision recorded",
+            "short": "Your sales manager decides the price and the trade-in.",
+            "phase": 3,
+            "approval": "Money, discounts and trade-in values need the manager’s approval."
+          },
+          {
+            "actor": "agent",
+            "who": "CarSalesTeam",
+            "does": "Drafts the reply with the decision exactly as approved.",
+            "status": "Customer updated",
+            "short": "Drafts the reply; the manager approves it.",
+            "phase": 3,
+            "approval": "The manager approves the reply before it is sent."
+          },
+          {
+            "actor": "agent",
+            "who": "CarSalesTeam",
+            "does": "Records the decision, the approver and the reply on the enquiry record as an exception, and counts it in the regular report.",
+            "status": "Closed and logged",
+            "short": "Records the decision and closes the case.",
+            "phase": 3
+          }
+        ]
       }
     ]
   },
