@@ -69,20 +69,20 @@ h3{font:500 27px/1.3 var(--font);letter-spacing:-.6px;margin:15px 0}
 .hero-media video{opacity:0;transition:opacity .5s}
 .hero-media video.is-playing{opacity:1}
 .hero-wash{position:absolute;inset:0;background:linear-gradient(90deg,#20292ca8 0%,#20292c55 58%,#20292c2e),linear-gradient(0deg,var(--bg) 0%,transparent 27%);z-index:-1}
-.hero-content{width:100%;display:grid;grid-template-columns:1.05fr .8fr;gap:10%;align-items:center}
+.hero-content{width:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,500px);gap:48px;align-items:center}
 .hero h1{font:500 clamp(48px,5.2vw,78px)/1.1 var(--font);letter-spacing:-2.9px;margin:25px 0;max-width:760px}
 .hero h1 em{font-style:normal;display:block}
 .intro{color:#dfdcd6;font-size:17px;line-height:1.7;max-width:590px}
 .actions{display:flex;gap:15px;flex-wrap:wrap;margin:28px 0 22px}
 .hero .micro{color:#cdcac4}
-.hero-card{margin:90px 0 0;max-width:410px;background:#20292cb8;border:1px solid #ffffff22;backdrop-filter:blur(23px);border-radius:10px;padding:26px 28px;box-shadow:0 10px 40px #0001}
+.hero-card{margin:90px 0 0;max-width:500px;background:#20292cb8;border:1px solid #ffffff22;backdrop-filter:blur(23px);border-radius:12px;padding:14px;box-shadow:0 10px 40px #0001}
 .hero-card-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#cfccc6;margin:0 0 10px}
 .hero-card-request{font-size:19px;line-height:1.45;margin:0 0 22px;padding-bottom:22px;border-bottom:1px solid #ffffff1f}
 .handoff{list-style:none;margin:0;padding:0;display:grid;gap:14px}
 .handoff li{display:grid;grid-template-columns:34px 1fr;font-size:14px;line-height:1.5;color:#dfdcd6}
 .handoff .number{grid-row:span 2;padding-top:2px}
 .handoff strong{font-weight:500;color:#fff}
-.hero-card figcaption{font-size:10px;color:#cfccc6;margin-top:20px;padding-top:16px;border-top:1px solid #ffffff1f}
+.hero-card figcaption{font-size:10px;color:#cfccc6;margin-top:10px}
 .hero-foot{position:absolute;bottom:26px;left:0;width:100%;display:flex;justify-content:space-between;align-items:center;padding:0 48px;font-size:10px;color:#cfccc6;gap:15px}
 .video-control{background:#ffffff10;backdrop-filter:blur(10px);border:1px solid #ffffff40;border-radius:30px;color:#fff;font-size:11px;padding:9px 13px;white-space:nowrap}
 .video-control::before{content:'Ⅱ' / '';margin-right:.7em}
@@ -107,11 +107,11 @@ section:not(.hero){padding:100px 0}
 .demo-section .section-head{display:block;text-align:center;max-width:770px;margin:0 auto 80px}
 .demo-section .section-head .eyebrow{justify-content:center}
 .demo-section .section-head>p{max-width:690px;margin:20px auto 0}
-.demo{display:grid;grid-template-columns:1.1fr .9fr;gap:75px;align-items:start}
+.demo{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:56px;align-items:start}
 .demo-side{grid-column:2;grid-row:1;padding:10px 0}
 .demo-side .label{font-size:10px;color:var(--ink);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:18px}
 .tabs{display:flex;flex-direction:column}
-.tab{color:#8e8b85;background:transparent;border:0;border-bottom:1px solid var(--line);padding:24px 0;text-align:left;font:500 28px/1.3 var(--font);letter-spacing:-.6px;position:relative}
+.tab{color:#a19e98;background:transparent;border:0;border-bottom:1px solid var(--line);padding:24px 0;text-align:left;font:500 28px/1.3 var(--font);letter-spacing:-.6px;position:relative}
 .tab:after{content:'↗';position:absolute;right:3px;top:27px;font:16px var(--font);color:var(--muted)}
 .tab:hover{color:#fff}
 .tab.active{color:var(--ink);border-color:var(--signal)}
@@ -183,8 +183,8 @@ section.faq{padding-top:10px}
 .foot-links{display:flex;flex-wrap:wrap;gap:24px;font-size:12px;color:#c2bfb9}
 .foot-links a:hover,.foot-links a[aria-current]{color:#fff}
 .foot-links a[aria-current]{text-decoration:underline;text-underline-offset:5px}
-.foot-bottom{margin-top:32px;font-size:10px;color:#8d8a84;align-items:start}
-.footage-note{font-size:9px;color:#7f7c77;margin-top:20px}
+.foot-bottom{margin-top:32px;font-size:10px;color:#a3a09a;align-items:start}
+.footage-note{font-size:9px;color:#a3a09a;margin-top:20px}
 .footage-note a{text-decoration:underline}
 .copyright{white-space:nowrap}
 .governance a{text-decoration:underline;text-underline-offset:3px}
@@ -204,9 +204,9 @@ section.page{padding:190px 0 110px}
 @media(max-width:1100px){
   .wrap{padding:0 32px}
   .hero-foot{padding:0 32px}
-  .hero-content{gap:5%;grid-template-columns:1.1fr .85fr}
+  .hero-content{gap:36px;grid-template-columns:minmax(0,1fr) minmax(0,440px)}
   .hero h1{font-size:62px}
-  .hero-card{max-width:360px;padding:22px}
+  .hero-card{max-width:440px;padding:12px}
   .hero-card-request{font-size:17px}
   .desktop{gap:20px}
   .brand small{display:none}
@@ -235,7 +235,7 @@ section.page{padding:190px 0 110px}
   .hero .eyebrow{font-size:9px;letter-spacing:1.5px}
   .intro{font-size:14px;max-width:550px}
   .hero .micro{font-size:10px;max-width:500px}
-  .hero-card{margin:0;max-width:430px;padding:18px 20px}
+  .hero-card{margin:0;max-width:480px;padding:10px}
   .hero-card-label{font-size:9px;margin-bottom:8px}
   .hero-card-request{font-size:15px;margin-bottom:16px;padding-bottom:16px}
   .handoff{gap:10px}
@@ -397,10 +397,9 @@ ol.steps{list-style:none;margin:0;padding:0}
 .scenes{display:grid;overflow-anchor:none}
 .scene{grid-area:1/1;min-width:0;transition:opacity .3s ease,visibility 0s}
 .scene:not(.is-active){opacity:0;visibility:hidden;transition:opacity .3s ease,visibility 0s .3s}
-.demo-section,.run,.hero-card,.wf-card{overflow-anchor:none}
+.demo-section,.film,.hero-card,.wf-card{overflow-anchor:none}
 .flow-ctl{visibility:hidden}
 .flow-on .flow-ctl{visibility:visible}
-#flow-pause{width:4.2em;text-align:left}
 .demo-actions{margin-top:30px;padding-top:18px;border-top:1px solid #ffffff20}
 
 
@@ -412,205 +411,202 @@ ol.steps{list-style:none;margin:0;padding:0}
   .demo-body{padding:22px 18px}
 }
 
-/* Request runs, read at a glance: one lane per actor (customer, CarSalesTeam, your team), a bold label and an icon per
-   step, phase headers, and a checkpoint marker where your team approves. One accent per actor type, the same on
-   every Actuathron site, shown only through the small actor and step icons: customer blue #2563EB, agent teal #0D9488, your team amber #D97706. On the dark cards the
-   blue and teal are lightened, and on the light section the amber is darkened, to keep WCAG AA contrast. The layout is fixed from first paint; with
-   scripting and motion allowed, playing changes only opacity and transform. site.js starts the run when a quarter
-   of it is on screen, pauses it off screen, and moves the token to the lane that has the request. */
+/* Actor colours, shown only on small icons and dots: customer blue #2563EB, agent teal #0D9488, your team amber
+   #D97706. --lane is lightened for the dark panels and --lane-ink darkened for light surfaces (the films' screens),
+   both for WCAG AA contrast. Approvals are also marked by the shield and the 'Your team approves' pill. */
 :root{--lane-customer:#6A94F1;--lane-agent:#10B2A4;--lane-team:#E98006;--lane-customer-ink:#2563EB;--lane-agent-ink:#0A7167;--lane-team-ink:#A45A05}
-.lane-customer{--lane:var(--lane-customer);--lane-ink:var(--lane-customer-ink);--k:0}
-.lane-agent{--lane:var(--lane-agent);--lane-ink:var(--lane-agent-ink);--k:1}
-.lane-team{--lane:var(--lane-team);--lane-ink:var(--lane-team-ink);--k:2}
+.lane-customer{--lane:var(--lane-customer);--lane-ink:var(--lane-customer-ink)}
+.lane-agent{--lane:var(--lane-agent);--lane-ink:var(--lane-agent-ink)}
+.lane-team{--lane:var(--lane-team);--lane-ink:var(--lane-team-ink)}
 .demo-section .lane-customer,.demo-section .lane-agent,.demo-section .lane-team,.wf-card .lane-customer,.wf-card .lane-agent,.wf-card .lane-team,.hero .lane-customer,.hero .lane-agent,.hero .lane-team{--lane-ink:var(--lane)}
 .run-ic{width:16px;height:16px;flex:none;display:block}
-.run{--step:3.2s;--pause:.7s;--offset:1.3s;--gap:12px;position:relative}
-.run-compact{--step:2.6s;--gap:8px}
-.s0{--i:0}.s1{--i:1}.s2{--i:2}.s3{--i:3}.s4{--i:4}.s5{--i:5}.s6{--i:6}.s7{--i:7}.s8{--i:8}.n6{--n:6}.n7{--n:7}.n8{--n:8}.n9{--n:9}.p0{--p:0}.p1{--p:1}.p2{--p:2}.p3{--p:3}.p4{--p:4}.p5{--p:5}.p6{--p:6}.pt0{--pt:0}.pt1{--pt:1}.pt2{--pt:2}.pt3{--pt:3}.pt4{--pt:4}.pt5{--pt:5}.pt6{--pt:6}
-.run-head{display:flex;justify-content:space-between;align-items:center;gap:12px;height:28px;margin-bottom:6px}
-.run-live{display:inline-flex;flex:1;min-width:0;gap:8px;align-items:center;font-size:11px;letter-spacing:.3px;color:var(--ink)}
-.run-now{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
-.run-dot{width:7px;height:7px;border-radius:50%;background:#f5f2ebcc;flex:none}
-.run-replay{visibility:hidden;opacity:0;transition:opacity .3s;background:transparent;color:var(--ink);border:1px solid #f5f2eb4d;border-radius:999px;padding:4px 13px;font-size:11px;line-height:1.5}
-.run-replay:hover{border-color:var(--signal)}
-.run.is-done .run-replay{visibility:visible;opacity:1}
-.run-summary{margin:0 0 16px;font-size:13px;font-weight:600;color:var(--ink);letter-spacing:-.1px}
-.run-lanes{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gap);margin-bottom:10px}
-.lane-h{position:relative;z-index:1;display:flex;align-items:center;gap:7px;padding:7px 9px;font-size:11px;font-weight:600;letter-spacing:.2px;color:var(--ink);border-top:2px solid var(--lane);transition:opacity .3s}
-.lane-h .run-ic{color:var(--lane)}
-.run-token{position:absolute;left:0;top:0;bottom:0;width:calc((100% - 2 * var(--gap)) / 3);border-radius:0 0 6px 6px;background:#f5f2eb14;opacity:0;transition:transform .8s cubic-bezier(.65,0,.35,1),opacity .4s}
-.run-bar{position:relative;height:2px;margin:0 0 4px;background:#f5f2eb1f;overflow:hidden;border-radius:2px}
-.run-bar span{position:absolute;inset:0;background:#f5f2ebb3;transform-origin:left;transform:none}
-.run-phases{position:relative}
-.run-phase-name{position:relative;margin:12px 0 6px;font-size:10px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)}
-.run-phase:first-child .run-phase-name{margin-top:8px}
-.run-steps{list-style:none;margin:0;padding:0;display:grid;gap:6px;transition:opacity .3s ease}
-.run-step{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:var(--gap)}
-.run-chip{position:relative;grid-column:calc(var(--k) + 1);display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:7px}
-.run-chip:after{content:'';position:absolute;inset:0;border-radius:7px;border:1px solid color-mix(in srgb,var(--lane) 70%,transparent);opacity:0;pointer-events:none}
-.run-icons{display:flex;color:var(--lane);margin-top:1px}
 .run-actor-ic{display:none}
-.lane-h .run-actor-ic,.lane-key .run-actor-ic,.flow-icons .run-actor-ic{display:block}
-.run-text{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;min-width:0}
-.run-label{font-size:13px;font-weight:650;line-height:1.3;color:var(--ink)}
-.run-who{font-size:11px;color:var(--muted)}
-.run-step.lane-agent .run-who{display:none}
-.run-check{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;letter-spacing:.2px;line-height:1;padding:3px 7px 3px 5px;border-radius:999px;border:1px solid var(--lane-team);color:var(--ink);background:color-mix(in srgb,var(--lane-team) 16%,transparent);white-space:nowrap}
+.lane-key .run-actor-ic{display:block}
+.run-check{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;letter-spacing:.2px;line-height:1;padding:3px 7px 3px 5px;border-radius:999px;border:1px solid var(--lane-team);color:var(--ink);white-space:nowrap}
 .run-check .run-ic{width:13px;height:13px;color:var(--lane-team)}
-.run-does{grid-column:1/-1;font-size:12px;line-height:1.5;color:var(--muted);margin:5px 0 4px}
-.run-approval{grid-column:1/-1;font-size:11px;line-height:1.5;margin:0 0 6px;color:var(--ink-soft)}
-.run-approval span{font-weight:600}
-.run-sr,.run-compact .run-does,.run-compact .run-approval{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
-.run-detail{display:none}
-.run-detail-item{grid-area:1/1;margin:0;font-size:13px;line-height:1.55;color:var(--ink-soft)}
-.run-detail-item strong{display:block;color:var(--ink);font-size:13px;margin-bottom:3px}
-.run-detail-approval{display:block;margin-top:6px;font-size:12px;color:var(--ink)}
-.run-detail-approval:before{content:'Your team approves: ';font-weight:600;color:var(--ink);border-bottom:2px solid var(--lane-team)}
-/* The example conversation: customers on the left, CarSalesTeam and your team on the right. Who speaks shows by side and
-   by the small actor icon; bubbles stay neutral. Static, it lists every line; playing, it shows one step at a time
-   in a box sized by its longest step, so its height never changes. */
-.cv{margin-top:18px;padding:14px 16px 12px;border-radius:8px;border:1px solid #f5f2eb14}
-.cv-title{margin:0 0 10px;font-size:10px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)}
-.cv-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.cv-g{display:grid;gap:6px;align-content:start}
-.cv-row{display:grid;justify-items:end}
-.cv-row.cv-customer{justify-items:start}
-.cv-msg{grid-area:1/1;display:flex;gap:7px;align-items:flex-start;max-width:90%;margin:0;padding:7px 11px;border-radius:12px 12px 4px 12px;font-size:12.5px;line-height:1.45;color:var(--ink);background:#f5f2eb1a;transform-origin:right bottom}
-.cv-customer .cv-msg{border-radius:12px 12px 12px 4px;background:#f5f2eb10;transform-origin:left bottom}
-.cv-note .cv-msg{background:transparent;border:1px dashed #f5f2eb38;color:var(--ink-soft)}
-.cv-msg .run-actor-ic{display:block;width:14px;height:14px;margin-top:2px;color:var(--lane)}
-.cv-who{font-weight:600}
-.cv-typing{display:none}
-.run-end{display:flex;align-items:center;gap:8px;margin:12px 0 0;padding-top:10px;border-top:1px solid #f5f2eb14;font-size:12px;font-weight:600;color:var(--ink)}
-.run-end-w{display:block;overflow:hidden;flex:none}
-.run-end-i{display:block}
-.run-end-ic{color:var(--lane-agent)}
-.run-compact .cv{margin-top:12px;padding:10px 12px}
-.run-compact .cv-title{font-size:9px;margin-bottom:8px}
-.run-compact .cv-msg{font-size:11.5px;padding:5px 9px}
-.run-compact .cv-list{max-height:190px;overflow:auto}
-.run-compact .run-end{font-size:11px;margin-top:8px;padding-top:8px}
 .run-legend{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;font-size:11px;color:var(--muted);margin:0 0 26px}
 .lane-key{display:inline-flex;align-items:center;gap:6px;color:var(--ink)}
 .lane-key .run-ic{color:var(--lane-ink)}
 .demo-side .run-legend{margin:22px 0 0}
 
-/* Compact run in the hero card: the lanes with labels only. */
-.run-compact .run-summary{font-size:12px;margin-bottom:12px}
-.run-compact .lane-h{font-size:10px;padding:5px 6px;gap:5px}
-.run-compact .lane-h .run-ic{width:13px;height:13px}
-.run-compact .run-phase-name{font-size:9px;margin:8px 0 4px}
-.run-compact .run-steps{gap:4px}
-.run-compact .run-chip{padding:5px 7px;gap:6px;border-radius:6px}
-.run-compact .run-chip:after{border-radius:6px}
-.run-compact .run-label{font-size:12px;font-weight:600}
-.run-compact .run-who{display:none}
-.run-compact .run-check{font-size:0;padding:2px;gap:0}
-.run-compact .run-icons .run-ic{width:14px;height:14px}
+/* Request films. Each card is a short product film: six shots (the shopper's message, the record check, the
+   approval, the hand-off, staff confirming, and an end card with the summary), each a big title line and a crisp
+   mock screen on a soft neutral backdrop. Static, with reduced motion or without JavaScript, the shots are a
+   storyboard: a small grid of frames with every line. Playing, they sit in one fixed, screen-shaped frame whose
+   height is set from first paint, and cut on the beat: each shot cross-fades in over the last in .3s, so the frame
+   is never empty. Only each shot's own elements animate (opacity, and one transform on the shot's camera layer);
+   the card itself never does. */
+.film{--S:3.6s;--T:calc(var(--S) * 6);min-width:0}
+.film-compact{--S:3.2s}
+.film-frame{--ink:#1d2427;--ink-soft:#3b4548;--muted:#566064;color:var(--ink);border-radius:10px;overflow:hidden;background:#d9d5cc;overflow-anchor:none}
+.film-frame .lane-customer{--lane-ink:var(--lane-customer-ink)}
+.film-frame .lane-agent{--lane-ink:var(--lane-agent-ink)}
+.film-frame .lane-team{--lane-ink:var(--lane-team-ink)}
+.film-shots{list-style:none;margin:0;padding:8px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.film-compact .film-shots{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:74%;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory}
+.film-compact .shot{scroll-snap-align:start}
+.shot{container-type:inline-size;min-width:0;border-radius:6px;overflow:hidden;background:radial-gradient(130% 110% at 20% 0%,#fbfaf7 0%,#efece6 55%,#e5e1d9 100%)}
+.shot-cam{display:flex;flex-direction:column;gap:10px;height:100%;padding:14px}
+.shot-title{margin:0;font:700 clamp(16px,7cqw,22px)/1.1 var(--font);letter-spacing:-.03em;color:var(--ink)}
+.shot-ui{min-width:0}
+.shot-steps{list-style:none;margin:auto 0 0;padding:0;display:flex;flex-wrap:wrap;gap:5px}
+.film-step{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;line-height:1.2;color:var(--ink-soft);background:#ffffffc0;border:1px solid #1d24271a;border-radius:999px;padding:3px 9px 3px 6px}
+.f-num{color:var(--muted);font-variant-numeric:tabular-nums}
+.f-ic{width:1.15em;height:1.15em;flex:none;color:var(--lane-ink)}
+/* Mock screens */
+.f-win{background:#fff;border:1px solid #1d242714;border-radius:9px;box-shadow:0 1px 0 #1d24270d,0 14px 34px #1d242724;overflow:hidden}
+.f-bar{display:flex;align-items:center;gap:8px;margin:0;padding:6px 11px;font-size:10px;color:var(--muted);background:#f6f5f2;border-bottom:1px solid #1d242712;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.f-dots{display:flex;gap:4px;flex:none}
+.f-dots i{width:6px;height:6px;border-radius:50%;background:#1d242726}
+.f-body{display:grid;gap:8px;padding:11px}
+.fb{display:flex;gap:7px;align-items:flex-start;width:fit-content;max-width:94%;margin:0;padding:7px 10px;border-radius:12px;background:#f0eee9;font-size:11.5px;line-height:1.4;color:var(--ink)}
+.fb .f-ic{margin-top:.1em}
+.fb-customer{border-bottom-left-radius:4px}
+.fb-agent,.fb-team{margin-left:auto;border-bottom-right-radius:4px;background:#eceff0}
+.fb-note{background:transparent;border:1px dashed #1d24273d}
+.fb-who{font-weight:650}
+.f-phone{display:grid;gap:8px;width:min(100%,250px);margin:0 auto;padding:12px 10px 14px;background:#fff;border:5px solid #1d2427;border-radius:20px;box-shadow:0 14px 34px #1d242730}
+.f-src{margin:0 0 2px;text-align:center;font-size:9.5px;color:var(--muted)}
+.f-typing{display:none;gap:3px;align-self:start;width:max-content;padding:9px 11px;border-radius:12px;background:#f0eee9}
+.f-typing i{width:5px;height:5px;border-radius:50%;background:#1d242766}
+.f-meta{margin:0;font-size:9.5px;color:var(--muted)}
+.f-tags{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.f-tag{display:inline-flex;align-items:center;gap:5px;padding:4px 10px 4px 7px;border:1px solid #1d24271f;border-radius:999px;background:#fff;font-size:10.5px;font-weight:600;color:var(--ink)}
+.film-frame .run-check{border-color:var(--lane-team-ink);color:var(--ink)}
+.film-frame .run-check .run-ic{color:var(--lane-team-ink)}
+.f-approve{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding-top:9px;border-top:1px solid #1d242712}
+.f-btn{position:relative;display:grid;font-size:11px;font-weight:650}
+.f-btn-idle,.f-btn-done{grid-area:1/1;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:6px 12px;border-radius:7px;white-space:nowrap}
+.f-btn-idle{display:none;background:#1d2427;color:#fff}
+.f-btn-done{background:#fff;color:var(--ink);border:1px solid #1d242733}
+.f-btn-done .f-ic{color:var(--lane-team-ink)}
+.f-tap{display:none;position:absolute;left:50%;top:50%;width:28px;height:28px;margin:-14px 0 0 -14px;border-radius:50%;border:2px solid #1d2427;opacity:0;pointer-events:none}
+.f-win-inbox .f-body{background:#f6f5f2}
+.f-brief{display:flex;gap:9px;align-items:flex-start;padding:10px;background:#fff;border:1px solid #1d24271a;border-radius:9px;box-shadow:0 8px 20px #1d24271a}
+.f-brief-ic{color:var(--lane-agent-ink);width:18px;height:18px}
+.f-brief-t{margin:0 0 3px;font-size:10px;font-weight:650;letter-spacing:.3px;text-transform:uppercase;color:var(--muted)}
+.f-brief .fb{padding:0;background:transparent;max-width:none;margin:0}
+.f-ok{display:flex;flex-wrap:wrap;align-items:center;gap:6px 9px;margin:0;font-size:10.5px;line-height:1.4;color:var(--ink-soft)}
+.f-end{display:grid;justify-items:center;gap:9px;text-align:center}
+.f-end-mark{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:#1d2427}
+.f-end-mark .f-ic{width:55%;height:55%;color:#fff}
+.f-end-name{margin:0;font:700 22px/1 var(--font);letter-spacing:-.04em}
+.f-end .fb{margin:0 auto;background:transparent;padding:0}
+.film-end{margin:0;font-size:11.5px;font-weight:650;line-height:1.4;color:var(--ink)}
+.film-foot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 14px;margin-top:12px}
+.film-summary{margin:0;font-size:13px;font-weight:600;color:var(--ink)}
+.film-ctl{display:flex;gap:8px}
+.film-ctl button{background:transparent;color:var(--ink);border:1px solid #f5f2eb4d;border-radius:999px;padding:4px 13px;font-size:11px;line-height:1.5;min-width:5.2em}
+.film-ctl button:hover{border-color:var(--signal)}
+.film-ctl button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.k0{--k:0}.k1{--k:1}.k2{--k:2}.k3{--k:3}.k4{--k:4}.k5{--k:5}
 
-.run-legend .run-check{border-color:var(--lane-team-ink);background:color-mix(in srgb,var(--lane-team-ink) 10%,transparent)}
-.run-legend .run-check .run-ic{color:var(--lane-team-ink)}
-.demo-side .run-legend .run-check{border-color:var(--lane-team)}
-.demo-side .run-legend .run-check .run-ic{color:var(--lane-team)}
-
-
-@media (scripting:enabled) and (prefers-reduced-motion:no-preference){
-  .run:not(.run-compact) .run-does,.run:not(.run-compact) .run-approval{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
-  .run-detail{display:grid;margin-top:18px;padding:14px 16px;border-radius:8px;background:#f5f2eb0a;border:1px solid #f5f2eb14;transition:opacity .3s ease}
-  /* Timing: each step starts at --t and stays in focus for --dur; hand-offs and approvals hold a little longer. */
-  .run-step,.run-detail-item,.cv-g{--t:calc(var(--i) * var(--step) + var(--p) * var(--pause) + var(--offset));--dur:var(--step)}
-  .run .pz{--dur:calc(var(--step) + var(--pause))}
-  /* Opening beat, first play only: the header, lanes and phase names rise in a short stagger before step 1. They
-     fill backwards only, so afterwards they rest at their normal, fully visible state and later loops leave them be. */
-  .run-head{animation:run-intro .6s ease .05s backwards}
-  .run-summary{animation:run-intro .6s ease .2s backwards}
-  .run-lanes,.run-bar{animation:run-intro .6s ease .35s backwards}
-  .run-phase-name{animation:run-intro .5s ease .55s backwards}
-  .run-phase:nth-child(2) .run-phase-name{animation-delay:.65s}
-  .run-phase:nth-child(3) .run-phase-name{animation-delay:.75s}
-  .run-phase:nth-child(4) .run-phase-name{animation-delay:.85s}
-  .cv{animation:run-intro .6s ease .5s backwards}
-  .run-detail{animation:run-intro .6s ease .6s backwards}
-  .run.is-looped .run-head,.run.is-looped .run-summary,.run.is-looped .run-lanes,.run.is-looped .run-bar,.run.is-looped .run-phase-name,.run.is-looped .cv,.run.is-looped .run-detail{animation:none}
-  /* Calm by design: only opacity and transform move, never a filter or a scale on text, and nothing ever blinks
-     out. Each step rises once and then rests a little quieter; the active step's outline fades in and out. */
-  .run-step{opacity:0;animation:run-rise .5s cubic-bezier(.22,.61,.36,1) var(--t) forwards,run-rest .8s ease calc(var(--t) + var(--dur)) forwards}
-  .run-chip:after{box-shadow:0 10px 28px #0000006b;animation:run-in .4s ease var(--t) both,run-out .5s ease calc(var(--t) + var(--dur)) forwards}
-  .run-phase:last-child .run-step:last-child{animation:run-rise .5s cubic-bezier(.22,.61,.36,1) var(--t) forwards}
-  .run-phase:last-child .run-step:last-child .run-chip:after{animation:run-in .4s ease var(--t) both}
-  /* Step notes and conversation lines share one grid cell each: the next one fades in while the last fades out,
-     over the same moment, so the panel is never empty between steps. */
-  .run-detail-item{opacity:0;animation:run-in .45s ease var(--t) both,run-out .45s ease calc(var(--t) + var(--dur)) forwards}
-  .run-detail-item:last-child{animation:run-in .45s ease var(--t) both}
-  .run-bar span{transform:scaleX(0);animation:run-fill calc((var(--n) - 1) * var(--step) + var(--pt) * var(--pause)) linear var(--offset) forwards}
-  .run-dot{animation:run-pulse 2.4s ease-in-out infinite}
-  /* Conversation: one step at a time. A step opens on its first line, or on a typing indicator when a customer or
-     CarSalesTeam speaks first, so something is always on screen as the previous step fades. */
-  .cv-list{gap:0}
-  .run-compact .cv-list{max-height:none;overflow:visible}
-  .cv-g{grid-area:1/1;--d0:0s;opacity:0;animation:run-in .45s ease var(--t) both,run-out .45s ease calc(var(--t) + var(--dur)) forwards}
-  .cv-g.t0{--d0:.8s}
-  .cv-g:last-child{animation:run-in .45s ease var(--t) both}
-  /* The first step's typing indicator shows from the start of every loop, so the panel is not empty before step 1. */
-  .cv-g.s0{animation:run-in .2s ease both,run-out .45s ease calc(var(--t) + var(--dur)) forwards}
-  .cv-g.s0 .cv-row.m0.ty .cv-typing{animation:cv-type0 calc(var(--t) + var(--d)) ease both}
-  /* The first note is also up from the start, so the notes panel is never empty while the run waits for step 1. */
-  .run-detail-item.s0{animation:run-in .2s ease both,run-out .45s ease calc(var(--t) + var(--dur)) forwards}
-  .cv-row{--d:0s}
-  .cv-row.ty{--d:.8s}
-  .cv-row.m1{--d:calc(var(--d0) + .9s)}
-  .cv-row.m1.ty{--d:calc(var(--d0) + 1.7s)}
-  .cv-msg{opacity:0;animation:cv-rise .5s cubic-bezier(.22,.61,.36,1) calc(var(--t) + var(--d)) forwards}
-  /* A typed line starts to rise as its typing indicator fades, so the two overlap instead of leaving a gap. */
-  .cv-row.ty .cv-msg{animation-delay:calc(var(--t) + var(--d) - .15s)}
-  .cv-typing{grid-area:1/1;align-self:end;display:flex;gap:4px;padding:9px 12px;border-radius:12px;background:#f5f2eb14;opacity:0;animation:cv-type .8s ease calc(var(--t) + var(--d) - .8s) both}
-  .cv-typing i{display:block;width:5px;height:5px;border-radius:50%;background:var(--ink-soft);opacity:.6;animation:cv-dot 1.2s ease-in-out infinite}
-  .cv-typing i:nth-child(2){animation-delay:.2s}
-  .cv-typing i:nth-child(3){animation-delay:.4s}
-  /* Closing beat: a check draws in with the run's real counts and holds. The next loop fades out only the steps,
-     the conversation and the progress, resets them, and fades the empty frame back in; the card itself stays put. */
-  .run-end{opacity:0;animation:run-intro .6s ease calc((var(--n) - 1) * var(--step) + var(--pt) * var(--pause) + var(--offset) + .7s) forwards}
-  .run-end-w{transform:translateX(-100%);animation:run-wipe .6s cubic-bezier(.65,0,.35,1) calc((var(--n) - 1) * var(--step) + var(--pt) * var(--pause) + var(--offset) + .9s) forwards}
-  .run-end-i{transform:translateX(100%);animation:run-wipe .6s cubic-bezier(.65,0,.35,1) calc((var(--n) - 1) * var(--step) + var(--pt) * var(--pause) + var(--offset) + .9s) forwards}
-  .run *,.run .run-chip:after{animation-play-state:paused !important}
-  .run.is-playing *,.run.is-playing .run-chip:after{animation-play-state:running !important}
-  .run.is-done .run-dot{animation:none}
-  .run-steps,.cv-list,.run-detail,.run-bar span{transition:opacity .45s ease}
-  .run.is-fading .run-steps,.run.is-fading .cv-list,.run.is-fading .run-detail,.run.is-fading .run-bar span{opacity:0}
-  .run.is-fading .run-end{animation:run-out .45s ease forwards}
-  .run.is-reset *,.run.is-reset .run-chip:after{animation:none !important}
-  .run .lane-h{opacity:.6;transition:opacity .6s ease}
-  .run[data-lane="0"] .lane-h.lane-customer,.run[data-lane="1"] .lane-h.lane-agent,.run[data-lane="2"] .lane-h.lane-team{opacity:1}
-  .run[data-lane] .run-token{opacity:1}
-  .run[data-lane="1"] .run-token{transform:translateX(calc(100% + var(--gap)))}
-  .run[data-lane="2"] .run-token{transform:translateX(calc(200% + var(--gap) * 2))}
-}
-@keyframes run-intro{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-@keyframes run-rise{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
-@keyframes run-rest{from{opacity:1}to{opacity:.55}}
-@keyframes run-in{from{opacity:0}to{opacity:1}}
-@keyframes run-out{from{opacity:1}to{opacity:0}}
-@keyframes run-fill{to{transform:none}}
-@keyframes run-wipe{to{transform:none}}
-@keyframes run-pulse{50%{opacity:.55}}
-@keyframes cv-rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-@keyframes cv-type0{0%{opacity:0}8%{opacity:1}90%{opacity:1}100%{opacity:0}}
-@keyframes cv-type{0%{opacity:0}20%{opacity:1}80%{opacity:1}100%{opacity:0}}
-@keyframes cv-dot{50%{opacity:1}}
-
-/* Phones: one column, with each actor's icon on every step. */
+/* Storyboard on phones: a swipeable strip of frames, one screen tall, every line still in the page. */
 @media (max-width:760px){
-  .run-lanes{display:none}
-  .run-step{grid-template-columns:minmax(0,1fr)}
-  .run-chip{grid-column:1}
-  .run-actor-ic{display:block}
-  .run-icons{gap:6px}
-  .run-step.lane-agent .run-who,.run-compact .run-who{display:inline}
-  .run-detail{min-height:0}
+  .film-shots,.film-compact .film-shots{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:86%;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory}
+  .shot{scroll-snap-align:start}
+}@media (scripting:enabled) and (prefers-reduced-motion:no-preference){
+  /* The frame: about 16:9, at most 560px tall, its height reserved from first paint. */
+  .film-frame{aspect-ratio:16/9;width:100%;max-height:560px;max-width:996px;margin:0 auto;background:#e5e1d9}
+  .film-shots{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);height:100%;padding:0;gap:0}
+  .film-shots,.film-compact .film-shots{grid-template-columns:minmax(0,1fr);overflow:hidden;scroll-snap-type:none}
+  .shot{grid-area:1/1;border-radius:0;opacity:0}
+  .shot.k0{opacity:1}
+  .shot-cam{display:grid;grid-template-columns:minmax(0,36fr) minmax(0,64fr);grid-template-rows:minmax(0,1fr) auto;gap:2.4cqw 4.5cqw;align-items:center;padding:5cqw 5.5cqw 4.4cqw;will-change:transform}
+  .shot-title{grid-column:1;grid-row:1;font-size:clamp(17px,4.4cqw,38px);line-height:1.06}
+  .shot-ui{grid-column:2;grid-row:1/3}
+  .shot-steps{grid-column:1;grid-row:2;align-self:end}
+  .film-step{font-size:clamp(9.5px,1.35cqw,12px)}
+  .f-bar{font-size:clamp(9px,1.3cqw,12px)}
+  .f-body{gap:clamp(6px,1.3cqw,12px);padding:clamp(9px,2.1cqw,18px)}
+  .fb{font-size:clamp(10px,1.75cqw,15px)}
+  .f-phone{width:min(100%,46cqw);gap:clamp(6px,1.2cqw,10px);padding:clamp(10px,2.4cqw,20px) clamp(8px,1.6cqw,14px);border-width:clamp(4px,.7cqw,6px);border-radius:clamp(16px,3.2cqw,26px)}
+  .f-phone .f-typing,.f-phone .fb{grid-row:2;grid-column:1}
+  .f-src,.f-meta{font-size:clamp(8.5px,1.25cqw,11px)}
+  .f-tag{font-size:clamp(9.5px,1.45cqw,13px)}
+  .f-btn{font-size:clamp(10px,1.5cqw,13.5px)}
+  .f-ok{font-size:clamp(9.5px,1.45cqw,13px)}
+  .f-end-mark{width:clamp(30px,6cqw,56px);height:clamp(30px,6cqw,56px)}
+  .f-end-name{font-size:clamp(18px,3.6cqw,34px)}
+  .film-end{font-size:clamp(10px,1.6cqw,14px)}
+  .f-typing{display:inline-flex}
+  .f-btn-idle{display:inline-flex}
+  .f-tap{display:block}
+
+  /* Timing: one loop is six shots of --S. Shot k starts at k x --S and its own elements share its clock. Paused,
+     the film rests on its first shot; playing, every shot and element runs the same keyframes, offset by its kN. */
+  .shot,.shot-cam,.cam-zoom .shot-title,.cam-zoom .shot-steps,.shot .a0,.shot .a1,.shot .a2,.shot .a3,.f-tap,.f-btn-idle,.f-btn-done{animation-duration:var(--T);animation-timing-function:linear;animation-delay:calc(var(--k) * var(--S));animation-iteration-count:infinite;animation-play-state:paused}
+  .film.is-playing .shot,.film.is-playing .shot-cam,.film.is-playing .cam-zoom .shot-title,.film.is-playing .cam-zoom .shot-steps,.film.is-playing .shot .a0,.film.is-playing .shot .a1,.film.is-playing .shot .a2,.film.is-playing .shot .a3,.film.is-playing .f-tap,.film.is-playing .f-btn-idle,.film.is-playing .f-btn-done{animation-play-state:running}
+  .film.is-reset .shot,.film.is-reset .shot *{animation:none}
+  .shot{animation-name:f-shot}
+  .shot.k0{animation-name:f-shot0}
+  .shot.k5{animation-name:f-shot5}
+  /* Camera, one transform per shot on its camera layer: a slow push, a pan, or a quick zoom-cut to the detail. */
+  .cam-push{animation-name:f-push;transform-origin:62% 50%}
+  .cam-pan{animation-name:f-pan}
+  .cam-zoom{animation-name:f-zoom}
+  /* On the zoom-cut the title has been read; it cuts away with the wide shot so the zoom never crops it. */
+  .cam-zoom .shot-title,.cam-zoom .shot-steps{animation-name:f-tcut}
+  .shot-check .shot-title,.shot-check .shot-steps{animation-name:none}
+  .cam-at-approve{transform-origin:82% 78%}
+  .cam-at-tags{transform-origin:70% 30%}
+  .shot-check .cam-zoom{animation-name:f-pan}
+  .shot .a0{animation-name:f-a0}
+  .shot .a1{animation-name:f-a1}
+  .shot .a2{animation-name:f-a2}
+  .shot .a3{animation-name:f-a3}
+  .f-brief.a1{animation-name:f-slide}
+  .shot-message .a1{animation-name:f-a1m}
+  .f-end-mark.a0{animation-name:f-pop}
+  .f-btn-idle{animation-name:f-idle}
+  .f-btn-done{animation-name:f-done}
+  .f-tap{animation-name:f-tap}
+  .scene,.scene:not(.is-active){transition:none}
+}
+/* Phones: a portrait frame, about 4:5 and at most 600px tall; title on top, the screen below. */
+@media (scripting:enabled) and (prefers-reduced-motion:no-preference) and (max-width:760px){
+  .film-frame{aspect-ratio:4/5;max-height:600px;max-width:480px}
+  .shot-cam{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto;gap:4cqw;padding:7cqw 6cqw 6cqw}
+  .shot-title{grid-column:1;grid-row:1;font-size:clamp(20px,7.4cqw,34px)}
+  .shot-ui{grid-column:1;grid-row:2;align-self:center}
+  .shot-steps{grid-column:1;grid-row:3}
+  .film-step{font-size:clamp(9.5px,3cqw,12px)}
+  .f-bar{font-size:clamp(9px,2.9cqw,12px)}
+  .f-body{gap:clamp(7px,2.4cqw,12px);padding:clamp(10px,3.6cqw,16px)}
+  .fb{font-size:clamp(11px,3.7cqw,15px)}
+  .f-phone{width:min(100%,78cqw);padding:4.5cqw 3.4cqw;border-radius:6cqw;border-width:5px;gap:2.4cqw}
+  .f-src,.f-meta{font-size:clamp(9px,2.9cqw,11px)}
+  .f-tag{font-size:clamp(10px,3.2cqw,13px)}
+  .f-btn{font-size:clamp(10.5px,3.4cqw,14px)}
+  .f-ok{font-size:clamp(10px,3.2cqw,13px)}
+  .f-end-mark{width:13cqw;height:13cqw}
+  .f-end-name{font-size:clamp(20px,8cqw,34px)}
+  .film-end{font-size:clamp(10.5px,3.5cqw,14px)}
+  .cam-push{transform-origin:50% 55%}
+  .cam-at-approve{transform-origin:70% 72%}
 }
 
-/* Workflow overview: the eight steps play as a run card, the same component as the scenarios. The full wording
-   sits in a closed native <details> under it; opening it is the only thing that moves the page. */
+/* One loop = 6 shots, so one shot is 16.67% of it. Shots cross-fade in over 1.5% (about .3s) on top of the last. */
+@keyframes f-shot{0%{opacity:0}1.5%,18.4%{opacity:1}18.5%,100%{opacity:0}}
+@keyframes f-shot0{0%,18.4%{opacity:1}18.5%,98.3%{opacity:0}98.4%,100%{opacity:1}}
+@keyframes f-shot5{0%{opacity:0}1.5%,16.67%{opacity:1}18.2%,100%{opacity:0}}
+@keyframes f-push{0%{transform:scale(1)}18.4%,100%{transform:scale(1.045)}}
+@keyframes f-pan{0%{transform:translateX(1.6%)}18.4%,100%{transform:translateX(-1.6%)}}
+@keyframes f-tcut{0%,7.9%{opacity:1}8%,100%{opacity:0}}
+@keyframes f-zoom{0%{transform:none}7.9%{transform:translateX(-.6%)}8%,18.4%,100%{transform:scale(1.2)}}
+@keyframes f-a0{0%{opacity:0}.6%,2.6%{opacity:1}3%,100%{opacity:0}}
+@keyframes f-a1{0%,1.4%{opacity:0;transform:translateY(10px)}2.8%,100%{opacity:1;transform:none}}
+@keyframes f-a1m{0%,2.8%{opacity:0;transform:translateY(10px)}4.4%,100%{opacity:1;transform:none}}
+@keyframes f-a2{0%,5.4%{opacity:0;transform:translateY(10px)}7%,100%{opacity:1;transform:none}}
+@keyframes f-a3{0%,8.6%{opacity:0;transform:translateY(10px)}10.2%,100%{opacity:1;transform:none}}
+@keyframes f-slide{0%,1.4%{opacity:0;transform:translateX(18%)}4.6%,100%{opacity:1;transform:none}}
+@keyframes f-pop{0%,1%{opacity:0;transform:scale(.6)}3%,100%{opacity:1;transform:none}}
+@keyframes f-idle{0%,9.3%{opacity:1}9.4%,100%{opacity:0}}
+@keyframes f-done{0%,9.3%{opacity:0}9.4%,100%{opacity:1}}
+@keyframes f-tap{0%,8.5%{opacity:0;transform:scale(.4)}8.9%{opacity:.75;transform:scale(.8)}10.2%,100%{opacity:0;transform:scale(1.7)}}
+
+/* Workflow overview: the eight steps play as a film, the same component as the scenarios. The full wording sits in
+   a closed native <details> under it (and under each scenario); opening it is the only thing that moves the page. */
 .wf-card{margin:0 auto;max-width:860px;padding:38px;background:var(--panel);border:1px solid #ffffff16;border-radius:8px;box-shadow:0 30px 80px #0002;overflow:hidden}
 .wf-card figcaption{font-size:10px;color:var(--muted);margin-top:20px}
 .wf-more{max-width:860px;margin:26px auto 0}

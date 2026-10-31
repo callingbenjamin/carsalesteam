@@ -70,40 +70,73 @@ export const flowEnd = steps => {
 // attributes (CSP style-src 'self'): timing comes from the sN/pK classes below.
 const LANE_KEYS = [['customer', 'Customer'], ['agent', SITE.name], ['team', 'Your team']];
 export const checkpoint = `<span class="run-check">${icon('shield', 'run-ic')}Your team approves</span>`;
-export const actorIcon = lane => icon(`a-${lane}`, 'run-ic run-actor-ic');
-// Steps that end in a hand-off or an approval hold for a short pause, so the run breathes where people decide.
-const pauses = st => Boolean(st.approval) || st.icon === 'handoff';
-// Timing classes for step i: sN is its place, pK the pauses before it, pz a pause after it (see .run in styles.css).
-const timing = steps => steps.map((st, i) => `s${i} p${steps.slice(0, i).filter(pauses).length}${pauses(st) && i < steps.length - 1 ? ' pz' : ''}`);
-// One step of the example conversation: one or two short lines. Customers sit on the left; CarSalesTeam and your
-// team on the right. Customer messages and CarSalesTeam's replies get a typing indicator first. The people are
-// fictional examples.
-const convoStep = (st, cls, people) => {
-  const lines = st.chat.map(m => (m.from === 'agent' && m.note ? { ...m, from: 'note' } : m));
-  const typed = m => m.from === 'customer' || m.from === 'agent';
-  const speaker = m => ({ customer: ['customer', `${people.customer} (example customer)`], agent: ['agent', `${SITE.name}, draft reply`], note: ['agent', `${SITE.name}, internal note`], team: ['team', people.team] })[m.from];
-  return `<li class="cv-g ${cls}${typed(lines[0]) ? ' t0' : ''}">${lines.map((m, j) => {
-    const [lane, name] = speaker(m);
-    const shown = m.from === 'team' ? `<b class="cv-who">${esc(name)}:</b> ` : m.from === 'note' ? '<b class="cv-who">Note:</b> ' : `<span class="run-sr">${esc(name)}: </span>`;
-    return `<div class="cv-row cv-${m.from} lane-${lane} m${j}${typed(m) ? ' ty' : ''}">${typed(m) ? '<span class="cv-typing" aria-hidden="true"><i></i><i></i><i></i></span>' : ''}<p class="cv-msg">${actorIcon(lane)}<span class="cv-text">${shown}${esc(m.text)}</span></p></div>`;
-  }).join('')}</li>`;
+export const actorIcon = (lane, cls = 'run-ic run-actor-ic') => icon(`a-${lane}`, cls);
+// A request film, built the same way on every card (the hero, each scenario and the workflow): six short shots cut
+// together like a product video. Each shot is one moment of the enquiry, a big title line and a mock app screen:
+// the shopper's message, the record check, the approval, the hand-off, staff confirming, and an end card with the
+// summary. Every word is in the HTML, so the film reads as a storyboard without JavaScript, with reduced motion, to
+// screen readers and to crawlers; styles.css plays the shots in one fixed frame and site.js only starts, pauses and
+// replays it. No style attributes (CSP style-src 'self'): each shot's place comes from its kN class.
+// Steps fall into shots by what they do, so the shots follow the step data and every step appears exactly once.
+const SHOT_OF = { inbox: 0, tag: 1, search: 1, rule: 1, pen: 2, handoff: 3, clock: 3, check: 4, send: 4, archive: 5 };
+export const FILM_SHOTS = 6;
+const approvalLine = m => m.from === 'team' && /^Approved\b/.test(m.text);
+// One or two lines per shot: every line if there are two or fewer, otherwise the last line of each step.
+const shotLines = steps => {
+  const all = steps.flatMap(st => st.chat.filter(m => !approvalLine(m)));
+  const lines = all.length <= 2 ? all : steps.map(st => st.chat.filter(m => !approvalLine(m)).pop()).filter(Boolean);
+  return lines.slice(0, 2);
 };
-export function runSteps(scene, { compact = false } = {}) {
-  const { steps, people } = scene;
-  const tc = timing(steps);
-  let k = 0;
-  const groups = STAGES.map((name, g) => ({ name, steps: steps.map((st, i) => ({ ...st, i })).filter(st => st.stage === g + 1) })).filter(g => g.steps.length);
-  const item = st => `<li class="run-step lane-${st.actor}${st.approval ? ' has-approval' : ''} ${tc[st.i]}" data-label="${esc(st.label)}"><div class="run-chip"><span class="run-icons">${actorIcon(st.actor)}${icon(st.icon, 'run-ic')}</span> <span class="run-text"><strong class="run-label">${esc(st.label)}</strong> <span class="run-who">${esc(st.who)}</span>${st.approval ? ` ${checkpoint}` : ''}</span></div> <p class="run-does"><span class="run-sr">Step ${st.i + 1}, ${ACTOR[st.actor].toLowerCase()}: </span>${esc(st.does)}</p>${st.approval ? ` <p class="run-approval"><span>Human approval:</span> ${esc(st.approval)}</p>` : ''}</li>`;
-  const last = steps[steps.length - 1];
-  const pt = steps.slice(0, -1).filter(pauses).length;
-  return `<div class="run${compact ? ' run-compact' : ''} n${steps.length} pt${pt}">
-<div class="run-head"><span class="run-live" aria-hidden="true"><span class="run-dot"></span><span class="run-now">Step ${steps.length} of ${steps.length} · ${esc(last.label)}</span></span><button type="button" class="run-replay">Replay</button></div>
-<p class="run-summary">${esc(flowSummary(steps))}</p>
-<div class="run-lanes" aria-hidden="true">${LANE_KEYS.map(([key, name]) => `<span class="lane-h lane-${key}">${actorIcon(key)}${esc(name)}</span>`).join('')}<span class="run-token"></span></div>
-<div class="run-bar" aria-hidden="true"><span></span></div>
-<div class="run-phases">${groups.map(g => `<div class="run-phase"><p class="run-phase-name">${g.name}</p><ol class="run-steps" start="${(k += g.steps.length) - g.steps.length + 1}">${g.steps.map(item).join('\n')}</ol></div>`).join('\n')}</div>
-<div class="cv" role="group" aria-label="Example conversation"><p class="cv-title">Example conversation</p><ol class="cv-list"${compact ? ' tabindex="0"' : ''}>${steps.map((st, i) => convoStep(st, tc[i], people)).join('')}</ol><p class="run-end"><span class="run-end-w" aria-hidden="true"><span class="run-end-i">${icon('tick', 'run-ic run-end-ic')}</span></span>${esc(flowEnd(steps))}</p></div>
-${compact ? '' : `<div class="run-detail" aria-hidden="true">${steps.map((st, i) => `<p class="run-detail-item ${tc[i]}"><strong>${pad(i + 1)} ${esc(st.label)}</strong> ${esc(st.does)}${st.approval ? ` <span class="run-detail-approval">${esc(st.approval)}</span>` : ''}</p>`).join('')}</div>`}
+export const filmShots = steps => {
+  const shots = Array.from({ length: FILM_SHOTS }, () => []);
+  steps.forEach((st, i) => shots[SHOT_OF[st.icon]]?.push({ ...st, i }));
+  return shots;
+};
+export function film(scene, { compact = false } = {}) {
+  const { steps, people, titles } = scene;
+  const shots = filmShots(steps);
+  const firstName = people.team.split(',')[0];
+  const owner = scene.owner || people.team.split(', ')[1]?.replace(/^./, c => c.toUpperCase()) || 'Your team';
+  const speaker = m => (m.from === 'agent' && m.note ? 'note' : m.from);
+  const bubble = (m, cls) => {
+    const who = speaker(m);
+    const lane = who === 'note' ? 'agent' : who;
+    const label = { customer: `<span class="visually-hidden">${esc(people.customer)} (example customer): </span>`, agent: `<b class="fb-who">${SITE.name} draft:</b> `, note: '<b class="fb-who">Note:</b> ', team: `<b class="fb-who">${esc(firstName)}:</b> ` }[who];
+    return `<p class="fb fb-${who} lane-${lane} ${cls}">${actorIcon(lane, 'f-ic')}<span>${label}${esc(m.text)}</span></p>`;
+  };
+  const approve = (st, cls) => {
+    const line = st.chat.find(approvalLine);
+    return `<div class="f-approve ${cls}">${checkpoint}<span class="f-btn"><span class="f-btn-idle">Approve and send</span><span class="f-btn-done">${icon('tick', 'f-ic')}${esc(firstName)}: ${esc(line ? line.text : 'Approved.')}</span><i class="f-tap" aria-hidden="true"></i></span></div>`;
+  };
+  const win = (bar, body, cls = '') => `<div class="f-win${cls}"><p class="f-bar"><span class="f-dots" aria-hidden="true"><i></i><i></i><i></i></span>${bar}</p><div class="f-body">${body}</div></div>`;
+  const ui = [
+    // 1. The shopper's message arrives on a phone.
+    sh => {
+      const [m] = shotLines(sh);
+      return `<div class="f-phone"><p class="f-src">${esc(scene.source || 'Website enquiry')}</p><span class="f-typing a0" aria-hidden="true"><i></i><i></i><i></i></span>${bubble(m, 'a1')}<p class="f-meta a2">${esc(people.customer)} · example customer</p></div>`;
+    },
+    // 2. CarSalesTeam reads it and checks the record: tags appear, then the notes.
+    sh => win(`Enquiry · ${esc(people.customer)}`, `<ul class="f-tags">${sh.map((st, j) => `<li class="f-tag lane-agent a${j + 1}">${icon(st.icon, 'f-ic')}${esc(st.status)}</li>`).join('')}<li class="f-tag lane-team a${Math.min(sh.length + 1, 3)}">${actorIcon('team', 'f-ic')}Owner: ${esc(owner)}</li></ul>${shotLines(sh).map((m, j) => bubble(m, `a${j + 2}`)).join('')}`),
+    // 3. The reply is drafted and your team approves it.
+    sh => win(`Draft reply · to ${esc(people.customer)}`, `${shotLines(sh).map(m => bubble(m, 'a1')).join('')}${approve(sh.find(st => st.approval) || sh[0], 'a2')}`),
+    // 4. Hand-off: a brief arrives with the right person; the reminder follows.
+    sh => {
+      const [a, b] = shotLines(sh);
+      return win(`To: ${esc(people.team)}`, `<div class="f-brief a1">${icon('handoff', 'f-ic f-brief-ic')}<div><p class="f-brief-t">Brief from ${SITE.name}</p>${bubble(a, '')}</div></div>${b ? bubble(b, 'a3') : ''}`, ' f-win-inbox');
+    },
+    // 5. Staff confirm, and the confirmation goes to the customer once approved.
+    sh => {
+      const ap = sh.find(st => st.approval);
+      return win(`Enquiry · ${esc(people.customer)}`, `${shotLines(sh).map((m, j) => bubble(m, `a${j + 1}`)).join('')}${ap ? `<p class="f-ok a3">${checkpoint}<span>${esc(ap.approval)}</span></p>` : ''}`);
+    },
+    // 6. End card: closed and logged, with the summary that adds up.
+    sh => `<div class="f-end"><span class="f-end-mark a0" aria-hidden="true">${icon('tick', 'f-ic')}</span><p class="f-end-name">${SITE.name}</p>${shotLines(sh).map(m => bubble(m, 'a1')).join('')}<p class="film-end a2">${esc(flowEnd(steps))}</p></div>`,
+  ];
+  const CAM = ['cam-push', 'cam-zoom cam-at-tags', 'cam-zoom cam-at-approve', 'cam-pan', 'cam-push', 'cam-push'];
+  const stepsOf = sh => `<ol class="shot-steps" start="${sh[0].i + 1}">${sh.map(st => `<li class="film-step lane-${st.actor}">${actorIcon(st.actor, 'f-ic')}<span><span class="f-num">${pad(st.i + 1)}</span> ${esc(st.label)}<span class="visually-hidden">, ${ACTOR[st.actor].toLowerCase()} (${esc(st.who)})${st.approval ? ', your team approves' : ''}</span></span></li>`).join('')}</ol>`;
+  return `<div class="film${compact ? ' film-compact' : ''}" role="group" aria-label="Example film: ${esc(scene.tab)}">
+<div class="film-frame"><ol class="film-shots">${shots.map((sh, k) => `<li class="shot k${k} shot-${['message', 'check', 'approve', 'handoff', 'confirm', 'end'][k]}"><div class="shot-cam ${CAM[k]}"><p class="shot-title"><span class="visually-hidden">Scene ${k + 1} of ${FILM_SHOTS}: </span>${esc(titles[k])}</p><div class="shot-ui">${ui[k](sh)}</div>${stepsOf(sh)}</div></li>`).join('')}</ol></div>
+<div class="film-foot"><p class="film-summary">${esc(flowSummary(steps))}</p><span class="film-ctl"><button type="button" class="film-pause flow-ctl" aria-pressed="false">Pause</button><button type="button" class="film-replay flow-ctl">Replay</button></span></div>
 </div>`;
 }
 export const legend = `<p class="run-legend">${LANE_KEYS.map(([key, name]) => `<span class="lane-key lane-${key}">${actorIcon(key)}${esc(name)}</span>`).join(' ')} ${checkpoint}</p>`;
@@ -112,7 +145,7 @@ export const legend = `<p class="run-legend">${LANE_KEYS.map(([key, name]) => `<
 // them as a run card, the same component as the scenarios; the full wording of each step sits in a closed
 // <details> under it and in llms.txt.
 const FLOW_PHASE = [0, 0, 1, 1, 2, 2, 3, 3];
-const flowRun = w => ({ tab: 'Workflow', people: w.people, steps: w.steps.map((s, i) => ({ ...s, stage: FLOW_PHASE[i] + 1 })) });
+const flowRun = w => ({ tab: 'Workflow', people: w.people, titles: w.titles, steps: w.steps.map((s, i) => ({ ...s, stage: FLOW_PHASE[i] + 1 })) });
 
 // The home page, built from the one service file in src/content/sectors. Its "In short" answer links to the
 // guide whose `sector` is this service, if there is one.
@@ -140,6 +173,12 @@ export function sectorPage(d, guides = []) {
     if (!s.steps.some(st => st.actor === 'customer')) throw new Error(`${d.key}: scene "${s.tab}" needs a customer step`);
     if (!s.people?.customer || !s.people?.team) throw new Error(`${d.key}: scene "${s.tab}" needs people`);
     for (const st of s.steps) if (!Array.isArray(st.chat) || st.chat.length < 1 || st.chat.length > 2 || st.chat.some(m => !ACTOR[m.from] || !m.text || m.text.length > 100)) throw new Error(`${d.key}: scene "${s.tab}" needs 1 or 2 short messages per step`);
+    if (!Array.isArray(s.titles) || s.titles.length !== FILM_SHOTS || s.titles.some(t => t.split(/\s+/).length < 2 || t.split(/\s+/).length > 4)) throw new Error(`${d.key}: scene "${s.tab}" needs ${FILM_SHOTS} title lines of 2 to 4 words`);
+    const shots = filmShots(s.steps);
+    if (shots.flat().length !== s.steps.length || shots.some(sh => !sh.length)) throw new Error(`${d.key}: scene "${s.tab}" needs every step in one of the ${FILM_SHOTS} film shots, and every shot filled`);
+    if (shots.some((sh, k) => k && sh[0].i < shots[k - 1].at(-1).i)) throw new Error(`${d.key}: scene "${s.tab}" film shots must follow the step order`);
+    if (!shots[0].some(st => st.actor === 'customer')) throw new Error(`${d.key}: scene "${s.tab}" film must open on the customer's message`);
+    if (!shots[2].some(st => st.approval)) throw new Error(`${d.key}: scene "${s.tab}" film needs an approval in its third shot`);
     for (const st of s.steps) if (!ACTOR[st.actor] || !st.status || !st.does || !st.label || st.label.split(' ').length > 3 || !ICON_PATHS[st.icon] || !(st.stage >= 1 && st.stage <= STAGES.length)) throw new Error(`${d.key}: scene "${s.tab}" has an incomplete step`);
   }
   const main = `${iconSprite()}<section class="hero" aria-labelledby="headline">
@@ -154,10 +193,7 @@ export function sectorPage(d, guides = []) {
 <p class="micro">${esc(d.hero.audience)}<br>Built and run by ${SITE.name}.</p>
 </div>
 <figure class="hero-card">
-<p class="hero-card-label">Incoming request</p>
-<p class="hero-card-request">“${esc(first.request)}”</p>
-<p class="hero-card-label">What happens next</p>
-${runSteps(first, { compact: true })}
+${film(first, { compact: true })}
 <figcaption>Illustrative example · synthetic data</figcaption>
 </figure>
 </div>
@@ -170,7 +206,7 @@ ${answerBlock({ ...d.summary, link: guide ? { href: `/guides/${guide.slug}`, lab
 <section id="workflow">
 <div class="section-head"><div><div class="eyebrow">${esc(d.workflow.eyebrow)}</div><h2>${esc(d.workflow.heading)}</h2></div><p>${esc(d.workflow.intro)}</p></div>
 <figure class="wf-card">
-${runSteps(flow)}
+${film(flow)}
 <figcaption>Illustrative example · synthetic data</figcaption>
 </figure>
 <details class="wf-more">
@@ -189,12 +225,15 @@ ${runSteps(flow)}
 <div class="scenes">
 ${d.demo.scenes.map((s, i) => `<article class="scene${i === 0 ? ' is-active' : ''}" id="scene-${i}" aria-label="${esc(s.tab)} scenario">
 <div class="demo-meta"><span>${esc(s.source)}</span><span class="pill">Owner: ${esc(s.owner)}</span></div>
-<p class="request">“${esc(s.request)}”</p>
-<div class="rule">${esc(s.rule)}</div>
-${runSteps(s)}
+${film(s)}
+<details class="wf-more scene-more">
+<summary>Read every step</summary>
+<p>Request: “${esc(s.request)}” Rule: ${esc(s.rule)}</p>
+<ol class="wf-steps">${s.steps.map((st, j) => `<li class="lane-${st.actor}"><h3><span class="number">${pad(j + 1)}</span> ${esc(st.label)} <span class="wf-who">${esc(st.who)} · ${STAGES[st.stage - 1]}</span></h3><p>${esc(st.does)}</p>${st.approval ? `<p class="wf-approval"><strong>Human approval:</strong> ${esc(st.approval)}</p>` : ''}</li>`).join('')}</ol>
+</details>
 </article>`).join('\n')}
 </div>
-<div class="demo-actions"><button class="reset flow-ctl" id="flow-pause" type="button">Pause</button><span class="demo-status">A local simulation. No live action is taken.</span></div>
+<div class="demo-actions"><span class="demo-status">A local simulation. No live action is taken.</span></div>
 </div>
 </div>
 <noscript><p>All three scenarios are shown in full above. You can contact <a href="mailto:${SITE.email}">${SITE.email}</a> to get started.</p></noscript>
