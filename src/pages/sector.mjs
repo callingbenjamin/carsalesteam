@@ -108,8 +108,11 @@ ${compact ? '' : `<div class="run-detail" aria-hidden="true">${steps.map((st, i)
 }
 export const legend = `<p class="run-legend">${LANE_KEYS.map(([key, name]) => `<span class="lane-key lane-${key}">${actorIcon(key)}${esc(name)}</span>`).join(' ')} ${checkpoint}</p>`;
 
-// The workflow overview: eight steps, two per phase, each with its actor, icon and any approval.
+// The workflow overview: eight steps, two per phase, each with its actor, icon and any approval. The page shows
+// them as a run card, the same component as the scenarios; the full wording of each step sits in a closed
+// <details> under it and in llms.txt.
 const FLOW_PHASE = [0, 0, 1, 1, 2, 2, 3, 3];
+const flowRun = w => ({ tab: 'Workflow', people: w.people, steps: w.steps.map((s, i) => ({ ...s, stage: FLOW_PHASE[i] + 1 })) });
 
 // The home page, built from the one service file in src/content/sectors. Its "In short" answer links to the
 // guide whose `sector` is this service, if there is one.
@@ -130,12 +133,14 @@ export function sectorPage(d, guides = []) {
   const steps = startSteps(d);
   const guide = guides.find(g => g.sector === d.key);
   if (d.workflow.steps.length !== FLOW_PHASE.length || d.workflow.steps.some(s => !ACTOR[s.actor] || !s.who || !s.title || !s.body || !ICON_PATHS[s.icon])) throw new Error(`${d.key}: the workflow needs 8 complete steps`);
-  for (const s of d.demo.scenes) {
+  if (!d.workflow.intro || d.workflow.intro.split(/\s+/).length > 20) throw new Error(`${d.key}: the workflow intro needs one sentence of 20 words or fewer`);
+  const flow = flowRun(d.workflow);
+  for (const s of [flow, ...d.demo.scenes]) {
     if (s.steps.length < 6 || s.steps.length > 9) throw new Error(`${d.key}: scene "${s.tab}" needs 6 to 9 steps`);
     if (!s.steps.some(st => st.actor === 'customer')) throw new Error(`${d.key}: scene "${s.tab}" needs a customer step`);
     if (!s.people?.customer || !s.people?.team) throw new Error(`${d.key}: scene "${s.tab}" needs people`);
     for (const st of s.steps) if (!Array.isArray(st.chat) || st.chat.length < 1 || st.chat.length > 2 || st.chat.some(m => !ACTOR[m.from] || !m.text || m.text.length > 100)) throw new Error(`${d.key}: scene "${s.tab}" needs 1 or 2 short messages per step`);
-    for (const st of s.steps) if (!ACTOR[st.actor] || !st.status || !st.does || !st.short || !st.label || st.label.split(' ').length > 3 || !ICON_PATHS[st.icon] || !(st.stage >= 1 && st.stage <= STAGES.length)) throw new Error(`${d.key}: scene "${s.tab}" has an incomplete step`);
+    for (const st of s.steps) if (!ACTOR[st.actor] || !st.status || !st.does || !st.label || st.label.split(' ').length > 3 || !ICON_PATHS[st.icon] || !(st.stage >= 1 && st.stage <= STAGES.length)) throw new Error(`${d.key}: scene "${s.tab}" has an incomplete step`);
   }
   const main = `${iconSprite()}<section class="hero" aria-labelledby="headline">
 <div class="hero-media" aria-hidden="true">${posterPicture(d.key, { sizes: HERO_SIZES, attrs: 'fetchpriority="high"' })}<video id="hero-video" muted loop playsinline preload="metadata" tabindex="-1"><source src="${asset(`${media}/hero.mp4`)}" type="video/mp4"></video></div>
@@ -163,10 +168,16 @@ ${promiseStrip()}
 ${answerBlock({ ...d.summary, link: guide ? { href: `/guides/${guide.slug}`, label: guide.title } : { href: '/guides/staff-minutes-per-resolved-request', label: 'How results are measured' } }, d.scope)}
 <div class="statement"><p>${esc(d.statement[0])} <strong>${esc(d.statement[1])}</strong></p></div>
 <section id="workflow">
-<div class="section-head"><div><div class="eyebrow">${esc(d.workflow.eyebrow)}</div><h2>${esc(d.workflow.heading)}</h2></div><p>This page covers one task: ${esc(d.task)}. ${esc(d.workflow.body)}</p></div>
-${legend}
-<ol class="steps flow-steps">${d.workflow.steps.map((s, i) => `<li class="step lane-${s.actor}"><span class="flow-top"><span class="number">${pad(i + 1)}</span> <span class="flow-icons">${actorIcon(s.actor)}${icon(s.icon, 'run-ic')}</span> <span class="run-who">${esc(s.who)}</span><span class="flow-phase">${STAGES[FLOW_PHASE[i]]}</span></span><h3>${esc(s.title)}</h3><p>${esc(s.body)}</p>${s.approval ? `<p class="flow-approval">${checkpoint} <span>${esc(s.approval)}</span></p>` : ''}</li>`).join('\n')}</ol>
-<p class="micro example-note">See it run on illustrative examples with synthetic data in the scenarios below.</p>
+<div class="section-head"><div><div class="eyebrow">${esc(d.workflow.eyebrow)}</div><h2>${esc(d.workflow.heading)}</h2></div><p>${esc(d.workflow.intro)}</p></div>
+<figure class="wf-card">
+${runSteps(flow)}
+<figcaption>Illustrative example · synthetic data</figcaption>
+</figure>
+<details class="wf-more">
+<summary>Read every step</summary>
+<p>${esc(d.workflow.body)}</p>
+<ol class="wf-steps">${d.workflow.steps.map((s, i) => `<li class="lane-${s.actor}"><h3><span class="number">${pad(i + 1)}</span> ${esc(s.title)} <span class="wf-who">${esc(s.who)} · ${STAGES[FLOW_PHASE[i]]}</span></h3><p>${esc(s.body)}</p>${s.approval ? `<p class="wf-approval"><strong>Human approval:</strong> ${esc(s.approval)}</p>` : ''}</li>`).join('\n')}</ol>
+</details>
 </section>
 </div>
 <section class="demo-section" id="example"><div class="wrap">
