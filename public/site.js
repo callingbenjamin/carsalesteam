@@ -107,34 +107,26 @@ ${config.briefRecordsLine}`;
   });
 }
 
-// Hero video: honours reduced motion and stays under the visitor's control.
+// Hero video: muted background loop with no controls. It plays only while some of it is on screen and the tab is
+// visible; with reduced motion it stays paused and the poster shows (styles.css also hides the video then).
 const video = $('hero-video');
-const videoToggle = $('video-toggle');
-if (video && videoToggle) {
-  let userPaused = false;
-  const update = () => {
-    // The play/pause symbol is drawn by CSS and not spoken, so the button's name is exactly its visible words.
-    videoToggle.textContent = video.paused ? 'Play video' : 'Pause video';
-    videoToggle.classList.toggle('is-paused', video.paused);
-    video.classList.toggle('is-playing', !video.paused);
+if (video) {
+  let onScreen = true;
+  const sync = () => video.classList.toggle('is-playing', !video.paused);
+  const want = () => onScreen && !document.hidden && !motion.matches;
+  const apply = async () => {
+    if (!want()) { video.pause(); return; }
+    try { await video.play(); } catch { /* autoplay refused: the poster stays */ }
   };
-  const start = async () => { try { await video.play(); } catch { update(); } };
   video.muted = true;
-  video.addEventListener('play', update);
-  video.addEventListener('pause', update);
-  video.addEventListener('error', () => { videoToggle.hidden = true; });
-  videoToggle.addEventListener('click', () => {
-    if (video.paused) { userPaused = false; start(); } else { userPaused = true; video.pause(); }
-  });
-  motion.addEventListener('change', () => {
-    if (motion.matches) { video.pause(); videoToggle.hidden = true; }
-    else { videoToggle.hidden = false; if (!userPaused) start(); }
-  });
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) video.pause();
-    else if (!motion.matches && !userPaused) start();
-  });
-  if (motion.matches) videoToggle.hidden = true; else start();
+  video.addEventListener('play', sync);
+  video.addEventListener('pause', sync);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; apply(); }).observe(video);
+  }
+  motion.addEventListener('change', apply);
+  document.addEventListener('visibilitychange', apply);
+  apply();
 }
 
 // Home hero: slow crossfade through the industry photographs.

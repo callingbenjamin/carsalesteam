@@ -204,7 +204,7 @@ ${film(first, { compact: true })}
 <figcaption>Illustrative example · synthetic data</figcaption>
 </figure>
 </div>
-<div class="hero-foot"><span>${esc(d.hero.foot)}</span><button type="button" class="video-control" id="video-toggle">Pause video</button></div>
+<div class="hero-foot"><span>${esc(d.hero.foot)}</span></div>
 </section>
 <div class="wrap">
 ${promiseStrip()}

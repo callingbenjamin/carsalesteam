@@ -38,22 +38,25 @@ h3{font:500 27px/1.3 var(--font);letter-spacing:-.6px;margin:15px 0}
 
 /* Header */
 /* The header keeps one layout box in every state, so nothing on the page moves. Compact (.scrolled) changes only
-   transform, clip-path and paint: the bar is drawn by two halves (::before left, ::after right) that slide in by
-   --in and shrink to the compact height, the content slides with them by --dx, and the whole header lifts by --dy.
-   Each half reaches 60px past the centre and is clipped at the centre, so the seam never shows. */
-.top{position:fixed;top:23px;left:0;width:100%;z-index:30;container-type:inline-size;transition:transform .25s}
-.nav{--pad:48px;--in:0px;--dx:0px;--k:1;--bar-bg:#20292cc4;--bar-bd:#ffffff20;min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:30px;position:relative;isolation:isolate;border:1px solid transparent;border-radius:6px}
-.nav::before,.nav::after{content:"";position:absolute;z-index:-1;top:-1px;bottom:-1px;box-sizing:border-box;width:calc(50% + 61px);border:1px solid var(--bar-bd);border-radius:inherit;background:var(--bar-bg);pointer-events:none;transition:transform .25s,clip-path .25s,background-color .25s,border-color .25s,box-shadow .25s}
-.nav::before{left:-1px;clip-path:inset(-60px 60px -60px -60px)}
-.nav::after{right:-1px;clip-path:inset(-60px -60px -60px 60px)}
-.brand-lockup,.desktop,.mobile{transition:transform .25s}
-/* Compact: the bar narrows to 1070px wide (22px inside) and 72.2px tall, 14px from the top, as before. */
-.top.scrolled{transform:translateY(-11.9px)}
-.top.scrolled .nav{--in:max(0px,(min(100cqw,1400px) - 1070px) / 2);--dx:calc(var(--in) + 22px - var(--pad));--k:.9255;--bar-bg:#20292cf7;--bar-bd:#ffffff25}
-.top.scrolled .nav::before,.top.scrolled .nav::after{backdrop-filter:blur(20px);box-shadow:0 6px 30px #0003}
+   transform, clip-path and paint. The bar's fill and blur are one layer (.top::before) that the compact state clips
+   to the narrower, shorter shape. Its border and shadow are two halves (.nav::before left, ::after right) that slide
+   in by --in and shrink to the compact height (--k); each reaches 60px past the centre, which is on a whole pixel,
+   and is clipped there, so the seam never shows. The content slides by --dx and the whole header lifts by --dy. */
+.top{--pad:48px;--r:6px;--in:0px;--dx:0px;--k:1;--cy:0px;--bar-bg:#20292cc4;--bar-bd:#ffffff20;position:fixed;top:23px;left:0;width:100%;z-index:30;container-type:inline-size;transition:transform .25s}
+.top::before{content:"";position:absolute;z-index:-1;top:0;bottom:0;left:calc((100% - min(100%,1400px)) / 2);right:calc((100% - min(100%,1400px)) / 2);background:var(--bar-bg);clip-path:inset(var(--cy) var(--in) round var(--r) / calc(var(--r) * var(--k)));pointer-events:none;transition:clip-path .25s,background-color .25s}
+.nav{min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:30px;position:relative;isolation:isolate;border:1px solid transparent;border-radius:var(--r)}
+.nav::before,.nav::after{content:"";position:absolute;z-index:-1;top:-1px;bottom:-1px;box-sizing:border-box;border:1px solid var(--bar-bd);border-radius:inherit;pointer-events:none;transition:transform .25s,clip-path .25s,border-color .25s,box-shadow .25s}
+.nav::before{left:-1px;width:calc(round(down,50% + 1px,1px) + 60px);clip-path:inset(-60px 60px -60px -60px)}
+.nav::after{right:-1px;width:calc(100% + 62px - round(down,50% + 1px,1px));clip-path:inset(-60px -60px -60px 60px)}
+.brand-lockup,.brand-by,.desktop,.mobile{transition:transform .25s}
+/* Compact: the bar narrows to 1070px wide (22px inside) and 72px tall, 14px from the top, as before. */
+.top.scrolled{--in:round(max(0px,(min(100cqw,1400px) - 1070px) / 2),1px);--dx:calc(var(--in) + 22px - var(--pad));--k:.9231;--cy:3px;--bar-bg:#20292cf7;--bar-bd:#ffffff25;transform:translateY(-12px)}
+.top.scrolled::before{backdrop-filter:blur(20px)}
+.top.scrolled .nav{backdrop-filter:blur(0px)}
+.top.scrolled .nav::before,.top.scrolled .nav::after{box-shadow:0 6px 30px #0003}
 .top.scrolled .nav::before{transform:translateX(var(--in)) scaleY(var(--k));clip-path:inset(-60px calc(60px + var(--in)) -60px -60px)}
 .top.scrolled .nav::after{transform:translateX(calc(0px - var(--in))) scaleY(var(--k));clip-path:inset(-60px -60px -60px calc(60px + var(--in)))}
-.top.scrolled .brand-lockup{transform:translateX(var(--dx))}
+.top.scrolled .brand-lockup{transform:translate(var(--dx),var(--by,0px))}
 .top.scrolled .desktop,.top.scrolled .mobile{transform:translateX(calc(0px - var(--dx)))}
 .brand{display:flex;align-items:center;gap:9px;font-size:25px;font-weight:600;line-height:1;white-space:nowrap;letter-spacing:-1px}
 .brand-logo{display:block;height:30px;width:196px;flex-shrink:0}
@@ -66,7 +69,7 @@ h3{font:500 27px/1.3 var(--font);letter-spacing:-.6px;margin:15px 0}
 .desktop>a:not(.btn):hover{color:#fff;text-decoration:underline;text-underline-offset:5px}
 .mobile{display:none}
 /* Pages without a photo hero: over ivory, a see-through bar turns grey, so it is solid graphite. */
-.plain .nav{--bar-bg:var(--graphite)}
+.plain .top:not(.scrolled){--bar-bg:var(--graphite)}
 
 /* Buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:16px;background:var(--amber);color:var(--graphite);border:1px solid transparent;border-radius:5px;padding:14px 22px;font-size:14px;font-weight:500;line-height:1.3;transition:transform .2s,background .2s}
@@ -106,9 +109,6 @@ h3{font:500 27px/1.3 var(--font);letter-spacing:-.6px;margin:15px 0}
 .handoff strong{font-weight:500;color:#fff}
 .hero-card figcaption{font-size:10px;color:#cfccc6;margin-top:10px}
 .hero-foot{position:absolute;bottom:26px;left:0;width:100%;display:flex;justify-content:space-between;align-items:center;padding:0 48px;font-size:10px;color:#cfccc6;gap:15px}
-.video-control{background:#ffffff10;backdrop-filter:blur(10px);border:1px solid #ffffff40;border-radius:30px;color:#fff;font-size:11px;padding:9px 13px;white-space:nowrap}
-.video-control::before{content:'Ⅱ' / '';margin-right:.7em}
-.video-control.is-paused::before{content:'▶' / ''}
 
 /* Sections */
 section:not(.hero){padding:100px 0}
@@ -230,7 +230,7 @@ section.page{padding:190px 0 110px}
   .hero-card-request{font-size:17px}
   .desktop{gap:20px}
   .brand small{display:none}
-  .nav{--pad:32px}
+  .top{--pad:32px}
   .demo{gap:35px}
   .start-panel{padding:45px;gap:50px}
   .faq,.measure{gap:60px}
@@ -244,8 +244,8 @@ section.page{padding:190px 0 110px}
 @media(max-width:760px){
   html{scroll-padding-top:100px}
   .wrap{padding:0 22px}
-  .top{top:13px}
-  .nav{--pad:22px;min-height:62px;gap:12px}
+  .top{--pad:22px;top:13px}
+  .nav{min-height:62px;gap:12px}
   .brand small{display:block;font-size:8px;padding-left:10px;margin-left:2px}
   .desktop{display:none}
   .mobile{display:block;position:relative;font-size:12px}
@@ -254,9 +254,9 @@ section.page{padding:190px 0 110px}
   .mobile nav{position:absolute;top:45px;right:0;min-width:210px;background:#20292cf2;backdrop-filter:blur(20px);border:1px solid #ffffff30;border-radius:15px;padding:12px;box-shadow:0 10px 30px #0003}
   .mobile nav a{display:block;padding:10px}
   .mobile nav a.btn{margin-top:6px}
-  /* Compact: 12px in from each side, 13px inside, 57.8px tall, 14px from the top, as before. */
-  .top.scrolled{transform:translateY(-1.1px)}
-  .top.scrolled .nav{--in:12px;--dx:3px;--k:.9323}
+  /* Compact: 12px in from each side, 13px inside, 58px tall, 14px from the top, as before. */
+  .top.scrolled{--in:12px;--dx:3px;--by:-1px;--k:.9355;--cy:2px;transform:translateY(-1px)}
+  .top.scrolled .brand-by{transform:translateY(1px)}
   .hero{min-height:900px;min-height:100svh;padding:140px 0 110px;align-items:start}
   .hero-content{grid-template-columns:1fr;gap:30px}
   .hero h1{font-size:min(60px,8.5cqi);letter-spacing:-1.7px;line-height:1.13;margin:22px 0}
@@ -272,7 +272,6 @@ section.page{padding:190px 0 110px}
   .hero-wash{background:linear-gradient(90deg,#20292cb3,#20292c55),linear-gradient(0deg,var(--bg),transparent 45%)}
   .hero-foot{padding:0 22px;font-size:9px;bottom:22px}
   .hero-foot>span{max-width:180px}
-  .video-control{font-size:9px;padding:9px 11px}
   .actions{margin:22px 0 17px}
   .btn{font-size:12px;padding:13px 17px}
   .promise-strip{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:10px;padding:24px 0}
@@ -317,7 +316,7 @@ section.page{padding:190px 0 110px}
   .brand-logo{height:27px;width:176px}
   .brand-by{font-size:11.5px;margin:10.3px 0 0 7px}
   .hero h1{letter-spacing:-2px}
-  .nav{border-radius:5px}
+  .top{--r:5px}
 }
 
 /* The logo stands alone where "by Actuathron" would crowd the menu: below 390px it would sit within 20px of the
