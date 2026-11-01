@@ -72,6 +72,9 @@ h3{font:500 27px/1.3 var(--font);letter-spacing:-.6px;margin:15px 0}
 .hero-content{width:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,500px);gap:48px;align-items:center}
 .hero h1{font:500 clamp(40px,min(5.2vw,calc((100vw - 644px)*.085)),64px)/1.1 var(--font);letter-spacing:-2.9px;margin:25px 0;max-width:760px}
 .hero h1 em{font-style:normal;display:block}
+/* Hero accent: the hero is dark (graphite wash over the film), so the phrase is set in the mark's amber. A tight graphite halo keeps it
+   at 3:1 or better where the film behind it turns bright (window light). */
+.hero h1 .accent{color:var(--amber);text-shadow:0 0 .08em var(--graphite),0 0 .2em var(--graphite),0 0 .5em #20292c99}
 .intro{color:#dfdcd6;font-size:17px;line-height:1.7;max-width:590px}
 .actions{display:flex;gap:15px;flex-wrap:wrap;margin:28px 0 22px}
 .hero .micro{color:#cdcac4}
@@ -215,6 +218,11 @@ section.page{padding:190px 0 110px}
   .faq,.measure{gap:60px}
 }
 
+/* Narrow tablets: the 440px film card leaves the headline under 300px, so stack the hero like phones do. */
+@media(min-width:761px) and (max-width:899px){
+  .hero-content{grid-template-columns:minmax(0,1fr);gap:30px}
+  .hero h1{font-size:min(60px,calc((100vw - 64px)*.08))}
+}
 @media(max-width:760px){
   html{scroll-padding-top:100px}
   .wrap{padding:0 22px}
@@ -309,6 +317,11 @@ section.page{padding:190px 0 110px}
 /* Home hero has no chat column, so the headline can use the full width. */
 .home .hero-content{grid-template-columns:minmax(0,900px)}
 .home .hero h1{max-width:900px}
+
+/* Large phones: a slightly smaller ratio keeps the headline on two lines up to the 760px breakpoint. (after the 760px block, so it wins) */
+@media(min-width:600px) and (max-width:760px){
+  .hero h1{font-size:min(60px,calc((100vw - 44px)*.08))}
+}
 
 /* Answer-first block ("In short"): a direct answer and key takeaways near the top of key pages. */
 .answer{display:grid;grid-template-columns:1fr 1.35fr;gap:105px;align-items:start;border-bottom:1px solid var(--line)}
