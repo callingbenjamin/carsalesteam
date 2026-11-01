@@ -15,7 +15,21 @@ MARK = (ROOT / 'public/brand/carsalesteam-mark.svg').read_text()
 FAVICON = (ROOT / 'public/favicon.svg').read_text()
 FONT = (ROOT / 'public/fonts/geist-latin-v5.woff2').as_uri()
 
-def card(eyebrow, lines, photo=None):
+def accent_lines(lines, accent):
+    """Escapes each headline line, wrapping the part of the accent phrase that falls on it in <span class="accent">."""
+    full = ' '.join(lines)
+    at = full.find(accent) if accent else -1
+    out, start = [], 0
+    for l in lines:
+        a, b = max(at, start) - start, min(at + len(accent or ''), start + len(l)) - start
+        if at < 0 or b <= a:
+            out.append(html.escape(l))
+        else:
+            out.append(html.escape(l[:a]) + '<span class="accent">' + html.escape(l[a:b]) + '</span>' + html.escape(l[b:]))
+        start += len(l) + 1
+    return '<br>'.join(out)
+
+def card(eyebrow, lines, photo=None, accent=None):
     bg = f'url({photo.as_uri()}) center/cover' if photo else '#20292C'
     return f'''<!doctype html><html><head><style>
 @font-face{{font-family:Geist;src:url({FONT}) format('woff2');font-weight:400 700}}
@@ -25,10 +39,12 @@ body{{margin:0;width:1200px;height:630px;font-family:Geist;color:#F5F2EB;backgro
 .brand svg{{display:block;height:46px;width:300px}}
 .eyebrow{{font-size:16px;letter-spacing:3px;text-transform:uppercase;color:#aaa8a3;margin-bottom:22px}}
 h1{{font-weight:500;font-size:64px;line-height:1.08;letter-spacing:-2.4px;margin:0;max-width:900px;white-space:nowrap}}
+/* Same amber accent as the hero, with a dark halo so it reads over the photo. */
+.accent{{color:#F2B544;text-shadow:0 1px 12px rgba(20,24,26,.55),0 0 .08em #20292C,0 0 .2em #20292C}}
 .bar{{width:120px;height:4px;background:#F2B544}}
 </style></head><body><div class="wash"></div><div class="in">
 <div class="brand">{LOGO}</div>
-<div><div class="eyebrow">{html.escape(eyebrow)}</div><h1>{'<br>'.join(html.escape(l) for l in lines)}</h1></div>
+<div><div class="eyebrow">{html.escape(eyebrow)}</div><h1>{accent_lines(lines, accent)}</h1></div>
 <div class="bar"></div></div></body></html>'''
 
 def icon(size):
@@ -61,7 +77,8 @@ def write_ico(pngs, out):
     out.write_bytes(head + b''.join(data))
 
 d = json.loads((ROOT / 'src/content/sectors/dealerships.json').read_text())
-shot(card('Dealership enquiry follow-up for dealer groups', d['hero']['headline'], ROOT / 'public/media/dealerships/poster.jpg'),
+shot(card('Dealership enquiry follow-up for dealer groups', d['hero']['headline'], ROOT / 'public/media/dealerships/poster.jpg',
+           d['hero'].get('accent')),
      ROOT / 'public/og/home.png', 1200, 630)
 shot(icon(180), ROOT / 'public/apple-touch-icon.png', 180, 180)
 for size in (192, 512):
