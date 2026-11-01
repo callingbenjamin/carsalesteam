@@ -8,8 +8,8 @@ const nav = [
   { href: '/#start', label: 'Talk to us', button: true },
 ];
 
-function plainPage({ path, title, category, description, current, body, noindex = false }) {
-  const full = `${title} — ${SITE.name}${category ? ` | ${category}` : ''}`;
+function plainPage({ path, title, description, current, body, noindex = false }) {
+  const full = `${title} · ${SITE.titleBrand}`;
   return page({
     path,
     title: full,
@@ -34,7 +34,6 @@ export function privacyPage() {
   return plainPage({
     path: '/privacy',
     title: 'Privacy',
-    category: 'Website privacy notice',
     description: PRIVACY_DEFINITION,
     current: 'privacy',
     body: `<div class="eyebrow">Privacy</div>

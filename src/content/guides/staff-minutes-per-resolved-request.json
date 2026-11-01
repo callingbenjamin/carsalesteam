@@ -4,6 +4,7 @@
   "topic": "Measuring results",
   "title": "What is staff minutes per resolved request?",
   "shortTitle": "Staff minutes per resolved request",
+  "pageTitle": "Minutes per resolved request",
   "description": "Staff minutes per resolved request is the total human time spent getting requests to a confirmed resolution, divided by the number of requests resolved.",
   "published": "2026-10-31",
   "updated": "2026-10-31",
