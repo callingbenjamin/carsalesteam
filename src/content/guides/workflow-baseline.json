@@ -4,12 +4,12 @@
   "topic": "Measuring results",
   "title": "How to write a baseline before a workflow goes live",
   "shortTitle": "How to write a baseline",
-  "description": "Pick the type of request the workflow will handle, agree one main measure and what counts as resolved, then record how your team handles those requests today over a typical period.",
+  "description": "Pick the request type, agree one main measure and what counts as resolved, then record how your team handles those requests today over a typical period.",
   "published": "2026-10-31",
   "updated": "2026-10-31",
   "summary": {
     "question": "How do I write a baseline before a workflow goes live?",
-    "answer": "Pick the type of request the workflow will handle, agree one main measure and what counts as resolved, then record how your team handles those requests today over a typical period. Write it down before go-live and compare with it, measured the same way, at every review.",
+    "answer": "Pick the request type, agree one main measure and what counts as resolved, then record how your team handles those requests today over a typical period. Write it down before go-live and compare with it, measured the same way, at every review.",
     "takeaways": [
       "Write the baseline before anything goes live; it cannot be rebuilt honestly afterwards.",
       "Agree what counts as resolved before you start measuring.",

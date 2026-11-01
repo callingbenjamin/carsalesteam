@@ -2,7 +2,7 @@
   "key": "dealerships",
   "name": "Dealerships",
   "tagline": "Your back office that never clocks out, for dealerships.",
-  "description": "CarSalesTeam is a managed workflow service for dealer groups and their dealerships that brings vehicle enquiries, test-drive requests and service follow-ups into one workflow, with your sales and service teams in control.",
+  "description": "CarSalesTeam is a managed workflow service that puts dealership vehicle enquiries, test drives and service follow-ups in one workflow, with staff in control.",
   "topic": "Dealership enquiry follow-up",
   "task": "following up sales and service enquiries",
   "hero": {
@@ -12,13 +12,13 @@
       "clocks out, for dealerships."
     ],
     "accent": "never clocks out",
-    "intro": "CarSalesTeam is a managed workflow service for dealer groups and their dealerships that brings vehicle enquiries, test-drive requests and service follow-ups into one workflow, with your sales and service teams in control.",
+    "intro": "CarSalesTeam is a managed workflow service that puts dealership vehicle enquiries, test drives and service follow-ups in one workflow, with staff in control.",
     "audience": "For dealer groups & their dealerships",
     "foot": "For the people behind every sale."
   },
   "summary": {
     "question": "What is CarSalesTeam?",
-    "answer": "CarSalesTeam is a managed workflow service for dealer groups and their dealerships that brings vehicle enquiries, test-drive requests and service follow-ups into one workflow, with your sales and service teams in control. Every enquiry gets a clear next step, and staff confirm inventory and appointments before anything is promised.",
+    "answer": "CarSalesTeam is a managed workflow service that puts dealership vehicle enquiries, test drives and service follow-ups in one workflow, with staff in control. Every enquiry gets a clear next step, and staff confirm inventory and appointments before anything is promised.",
     "takeaways": [
       "Every enquiry gets a clear next step and a named person to confirm it.",
       "Vehicle availability, discounts, financing, trade-in valuations and repair authorisations stay with authorised staff.",

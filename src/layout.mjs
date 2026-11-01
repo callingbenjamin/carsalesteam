@@ -22,6 +22,9 @@ export const arrow = ARROW;
 // title: the <title>, "{Page} · CarSalesTeam by Actuathron" (home: brand first). shareTitle: og:title and
 // twitter:title, the same unless a page has a fuller name for share previews.
 // imageAlt: one sentence naming the brand and what the share image shows.
+// The Markdown copy of each indexable page (built by build.mjs): / -> /index.md, /guides/x -> /guides/x.md.
+export const mdPath = path => (path === '/' ? '/index' : path) + '.md';
+
 export function page({ path, title, shareTitle = title, description, image, imageAlt, bodyClass = '', header, main, footer, config, jsonLd, ogType = 'website', noindex = false }) {
   if (!imageAlt) throw new Error(`${path}: page() needs imageAlt for its share image`);
   const url = SITE.url + path;
@@ -32,7 +35,7 @@ export function page({ path, title, shareTitle = title, description, image, imag
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
-${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${url}">`}
+${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${url}">\n<link rel="alternate" type="text/markdown" href="${mdPath(path)}">`}
 <meta name="theme-color" content="#20292C">
 <meta property="og:type" content="${ogType}">
 <meta property="og:site_name" content="${esc(SITE.titleBrand)}">
@@ -44,6 +47,7 @@ ${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" hr
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="${esc(imageAlt)}">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="${SITE.url}${image}">
 <meta name="twitter:image:alt" content="${esc(imageAlt)}">
 <meta name="twitter:title" content="${esc(shareTitle)}">
 <meta name="twitter:description" content="${esc(description)}">

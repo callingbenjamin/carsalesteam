@@ -6,7 +6,9 @@
     "build": "node build.mjs",
     "dev": "node build.mjs && npx --yes serve@14.2.4 dist -l 4321",
     "check": "node build.mjs && node scripts/check.mjs && node scripts/test-middleware.mjs && node scripts/test-brand.mjs",
-    "test": "node scripts/test-middleware.mjs && node scripts/test-brand.mjs"
+    "test": "node scripts/test-middleware.mjs && node scripts/test-brand.mjs",
+    "vercel-build": "node build.mjs && node scripts/indexnow.mjs --if-production",
+    "indexnow": "node scripts/indexnow.mjs"
   },
   "engines": {
     "node": ">=20"

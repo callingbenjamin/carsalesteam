@@ -5,12 +5,12 @@
   "title": "What is a human-in-the-loop workflow? How it keeps a person in control",
   "shortTitle": "What is a human-in-the-loop workflow?",
   "pageTitle": "Human-in-the-loop workflows",
-  "description": "A human-in-the-loop workflow is one where software gathers requests and prepares the next step, and a named person confirms every action that matters before it happens.",
+  "description": "A human-in-the-loop workflow is one where software gathers requests and prepares the next step, and a named person confirms every key action before it happens.",
   "published": "2026-10-31",
   "updated": "2026-10-31",
   "summary": {
     "question": "What is a human-in-the-loop workflow?",
-    "answer": "A human-in-the-loop workflow is one where software gathers requests and prepares the next step, and a named person confirms every action that matters before it happens. The software does the routine work of sorting, drafting and following up; people keep the decisions and the final say on whether a request is done.",
+    "answer": "A human-in-the-loop workflow is one where software gathers requests and prepares the next step, and a named person confirms every key action before it happens. The software does the routine work of sorting, drafting and following up; people keep the decisions and the final say on whether a request is done.",
     "takeaways": [
       "Software prepares; a named person confirms the actions that matter.",
       "Agree in writing, before anything goes live, which steps wait for a person.",
