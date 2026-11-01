@@ -1,8 +1,7 @@
 // IndexNow (https://www.indexnow.org/): tells participating search engines (Bing, Yandex, Seznam, Naver and others)
 // that every URL in the sitemap may have changed. The key file is public/b389f59c7df5dc2835e3fc134f4c1916.txt.
-// Runs at the end of each Vercel production build (VERCEL_ENV=production), so it costs nothing and needs no
-// GitHub Actions; engines fetch the pages later, after the deployment is live. Run it by hand after a deploy with
-// `npm run indexnow`. It never fails the build: errors are logged and the exit code stays 0.
+// Manual use only: `npm run indexnow` after a build. Production deploys ping automatically after go-live through
+// middleware.js and api/indexnow-*.js. It never exits non-zero.
 import { readFileSync } from 'node:fs';
 
 const KEY = 'b389f59c7df5dc2835e3fc134f4c1916';
@@ -21,9 +20,4 @@ export async function ping() {
   return res.status;
 }
 
-const auto = process.argv.includes('--if-production');
-if (auto && process.env.VERCEL_ENV !== 'production') {
-  console.log('IndexNow: skipped (not a production build)');
-} else {
-  try { await ping(); } catch (e) { console.log(`IndexNow: ping failed (${e.message}); the build continues`); }
-}
+try { await ping(); } catch (e) { console.log(`IndexNow: ping failed (${e.message})`); }
