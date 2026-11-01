@@ -24,7 +24,7 @@ body{{margin:0;width:1200px;height:630px;font-family:Geist;color:#F5F2EB;backgro
 .in{{position:absolute;inset:0;padding:64px 72px;display:flex;flex-direction:column;justify-content:space-between}}
 .brand svg{{display:block;height:46px;width:300px}}
 .eyebrow{{font-size:16px;letter-spacing:3px;text-transform:uppercase;color:#aaa8a3;margin-bottom:22px}}
-h1{{font-weight:500;font-size:74px;line-height:1.08;letter-spacing:-2.8px;margin:0;max-width:820px}}
+h1{{font-weight:500;font-size:64px;line-height:1.08;letter-spacing:-2.4px;margin:0;max-width:900px;white-space:nowrap}}
 .bar{{width:120px;height:4px;background:#F2B544}}
 </style></head><body><div class="wash"></div><div class="in">
 <div class="brand">{LOGO}</div>
