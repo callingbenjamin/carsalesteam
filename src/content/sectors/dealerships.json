@@ -846,9 +846,5 @@
       "q": "Does it handle both sales and service?",
       "a": "Yes, if you agree both. Sales and service each run as their own workflow, with their own approval rules and their own results."
     }
-  ],
-  "footage": {
-    "credit": "Antoni Shkraba",
-    "url": "https://www.pexels.com/video/couple-talking-to-a-car-dealer-7154209/"
-  }
+  ]
 }
