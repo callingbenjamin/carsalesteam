@@ -3,9 +3,10 @@ import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync } from 'node:fs'
 import { dirname, join } from 'node:path';
 import { SITE } from './src/site.mjs';
 import { sectorPage } from './src/pages/sector.mjs';
-import { privacyPage, notFoundPage } from './src/pages/plain.mjs';
-import { guidesIndexPage, guidePage } from './src/pages/guides.mjs';
-import { llmsTxt, llmsFullTxt } from './src/llms.mjs';
+import { privacyPage, notFoundPage, PRIVACY_BODY } from './src/pages/plain.mjs';
+import { guidesIndexPage, guidePage, GUIDES_INDEX } from './src/pages/guides.mjs';
+import { llmsTxt, llmsFullTxt, sectorMd, guideMd } from './src/llms.mjs';
+import { mdPath } from './src/layout.mjs';
 import { BLOCKED_ROBOTS, ALLOWED_ROBOTS, SIGNAL } from './src/crawlers.mjs';
 
 const OUT = 'dist';
@@ -57,5 +58,26 @@ Sitemap: ${SITE.url}/sitemap.xml
 `);
 write('llms.txt', llmsTxt(sector, guides));
 write('llms-full.txt', llmsFullTxt(sector, guides));
+
+// Markdown copies of every indexable page, linked from each page with <link rel="alternate" type="text/markdown">
+// and listed in llms.txt. Same content files as the HTML; vercel.json serves them as text/markdown.
+const u = p => SITE.url + p;
+const mdDecode = s => s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+const htmlToMd = html => mdDecode(html
+  .replace(/<div class="eyebrow">[^<]*<\/div>\n?/g, '')
+  .replace(/<h1>(.*?)<\/h1>/g, '# $1\n')
+  .replace(/<h2>(.*?)<\/h2>/g, '\n## $1\n')
+  .replace(/<li>(.*?)<\/li>/g, '- $1\n')
+  .replace(/<strong>(.*?)<\/strong>/g, '**$1**')
+  .replace(/<a href="mailto:([^"]+)">[^<]*<\/a>/g, '$1')
+  .replace(/<p[^>]*>(.*?)<\/p>/g, '$1\n')
+  .replace(/<\/?ul>/g, '')
+  .replace(/<[^>]+>/g, ''))
+  .replace(/\n{3,}/g, '\n\n').trim();
+const md = (path, text) => write(mdPath(path).slice(1), `${text.trim()}\n`);
+md('/', `# ${SITE.name}\n\n> ${SITE.description}\n\nCanonical: ${u('/')}\n\n${sectorMd(sector)}\n\nBuilt and run by ${SITE.parent.name}.`);
+md('/guides', `# ${GUIDES_INDEX.title}\n\n> ${GUIDES_INDEX.description}\n\nCanonical: ${u('/guides')}\n\n${GUIDES_INDEX.summary.answer}\n\n${guides.map(g => `- [${g.title}](${u(`/guides/${g.slug}`)}) (${g.kind}, ${g.topic}): ${g.description}`).join('\n')}`);
+for (const g of guides) md(`/guides/${g.slug}`, `# ${g.title}\n\n> ${g.description}\n\nCanonical: ${u(`/guides/${g.slug}`)}\n\n${guideMd(g).replace(/^## [^\n]*\n\nURL: [^\n]*\n/, '')}`);
+md('/privacy', `${htmlToMd(PRIVACY_BODY)}\n\nCanonical: ${u('/privacy')}`);
 
 console.log(`Built ${paths.length} pages into ${OUT}/`);

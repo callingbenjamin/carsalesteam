@@ -28,15 +28,9 @@ function plainPage({ path, title, description, current, body, noindex = false })
   });
 }
 
-const PRIVACY_DEFINITION = `This privacy notice explains how the ${SITE.name} website handles your information: it uses no cookies, analytics or trackers, and enquiries stay in your browser until you send them.`;
+const PRIVACY_DEFINITION = `This privacy notice explains how the ${SITE.name} website handles your data: no cookies, analytics or trackers, and enquiries stay in your browser until sent.`;
 
-export function privacyPage() {
-  return plainPage({
-    path: '/privacy',
-    title: 'Privacy',
-    description: PRIVACY_DEFINITION,
-    current: 'privacy',
-    body: `<div class="eyebrow">Privacy</div>
+export const PRIVACY_BODY = `<div class="eyebrow">Privacy</div>
 <h1>How this website handles your information.</h1>
 <p class="lead">${PRIVACY_DEFINITION}</p>
 <p>Last updated 31 October 2026.</p>
@@ -52,7 +46,15 @@ export function privacyPage() {
 <h2>Hosting</h2>
 <p>The site is hosted by Vercel. Like most web hosts, Vercel keeps standard access logs (for example IP address, browser type and time of request) to run and protect the service.</p>
 <h2>Contact</h2>
-<p>Questions about this notice: <a href="mailto:${SITE.email}">${SITE.email}</a>.</p>`,
+<p>Questions about this notice: <a href="mailto:${SITE.email}">${SITE.email}</a>.</p>`;
+
+export function privacyPage() {
+  return plainPage({
+    path: '/privacy',
+    title: 'Privacy',
+    description: PRIVACY_DEFINITION,
+    current: 'privacy',
+    body: PRIVACY_BODY,
   });
 }
 

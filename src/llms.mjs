@@ -72,10 +72,19 @@ ${guides.map(g => `- [${g.title}](${url(`/guides/${g.slug}`)}): ${g.description}
 
 - [Full text of this site](${url('/llms-full.txt')}): every page above as plain text.
 - [Privacy](${url('/privacy')}): how this website handles your information.
+
+## Markdown copies
+
+Each page is also available as Markdown:
+
+- [Home](${url('/index.md')})
+- [Guides](${url('/guides.md')})
+${guides.map(g => `- [${g.title}](${url(`/guides/${g.slug}.md`)})`).join('\n')}
+- [Privacy](${url('/privacy.md')})
 `;
 }
 
-const sectorMd = s => `## ${s.summary.question}
+export const sectorMd = s => `## ${s.summary.question}
 
 URL: ${url('/')}
 
@@ -119,7 +128,7 @@ ${faqMd([...s.faq, ...SITE_FAQ, COST_FAQ, ENQUIRY_FAQ])}
 
 Principles: ${PROMISES.join('; ')}.`;
 
-const guideMd = g => `## ${g.title}
+export const guideMd = g => `## ${g.title}
 
 URL: ${url(`/guides/${g.slug}`)}
 ${g.kind}. Topic: ${g.topic}. By the ${SITE.name} team. Published ${g.published}, updated ${g.updated}.

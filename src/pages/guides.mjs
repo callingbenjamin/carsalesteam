@@ -19,14 +19,14 @@ ${(s.paragraphs ?? []).map(p => `<p>${esc(p)}</p>`).join('\n')}${s.list ? `\n<${
 
 export const GUIDES_INDEX = {
   title: 'Guides',
-  description: `${SITE.name} guides are practical how-tos and definitions for handling sales and service enquiries at dealer groups and their dealerships: how to stop them getting lost, and how to measure the results.`,
+  description: `${SITE.name} guides are practical how-tos and definitions for handling dealership sales and service enquiries: how to stop losing them and measure the results.`,
   scope: {
     covers: 'Handling vehicle, test-drive and service enquiries at dealer groups and their dealerships, and measuring the results.',
     excludes: 'Product documentation, prices and customer case studies.',
   },
   summary: {
     question: 'What are these guides?',
-    answer: `${SITE.name} guides are practical how-tos and definitions for handling sales and service enquiries at dealer groups and their dealerships: how to stop them getting lost, and how to measure the results. Each one stands on its own and links to the example workflow on the ${SITE.name} home page.`,
+    answer: `${SITE.name} guides are practical how-tos and definitions for handling dealership sales and service enquiries: how to stop losing them and measure the results. Each one stands on its own and links to the example workflow on the ${SITE.name} home page.`,
     takeaways: [
       'Guides you can use whether or not you work with us.',
       'Plain definitions of the terms we use.',
