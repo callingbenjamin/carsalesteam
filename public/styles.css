@@ -70,8 +70,9 @@ h3{font:500 27px/1.3 var(--font);letter-spacing:-.6px;margin:15px 0}
 .hero-media video.is-playing{opacity:1}
 .hero-wash{position:absolute;inset:0;background:linear-gradient(90deg,#20292ca8 0%,#20292c55 58%,#20292c2e),linear-gradient(0deg,var(--bg) 0%,transparent 27%);z-index:-1}
 .hero-content{width:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,500px);gap:48px;align-items:center}
-.hero h1{font:500 clamp(40px,min(5.2vw,calc((100vw - 644px)*.085)),64px)/1.1 var(--font);letter-spacing:-2.9px;margin:25px 0;max-width:760px}
-.hero h1 em{font-style:normal;display:block}
+/* The headline wraps freely (no forced break) and balances its lines; its size follows the copy column (cqi), not the viewport. */
+.hero-copy{container-type:inline-size}
+.hero h1{font:500 clamp(22px,8.5cqi,64px)/1.1 var(--font);letter-spacing:-2.9px;margin:25px 0;max-width:760px;text-wrap:balance}
 /* Hero accent: the hero is dark (graphite wash over the film), so the phrase is set in the mark's amber. A tight graphite halo keeps it
    at 3:1 or better where the film behind it turns bright (window light). */
 .hero h1 .accent{color:var(--amber);text-shadow:0 0 .08em var(--graphite),0 0 .2em var(--graphite),0 0 .5em #20292c99}
@@ -208,7 +209,7 @@ section.page{padding:190px 0 110px}
   .wrap{padding:0 32px}
   .hero-foot{padding:0 32px}
   .hero-content{gap:36px;grid-template-columns:minmax(0,1fr) minmax(0,440px)}
-  .hero h1{font-size:clamp(34px,calc((100vw - 540px)*.085),62px)}
+  .hero h1{font-size:clamp(22px,8.5cqi,62px)}
   .hero-card{max-width:440px;padding:12px}
   .hero-card-request{font-size:17px}
   .desktop{gap:20px}
@@ -221,7 +222,7 @@ section.page{padding:190px 0 110px}
 /* Narrow tablets: the 440px film card leaves the headline under 300px, so stack the hero like phones do. */
 @media(min-width:761px) and (max-width:899px){
   .hero-content{grid-template-columns:minmax(0,1fr);gap:30px}
-  .hero h1{font-size:min(60px,calc((100vw - 64px)*.08))}
+  .hero h1{font-size:min(60px,8cqi)}
 }
 @media(max-width:760px){
   html{scroll-padding-top:100px}
@@ -239,7 +240,7 @@ section.page{padding:190px 0 110px}
   .top.scrolled .nav{margin:0 12px;padding:8px 13px;min-height:57px}
   .hero{min-height:900px;min-height:100svh;padding:140px 0 110px;align-items:start}
   .hero-content{grid-template-columns:1fr;gap:30px}
-  .hero h1{font-size:min(60px,calc((100vw - 44px)*.085));letter-spacing:-1.7px;line-height:1.13;margin:22px 0}
+  .hero h1{font-size:min(60px,8.5cqi);letter-spacing:-1.7px;line-height:1.13;margin:22px 0}
   .hero .eyebrow{font-size:9px;letter-spacing:1.5px}
   .intro{font-size:14px;max-width:550px}
   .hero .micro{font-size:10px;max-width:500px}
@@ -302,7 +303,7 @@ section.page{padding:190px 0 110px}
 @media(max-width:400px){
   .hero{padding-top:125px;min-height:940px}
   .brand small{display:none}
-  .hero h1{font-size:min(42px,calc((100vw - 44px)*.085))}
+  .hero h1{font-size:min(42px,8.5cqi)}
   .form-grid{grid-template-columns:1fr}
   .field.full{grid-column:auto}
   .hero-foot>span{max-width:140px}
@@ -320,7 +321,7 @@ section.page{padding:190px 0 110px}
 
 /* Large phones: a slightly smaller ratio keeps the headline on two lines up to the 760px breakpoint. (after the 760px block, so it wins) */
 @media(min-width:600px) and (max-width:760px){
-  .hero h1{font-size:min(60px,calc((100vw - 44px)*.08))}
+  .hero h1{font-size:min(60px,8cqi)}
 }
 
 /* Answer-first block ("In short"): a direct answer and key takeaways near the top of key pages. */

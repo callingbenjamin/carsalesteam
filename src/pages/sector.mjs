@@ -2,16 +2,11 @@ import { SITE } from '../site.mjs';
 import { esc, arrow, page, header, footer, promiseStrip, faqList, answerBlock, boundaryLinks, COST_FAQ } from '../layout.mjs';
 import { graph, webPage, faqPage, service, serviceId, howTo } from '../seo.mjs';
 import { asset, posterPicture } from '../assets.mjs';
-/* Wraps the part of the optional hero accent phrase that falls inside headline line i in <span class="accent">.
-   The phrase may run across the forced line break, so each line gets its own span; the text content is unchanged. */
-function accentHeadline(line, accent, i, lines) {
-  const full = lines.join(' ');
-  const at = accent ? full.indexOf(accent) : -1;
-  if (at < 0) return esc(line);
-  const start = i === 0 ? 0 : lines[0].length + 1;
-  const a = Math.max(at, start) - start, b = Math.min(at + accent.length, start + line.length) - start;
-  if (b <= a) return esc(line);
-  return `${esc(line.slice(0, a))}<span class="accent">${esc(line.slice(a, b))}</span>${esc(line.slice(b))}`;
+/* Wraps the optional hero accent phrase in <span class="accent">; the text content is unchanged. */
+function accentHeadline(text, accent) {
+  const at = accent ? text.indexOf(accent) : -1;
+  if (at < 0) return esc(text);
+  return `${esc(text.slice(0, at))}<span class="accent">${esc(accent)}</span>${esc(text.slice(at + accent.length))}`;
 }
 
 // The hero image fills the viewport width, or more on tall screens.
@@ -199,7 +194,7 @@ export function sectorPage(d, guides = []) {
 <div class="wrap hero-content">
 <div class="hero-copy">
 <div class="eyebrow">${esc(d.hero.eyebrow)}</div>
-<h1 id="headline">${accentHeadline(d.hero.headline[0], d.hero.accent, 0, d.hero.headline)} <em>${accentHeadline(d.hero.headline[1], d.hero.accent, 1, d.hero.headline)}</em></h1>
+<h1 id="headline">${accentHeadline(d.hero.headline.join(' '), d.hero.accent)}</h1>
 <p class="intro">${esc(d.hero.intro)}</p>
 <div class="actions"><a class="btn" href="#start">Talk to us ${arrow}</a><a class="btn outline" href="#example">See the workflow <span aria-hidden="true">↓</span></a></div>
 <p class="micro">${esc(d.hero.audience)}<br>Built and run by ${SITE.name}.</p>
