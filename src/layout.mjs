@@ -94,7 +94,7 @@ export const COST_FAQ = {
 };
 
 // Share image for the guides and plain pages.
-export const HOME_IMAGE_ALT = `${SITE.name}: Your background staff for dealerships. ${SITE.category}.`;
+export const HOME_IMAGE_ALT = `${SITE.name}: Your back office that never clocks out, for dealerships. ${SITE.category}.`;
 
 // Scope stated as plain facts. scope: { covers, excludes, instead?, insteadLabel? } (insteadLabel defaults to "Handled by").
 export const scopeBlock = scope => `<dl class="scope-facts">
