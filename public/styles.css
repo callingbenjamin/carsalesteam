@@ -421,8 +421,6 @@ ol.steps{list-style:none;margin:0;padding:0}
 .scene{grid-area:1/1;min-width:0;transition:opacity .3s ease,visibility 0s}
 .scene:not(.is-active){opacity:0;visibility:hidden;transition:opacity .3s ease,visibility 0s .3s}
 .demo-section,.film,.hero-card,.wf-card{overflow-anchor:none}
-.flow-ctl{visibility:hidden}
-.flow-on .flow-ctl{visibility:visible}
 .demo-actions{margin-top:30px;padding-top:18px;border-top:1px solid #ffffff20}
 
 
@@ -518,10 +516,6 @@ ol.steps{list-style:none;margin:0;padding:0}
 .film-end{margin:0;font-size:11.5px;font-weight:650;line-height:1.4;color:var(--ink)}
 .film-foot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 14px;margin-top:12px}
 .film-summary{margin:0;font-size:13px;font-weight:600;color:var(--ink)}
-.film-ctl{display:flex;gap:8px}
-.film-ctl button{background:transparent;color:var(--ink);border:1px solid #f5f2eb4d;border-radius:999px;padding:4px 13px;font-size:11px;line-height:1.5;min-width:5.2em}
-.film-ctl button:hover{border-color:var(--signal)}
-.film-ctl button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 .k0{--k:0}.k1{--k:1}.k2{--k:2}.k3{--k:3}.k4{--k:4}.k5{--k:5}
 
 /* Storyboard on phones: a swipeable strip of frames, one screen tall, every line still in the page. */
@@ -556,7 +550,8 @@ ol.steps{list-style:none;margin:0;padding:0}
   .f-btn-idle{display:inline-flex}
   .f-tap{display:block}
 
-  /* Timing: one loop is six shots of --S. Shot k starts at k x --S and its own elements share its clock. Paused,
+  /* Timing: one loop is six shots of --S, repeating on its own. The end card holds to the last moment of the loop
+     and then cuts (no fade) to the first shot, which is already back in place underneath it. Shot k starts at k x --S and its own elements share its clock. Paused,
      the film rests on its first shot; playing, every shot and element runs the same keyframes, offset by its kN. */
   .shot,.shot-cam,.cam-zoom .shot-title,.cam-zoom .shot-steps,.shot .a0,.shot .a1,.shot .a2,.shot .a3,.f-tap,.f-btn-idle,.f-btn-done{animation-duration:var(--T);animation-timing-function:linear;animation-delay:calc(var(--k) * var(--S));animation-iteration-count:infinite;animation-play-state:paused}
   .film.is-playing .shot,.film.is-playing .shot-cam,.film.is-playing .cam-zoom .shot-title,.film.is-playing .cam-zoom .shot-steps,.film.is-playing .shot .a0,.film.is-playing .shot .a1,.film.is-playing .shot .a2,.film.is-playing .shot .a3,.film.is-playing .f-tap,.film.is-playing .f-btn-idle,.film.is-playing .f-btn-done{animation-play-state:running}
@@ -612,7 +607,7 @@ ol.steps{list-style:none;margin:0;padding:0}
 /* One loop = 6 shots, so one shot is 16.67% of it. Shots cross-fade in over 1.5% (about .3s) on top of the last. */
 @keyframes f-shot{0%{opacity:0}1.5%,18.4%{opacity:1}18.5%,100%{opacity:0}}
 @keyframes f-shot0{0%,18.4%{opacity:1}18.5%,98.3%{opacity:0}98.4%,100%{opacity:1}}
-@keyframes f-shot5{0%{opacity:0}1.5%,16.67%{opacity:1}18.2%,100%{opacity:0}}
+@keyframes f-shot5{0%{opacity:0}1.5%,16.666%{opacity:1}16.667%,100%{opacity:0}}
 @keyframes f-push{0%{transform:scale(1)}18.4%,100%{transform:scale(1.045)}}
 @keyframes f-pan{0%{transform:translateX(1.6%)}18.4%,100%{transform:translateX(-1.6%)}}
 @keyframes f-tcut{0%,7.9%{opacity:1}8%,100%{opacity:0}}
