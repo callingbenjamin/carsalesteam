@@ -7,7 +7,9 @@ export const SITE = {
   // The one-sentence definition. It is the first paragraph of the home page, its meta description,
   // the Organization and Service descriptions and the first line of llms.txt, word for word.
   description: 'CarSalesTeam is a managed workflow service for dealer groups and their dealerships that brings vehicle enquiries, test-drive requests and service follow-ups into one workflow, with your sales and service teams in control.',
-  // The plain-words category used after "|" in page titles.
+  // The brand part of every <title>, og:title, twitter:title and og:site_name.
+  titleBrand: 'CarSalesTeam by Actuathron',
+  // The plain-words category used in descriptions and share-image alt text.
   category: 'Dealership enquiry follow-up for dealer groups',
   // The enterprise offer. There is no personal or consumer plan.
   offer: 'CarSalesTeam for dealer groups',

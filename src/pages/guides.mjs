@@ -37,7 +37,7 @@ export const GUIDES_INDEX = {
 
 export function guidesIndexPage(guides) {
   const path = '/guides';
-  const title = `Workflow guides — ${SITE.name} | Definitions and how-tos`;
+  const title = `Workflow guides · ${SITE.titleBrand}`;
   const crumbs = [{ name: SITE.name, path: '/' }, { name: 'Guides', path }];
   const body = `${crumbTrail(crumbs)}
 <div class="eyebrow">Guides</div>
@@ -68,7 +68,9 @@ export function guidePage(g) {
   const path = `/guides/${g.slug}`;
   if (g.sector && g.sector !== SITE.sector) throw new Error(`${g.slug}: sector "${g.sector}" is not ${SITE.sector}`);
   const cta = '/#start';
-  const title = `${g.title} — ${SITE.name} | ${g.kind}`;
+  // <title> uses pageTitle (a trim for the tab) or the short title to stay near 60 characters; share previews keep the full question.
+  const title = `${g.pageTitle || g.shortTitle} · ${SITE.titleBrand}`;
+  const shareTitle = `${g.title} · ${SITE.titleBrand}`;
   const crumbs = [{ name: SITE.name, path: '/' }, { name: 'Guides', path: '/guides' }, { name: g.shortTitle, path }];
   const updated = g.updated !== g.published ? ` · Updated <time datetime="${g.updated}">${fmtDate(g.updated)}</time>` : '';
   const body = `${crumbTrail(crumbs)}
@@ -91,6 +93,7 @@ ${faqList(g.faq)}
   return page({
     path,
     title,
+    shareTitle,
     description: g.description,
     image: '/og/home.png',
     imageAlt: HOME_IMAGE_ALT,
