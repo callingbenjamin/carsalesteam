@@ -1,15 +1,15 @@
 {
   "key": "dealerships",
   "name": "Dealerships",
-  "tagline": "Every lead deserves a next step.",
+  "tagline": "Your background staff for dealerships.",
   "description": "CarSalesTeam is a managed workflow service for dealer groups and their dealerships that brings vehicle enquiries, test-drive requests and service follow-ups into one workflow, with your sales and service teams in control.",
   "topic": "Dealership enquiry follow-up",
   "task": "following up sales and service enquiries",
   "hero": {
     "eyebrow": "FROM FIRST ENQUIRY TO THE NEXT VISIT",
     "headline": [
-      "Every lead deserves",
-      "a next step."
+      "Your background",
+      "staff for dealerships."
     ],
     "intro": "CarSalesTeam is a managed workflow service for dealer groups and their dealerships that brings vehicle enquiries, test-drive requests and service follow-ups into one workflow, with your sales and service teams in control.",
     "audience": "For dealer groups & their dealerships",

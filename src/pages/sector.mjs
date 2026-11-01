@@ -187,7 +187,7 @@ export function sectorPage(d, guides = []) {
 <div class="wrap hero-content">
 <div class="hero-copy">
 <div class="eyebrow">${esc(d.hero.eyebrow)}</div>
-<h1 id="headline">${esc(d.hero.headline[0])}<em>${esc(d.hero.headline[1])}</em></h1>
+<h1 id="headline">${esc(d.hero.headline[0])} <em>${esc(d.hero.headline[1])}</em></h1>
 <p class="intro">${esc(d.hero.intro)}</p>
 <div class="actions"><a class="btn" href="#start">Talk to us ${arrow}</a><a class="btn outline" href="#example">See the workflow <span aria-hidden="true">↓</span></a></div>
 <p class="micro">${esc(d.hero.audience)}<br>Built and run by ${SITE.name}.</p>
