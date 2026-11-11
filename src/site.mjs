@@ -2,7 +2,7 @@
 export const SITE = {
   name: 'CarSalesTeam',
   url: 'https://carsalesteam.com',
-  // Enquiries go to the Actuathron sales inbox: CarSalesTeam is Actuathron's service for dealer groups.
+  // Enquiries go to the CarSalesTeam sales inbox.
   email: 'sales@carsalesteam.com',
   // The one-sentence definition. It is the first paragraph of the home page, its meta description,
   // the Organization and Service descriptions and the first line of llms.txt, word for word.
@@ -17,11 +17,15 @@ export const SITE = {
   parent: { name: 'Actuathron', url: 'https://actuathron.com/' },
   // The one service, rendered as the home page from src/content/sectors/<sector>.json.
   sector: 'dealerships',
+  // The industry this site serves: its name and the industry in plain words.
+  lines: {
+    dealerships: { name: 'CarSalesTeam', industry: 'Dealerships' },
+  },
   guides: ['dealership-vehicle-enquiries', 'staff-minutes-per-resolved-request', 'approval-rules', 'workflow-exceptions', 'human-in-the-loop-workflow', 'workflow-baseline'],
   // Last real content change of each page (YYYY-MM-DD), used for sitemap lastmod and dateModified.
   // Update the date when you change what a page says. Guides carry their own dates in their JSON files.
   updated: {
-    '/': '2026-10-31',
+    '/': '2026-11-11',
     '/guides': '2026-10-31',
     '/privacy': '2026-10-31',
   },

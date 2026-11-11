@@ -44,7 +44,7 @@ export function guidesIndexPage(guides) {
 <h1>Stop losing enquiries.<br>Measure the results.</h1>
 <p class="lead">${esc(GUIDES_INDEX.summary.answer)}</p>
 ${scopeBlock(GUIDES_INDEX.scope)}
-<ul class="guide-list">${guides.map(g => `<li><a href="/guides/${g.slug}"><span class="eyebrow">${esc(g.kind)} · ${esc(g.topic)}</span><strong>${esc(g.title)}</strong><span>${esc(g.description)}</span></a></li>`).join('')}</ul>`;
+</div></section><section class="doc-body"><div class="wrap doc-wrap"><ul class="guide-list">${guides.map(g => `<li><a href="/guides/${g.slug}"><span class="g-meta">${esc(g.kind)} · ${esc(g.topic)}</span><strong>${esc(g.title)}</strong><span class="g-desc">${esc(g.description)}</span></a></li>`).join('')}</ul>`;
   return page({
     path,
     title,
@@ -53,7 +53,7 @@ ${scopeBlock(GUIDES_INDEX.scope)}
     imageAlt: HOME_IMAGE_ALT,
     bodyClass: 'plain',
     header: header({ links: nav }),
-    main: `<section class="page"><div class="wrap">${body}</div></section>`,
+    main: `<section class="doc-head gridded"><div class="wrap doc-wrap">${body}</div></section>`,
     footer: footer({ current: 'guides' }),
     jsonLd: graph([
       { ...webPage({ path, title, description: GUIDES_INDEX.description, updated: SITE.updated[path], type: 'CollectionPage' }),
@@ -80,13 +80,11 @@ export function guidePage(g) {
 <p class="byline">Topic: ${esc(g.topic)} · By the ${SITE.name} team · <time datetime="${g.published}">${fmtDate(g.published)}</time>${updated}</p>
 </div>
 </div></section>
-<div class="wrap guide-answer">${answerBlock(g.summary, g.scope)}</div>
-<section class="page guide-body"><div class="wrap">
+<div class="wrap doc-wrap guide-answer">${answerBlock(g.summary, g.scope)}</div>
+<section class="doc-body"><div class="wrap doc-wrap"><div class="prose">
 ${g.sections.map(section).join('\n')}
 <h2>Questions</h2>
-<div class="faq-list">
 ${faqList(g.faq)}
-</div>
 <h2>Related</h2>
 <ul>${g.related.map(l => `<li><a href="${l.href}">${esc(l.label)}</a></li>`).join('')}</ul>
 <p>Want this running in your team? <a href="${cta}">Talk to ${SITE.name}</a> or email <a href="mailto:${SITE.email}">${SITE.email}</a>.</p>`;
@@ -100,7 +98,7 @@ ${faqList(g.faq)}
     bodyClass: 'plain guide',
     ogType: 'article',
     header: header({ links: nav }),
-    main: `<section class="page guide-head"><div class="wrap">${body}</div></section>`,
+    main: `<section class="doc-head gridded"><div class="wrap doc-wrap">${body}</div></div></section>`,
     footer: footer({ current: null }),
     jsonLd: graph([
       webPage({ path, title, description: g.description, updated: g.updated, mainEntity: `${SITE.url}${path}#article` }),

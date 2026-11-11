@@ -2,6 +2,7 @@
 // structured data parses and matches the visible FAQ, and the crawler files exist.
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { SITE } from '../src/site.mjs';
 import { BLOCKED_ROBOTS, ALLOWED_ROBOTS, SIGNAL } from '../src/crawlers.mjs';
 import { misspellings, providerClaims, retiredTerms } from '../src/brand.mjs';
 
@@ -25,8 +26,12 @@ const routeFile = route => {
 const ids = file => new Set([...readFileSync(file, 'utf8').matchAll(/\sid="([^"]+)"/g)].map(m => m[1]));
 
 const problems = [];
+const homeContent = JSON.parse(readFileSync('src/content/sectors/dealerships.json', 'utf8'));
+if (homeContent.description !== SITE.description || homeContent.hero.intro !== SITE.description || !homeContent.summary.answer.startsWith(SITE.description)) problems.push('Home definition must match SITE.description, hero and summary');
 for (const page of pages) {
   const html = readFileSync(page, 'utf8');
+  if (/\sstyle\s*=|<style\b/i.test(html)) problems.push(`${page}: inline styles violate CSP`);
+  for (const script of html.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/g)) if (!/\bsrc=|type="application\/(?:ld\+json|json)"/.test(script[1])) problems.push(`${page}: executable inline script violates CSP`);
   // Lucidrail may be named as the separate governance product: spelled "Lucidrail", never as a service provider.
   for (const w of misspellings(html)) problems.push(`${page}: write "Lucidrail", not "${w}"`);
   const text = html.replace(/<script(?! type="application\/ld\+json")[\s\S]*?<\/script>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/&#39;/g, "'").replace(/&amp;/g, '&').replace(/\s+/g, ' ');
@@ -58,6 +63,7 @@ for (const page of pages) {
   // The meta description is the page's one-sentence definition, so it must also be visible on the page, word for word.
   const decode = t => t.replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
   const meta = decode(html.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? '');
+  if (meta.length > 160) problems.push(`${page}: meta description exceeds 160 characters`);
   const visible = decode(html.replace(/<head>[\s\S]*?<\/head>/, '').replace(/<script[\s\S]*?<\/script>/g, '').replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ');
   if (!isNotFound && (!meta || !visible.includes(meta))) problems.push(`${page}: the meta description does not appear in the visible text`);
   if (!/<meta property="og:image:alt" content="[^"]+"/.test(html) || !/<meta name="twitter:image:alt" content="[^"]+"/.test(html)) problems.push(`${page}: missing og:image:alt or twitter:image:alt`);
@@ -114,39 +120,16 @@ for (const f of files) {
   if (/\.(html|css|js|mjs|json|xml|txt|svg|webmanifest)$/.test(f)) for (const w of new Set(retiredTerms(readFileSync(f, 'utf8')))) problems.push(`${f}: mentions a retired term ("${w}"); there is no dental service and no pilot`);
 }
 
-// Request films: every card (the hero, each scene and the workflow) is a film of 4 to 6 shots that opens on the
-// customer's message, has a customer step, and whose summary and closing line count each step once, by who does
-// it, adding up to the steps on that card. The llms files' summaries must add up too.
+// The port uses the package scenario explorer instead of the outgoing request films.
 {
-  const text = h => h.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').trim();
-  const sums = (line, count) => {
-    const m = /^(\d+) steps: ([^·]+?)(?: · .+)?\.?$/.exec(line || '');
-    if (!m) return false;
-    const parts = m[2].split(', ').map(p => /^(\d+) by \S/.exec(p));
-    if (parts.some(p => !p)) return false;
-    const total = parts.reduce((t, p) => t + Number(p[1]), 0);
-    return total === Number(m[1]) && (count === undefined || total === count);
-  };
   const home = readFileSync(join(DIST, 'index.html'), 'utf8');
-  const starts = [...home.matchAll(/<div class="film(?: film-compact)?" /g)].map(m => m.index);
-  if (starts.length < 5) problems.push(`index.html: expected the hero, workflow and three scenario films (found ${starts.length})`);
-  starts.forEach((start, i) => {
-    const chunk = home.slice(start, home.indexOf('</ol></div>\n<div class="film-foot">', start));
-    const shots = chunk.split(/<li class="shot k\d/).slice(1);
-    if (shots.length < 4 || shots.length > 6) problems.push(`index.html: film ${i + 1} has ${shots.length} shots (4 to 6 expected)`);
-    if (!/class="film-step lane-customer/.test(shots[0] || '') || !/class="fb fb-customer/.test(shots[0] || '')) problems.push(`index.html: film ${i + 1} does not open on the customer's message`);
-    if (shots.some(sh => !/class="shot-title"/.test(sh))) problems.push(`index.html: film ${i + 1} has a shot without a title line`);
-    const count = (chunk.match(/class="film-step /g) || []).length;
-    const rest = home.slice(start, home.indexOf('</div>\n</div>', home.indexOf('<div class="film-foot">', start)));
-    for (const cls of ['film-summary', 'film-end']) {
-      const m = new RegExp(`<p class="${cls}[^"]*">([\\s\\S]*?)<\\/p>`).exec(rest);
-      if (!m || !sums(text(m[1]), count)) problems.push(`index.html: film ${i + 1} ${cls} does not add up to ${count} steps (${m ? text(m[1]) : 'missing'})`);
-    }
-  });
-  for (const f of ['llms.txt', 'llms-full.txt']) {
-    const body = readFileSync(join(DIST, f), 'utf8');
-    for (const m of body.matchAll(/(\d+ steps: [^.;)\n]+)/g)) if (!sums(m[1])) problems.push(`${f}: summary does not add up (${m[1]})`);
-  }
+  const config = JSON.parse(home.match(/<script id="config" type="application\/json">([\s\S]*?)<\/script>/)[1]);
+  const tabs = [...home.matchAll(/class="tab(?: active)?"/g)];
+  if (tabs.length !== config.scenes.length || tabs.length !== 3) problems.push('index.html: expected three scenario tabs matching the config');
+  for (const scene of config.scenes) for (const k of ['tab','request','source','owner','rule','draft','action','result']) if (!scene[k]) problems.push(`index.html: scenario is missing ${k}`);
+  for (const id of ['demo-panel','demo-act','demo-reset','enquiry-form','hero-video']) if (!ids(join(DIST,'index.html')).has(id)) problems.push(`index.html: missing ${id}`);
+  if (home.includes('video-toggle')) problems.push('index.html: hero video controls must remain removed');
+  if (!home.includes('Illustrative example · synthetic data')) problems.push('index.html: missing synthetic example label');
 }
 
 if (problems.length) {

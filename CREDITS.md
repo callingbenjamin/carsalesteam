@@ -1,10 +1,8 @@
 # Media credits
 
-A record of the third-party media the site uses. These credits are kept in the repo only; the site does not show them.
+Credits are kept in the repository and are not shown on the site.
 
-## Homepage hero video
+## Home hero still and clip, and closing-call still
 
-- Files: `public/media/dealerships/hero.mp4` and its poster stills (`public/media/dealerships/poster*`)
-- Source clip: https://www.pexels.com/video/couple-talking-to-a-car-dealer-7154209/
-- Creator: Antoni Shkraba, via Pexels
-- Licence: Pexels licence (https://www.pexels.com/license/)
+- Files: `public/media/dealerships/hero.mp4`, `public/media/dealerships/poster*`, `public/media/cta/poster*`; the hero still also supplies `public/og/home.png`.
+- Generated with Higgsfield for Actuathron (still and clip, 11 November 2026) https://higgsfield.ai/

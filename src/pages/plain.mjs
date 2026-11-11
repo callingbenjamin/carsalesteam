@@ -23,7 +23,7 @@ function plainPage({ path, title, description, current, body, noindex = false })
     imageAlt: HOME_IMAGE_ALT,
     bodyClass: 'plain',
     header: header({ links: nav }),
-    main: `<section class="page"><div class="wrap">${body}</div></section>`,
+    main: `<section class="doc-head gridded"><div class="wrap doc-wrap">${body.split('<h2>')[0]}</div></section><section class="doc-body"><div class="wrap doc-wrap"><div class="prose">${body.includes('<h2>') ? '<h2>' + body.split('<h2>').slice(1).join('<h2>') : ''}</div></div></section>`,
     footer: footer({ current }),
   });
 }

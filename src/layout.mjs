@@ -15,14 +15,22 @@ export const LOGO = LOGO_FILE
   .replace(/(<text\b[^>]*?)fill="#20292C"/, '$1fill="currentColor"');
 if (!LOGO.includes('brand-logo') || !LOGO.includes('currentColor')) throw new Error('public/brand/carsalesteam-logo.svg: expected one <svg> with a #20292C <text> wordmark');
 
-const ARROW = '<span aria-hidden="true">↗</span>';
+const ARROW = '<span class="arr" aria-hidden="true">↗</span>';
 export const arrow = ARROW;
+export const arrowDown = '<span class="arr down" aria-hidden="true">↓</span>';
+
+const pad2 = n => String(n).padStart(2, '0');
+
+// A section label: spaced capitals. `tone` "accent" sets it in the signal colour. (A section index is no longer shown;
+// a number passed here is ignored, so older callers keep working.)
+export const eyebrow = (text, tone) =>
+  `<div class="eyebrow${tone === 'accent' ? ' accent' : ''}"><span>${esc(text)}</span></div>`;
 
 // jsonLd: a schema.org object from graph() in seo.mjs. noindex: keep the page out of search (404).
-// title: the <title>, "{Page} · CarSalesTeam by Actuathron" (home: brand first). shareTitle: og:title and
-// twitter:title, the same unless a page has a fuller name for share previews.
 // imageAlt: one sentence naming the brand and what the share image shows.
-// The Markdown copy of each indexable page (built by build.mjs): / -> /index.md, /guides/x -> /guides/x.md.
+// scripts: extra versioned module scripts from public/ (asset() URLs), loaded after site.js.
+// styles: extra versioned stylesheets from public/, after styles.css. headScripts: plain versioned scripts that run
+// before the page paints (no defer), for example to set a class on <html>; the CSP forbids inline scripts.
 export const mdPath = path => (path === '/' ? '/index' : path) + '.md';
 
 export function page({ path, title, shareTitle = title, description, image, imageAlt, bodyClass = '', header, main, footer, config, jsonLd, ogType = 'website', noindex = false }) {
@@ -36,7 +44,7 @@ export function page({ path, title, shareTitle = title, description, image, imag
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
 ${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${url}">\n<link rel="alternate" type="text/markdown" href="${mdPath(path)}">`}
-<meta name="theme-color" content="#20292C">
+<meta name="theme-color" content="#0B0F11">
 <meta property="og:type" content="${ogType}">
 <meta property="og:site_name" content="${esc(SITE.titleBrand)}">
 <meta property="og:title" content="${esc(shareTitle)}">
@@ -55,9 +63,9 @@ ${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" hr
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
+<link rel="preload" href="/fonts/instrument-serif-latin-v5.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/geist-latin-v5.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${asset('/styles.css')}">
-<noscript><link rel="stylesheet" href="${asset('/noscript.css')}"></noscript>
 <script src="${asset('/site.js')}" defer></script>${jsonLd ? `\n<script type="application/ld+json">${jsonBlock(jsonLd)}</script>` : ''}
 </head>
 <body${bodyClass ? ` class="${bodyClass}"` : ''}><a class="skip" href="#main">Skip to content</a>
@@ -71,34 +79,28 @@ ${footer}${config ? `\n<script id="config" type="application/json">${jsonBlock(c
 `;
 }
 
-// links: [{ href, label, button? }]
-export function header({ label, links }) {
-  const items = links.map(l => l.button
-    ? `<a class="btn" href="${l.href}">${esc(l.label)} ${ARROW}</a>`
-    : `<a href="${l.href}">${esc(l.label)}</a>`).join('');
-  return `<header class="top"><div class="wrap nav"><div class="brand-lockup"><a class="brand" href="/" aria-label="${SITE.name}${label ? ` ${esc(label)}` : ''} home">${LOGO}${label ? ` <small>${esc(label)}</small>` : ''}</a><span class="brand-by">by ${SITE.parent.name}</span></div><nav class="desktop" aria-label="Main navigation">${items}</nav><details class="mobile"><summary>Menu</summary><nav aria-label="Mobile navigation">${items}</nav></details></div></header>`;
+export const lineOf = key => SITE.lines[key];
+export function header({ links = [] } = {}) {
+  const cta = links.find(l => l.button) ?? { href: '/#start', label: 'Talk to us' };
+  const items = '<a href="/#workflow">Workflow</a><a href="/guides">Guides</a><a href="/#questions">Questions</a>';
+  const button = `<a class="btn" href="${cta.href}">${esc(cta.label)}</a>`;
+  return `<header class="top"><div class="wrap nav"><div class="brand-lockup"><a class="brand" href="/" aria-label="${SITE.name} home">${LOGO}</a><span class="brand-by">by Actuathron</span></div><nav class="desktop" aria-label="Main navigation">${items}${button}</nav><details class="mobile"><summary>Menu</summary><nav aria-label="Mobile navigation">${items}${button}</nav></details></div></header>`;
+}
+export function footer({ current } = {}) {
+  const link = (href, label) => `<li><a href="${href}">${esc(label)}</a></li>`;
+  return `<footer class="footer"><div class="wrap"><div class="foot-grid"><div class="foot-brand"><a class="brand" href="/" aria-label="${SITE.name} home">${LOGO}</a><p>Sales and service enquiries, followed through with your team in control.</p></div><nav class="foot-nav" aria-label="Footer"><div class="foot-col"><p class="foot-h">Resources</p><ul>${link('/guides','Guides')}${link('/privacy','Privacy')}</ul></div><div class="foot-col"><p class="foot-h">Contact</p><ul>${link('mailto:'+SITE.email,SITE.email)}</ul></div></nav></div><div class="foot-end"><div class="foot-mark" aria-hidden="true">${LOGO}</div><div class="foot-bottom"><span class="governance">Built and run by <a href="${SITE.parent.url}" rel="noopener">${SITE.parent.name}</a>.</span><span class="copyright">© ${new Date().getFullYear()} ${SITE.name}</span></div></div></div></footer>`;
 }
 
-// The hero clip's source is recorded in CREDITS.md, not on the site.
-export function footer({ current }) {
-  return `<footer class="footer"><div class="wrap">
-<div class="foot-top"><a class="brand" href="/" aria-label="${SITE.name} home">${LOGO}</a><nav class="foot-links" aria-label="Footer"><a href="/"${current === 'home' ? ' aria-current="page"' : ''}>Dealer groups</a><a href="/guides"${current === 'guides' ? ' aria-current="page"' : ''}>Guides</a><a href="/privacy"${current === 'privacy' ? ' aria-current="page"' : ''}>Privacy</a></nav></div>
-<div class="foot-bottom"><span>Sales and service enquiries, followed through with your team in control. <a href="mailto:${SITE.email}">${SITE.email}</a></span><span class="governance">Built and run by <a href="${SITE.parent.url}" rel="noopener">${SITE.parent.name}</a>.</span><span class="copyright">© ${new Date().getFullYear()} ${SITE.name}</span></div>
-</div></footer>`;
-}
-
-export const PROMISES = ['Every enquiry followed up', 'Agreed approval rules', 'Results you can measure', 'A person in control'];
-
-export const promiseStrip = () =>
-  `<div class="promise-strip">${PROMISES.map((p, i) => `<span><strong>0${i + 1}</strong> ${p}</span>`).join('')}</div>`;
+// The four principles, listed in the Markdown version of the home page (src/markdown.mjs).
+export const PROMISES = ['Every request followed up', 'Agreed approval rules', 'Results you can measure', 'A person in control'];
 
 export const COST_FAQ = {
   q: 'What does it cost?',
   a: 'The fees are agreed with you before work begins. We agree a fixed scope, setup fee, monthly service fee and usage limit first; there is no charge to prepare an enquiry.',
 };
 
-// Share image for the guides and plain pages.
-export const HOME_IMAGE_ALT = `${SITE.name}: Your back office that never clocks out, for dealerships. ${SITE.category}.`;
+// Share image for the home page, guides and plain pages.
+export const HOME_IMAGE_ALT = `${SITE.name}: Every lead deserves a next step. A still of a dealership.`;
 
 // Scope stated as plain facts. scope: { covers, excludes, instead?, insteadLabel? } (insteadLabel defaults to "Handled by").
 export const scopeBlock = scope => `<dl class="scope-facts">
@@ -107,15 +109,23 @@ export const scopeBlock = scope => `<dl class="scope-facts">
 <div><dt>${esc(scope.insteadLabel ?? 'Handled by')}</dt><dd>${esc(scope.instead)}</dd></div>` : ''}
 </dl>`;
 
-export const faqList = items => items.map(f => `<details><summary>${esc(f.q)}</summary><p>${f.html ?? esc(f.a)}</p></details>`).join('\n');
+// The questions are plain text inside <summary>: scripts/check.mjs matches them against the FAQPage markup,
+// and styles.css numbers them with a counter.
+export const faqList = items => `<div class="faq-list">\n${items.map(f => `<details><summary>${esc(f.q)}</summary><p>${f.html ?? esc(f.a)}</p></details>`).join('\n')}\n</div>`;
 
-// Answer-first block: a direct one- or two-sentence answer to "what is this and who is it for", then key takeaways.
-// links: [{ href, label }], guide links under a "decisions stay with people" block.
+// The FAQ section shared by the home and industry pages, on a pale scene.
+export const faqSection = items => `<section class="faq sec light paper-2" id="questions"><div class="wrap faq-grid">
+<div class="faq-head">${eyebrow('Before we begin')}<h2>A few useful<br>answers.</h2></div>
+${faqList(items)}
+</div></section>`;
+
+// Links under a "decisions stay with people" block. links: [{ href, label }]
 export const boundaryLinks = (links = []) => links.length ? `<ul class="boundary-links">${links.map(l => `<li><a href="${l.href}">${esc(l.label)}</a></li>`).join('')}</ul>` : '';
 
-// summary: { question, answer, takeaways: [string], link?: { href, label } }
+// Answer-first block: a direct one- or two-sentence answer to "what is this and who is it for", then the scope and
+// the key takeaways. summary: { question, answer, takeaways: [string], link?: { href, label } }
 // scope (optional) is rendered under the answer as Covers / Does not cover / Handled by.
 export const answerBlock = (summary, scope) => `<section class="answer" id="in-short" aria-labelledby="in-short-q">
-<div><div class="eyebrow">In short</div><h2 id="in-short-q">${esc(summary.question)}</h2><p class="lead">${esc(summary.answer)}</p>${scope ? scopeBlock(scope) : ''}${summary.link ? `<p class="answer-link"><a href="${summary.link.href}">${esc(summary.link.label)}</a></p>` : ''}</div>
-<div class="takeaways"><h3>Key takeaways</h3><ul>${summary.takeaways.map(t => `<li>${esc(t)}</li>`).join('')}</ul></div>
+<div class="answer-label">${eyebrow('In short')}</div><div class="answer-main"><h2 id="in-short-q">${esc(summary.question)}</h2><p class="lead">${esc(summary.answer)}</p>${scope ? scopeBlock(scope) : ''}${summary.link ? `<p class="answer-link"><a href="${summary.link.href}">${esc(summary.link.label)}</a></p>` : ''}
+<div class="takeaways"><h3>Key takeaways <span aria-hidden="true">${pad2(summary.takeaways.length)}</span></h3><ul>${summary.takeaways.map(t => `<li>${esc(t)}</li>`).join('')}</ul></div></div>
 </section>`;
