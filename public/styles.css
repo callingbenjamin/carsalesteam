@@ -280,6 +280,7 @@ a:hover>.arr{transform:translate(2px,-2px)}
 .foot-col a[aria-current]{text-decoration:underline;text-decoration-color:var(--signal);text-underline-offset:5px}
 .foot-end{position:relative;margin:8px 0 32px}
 .foot-bottom{position:absolute;right:0;bottom:calc(39.2% + 12px);font:500 11px/1.5 var(--mono);letter-spacing:.06em;color:var(--muted)}
+.foot-bottom{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:2px 16px}
 .copyright{white-space:nowrap}
 .foot-mark{color:var(--ink);opacity:.07;line-height:0}
 /* The round letters dip just below the tile's bottom edge, so the drawing is allowed to show past its box. */
