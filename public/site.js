@@ -53,7 +53,7 @@ if (!motion.matches && 'IntersectionObserver' in window) {
 const configEl = $('config');
 const config = configEl ? JSON.parse(configEl.textContent) : null;
 
-// Workflow console: a local simulation; nothing leaves the page.
+// Scenario explorer: a local simulation; nothing leaves the page.
 if (config && $('demo-panel')) {
   let current = 0;
   const panel = $('demo-panel');
