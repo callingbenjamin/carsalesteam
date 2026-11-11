@@ -687,7 +687,7 @@ select option{background:var(--panel);color:var(--ink)}
   .faq-list summary{grid-template-columns:44px 1fr 24px;font-size:16px;padding:20px 0}
   .faq-list details p{margin-left:44px;font-size:15px}
   .footer{padding-top:60px}
-  .foot-nav{grid-template-columns:1fr 1fr}
+  .foot-nav{grid-template-columns:minmax(0,1fr)}
   .foot-bottom{bottom:calc(54.5% + 5px);font-size:10px}
   .doc-head{padding:128px 0 52px}
   .doc-head .lead{font-size:17px}
