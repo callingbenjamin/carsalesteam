@@ -3,6 +3,7 @@
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { SITE } from '../src/site.mjs';
+import { metaDescription } from '../src/layout.mjs';
 import { BLOCKED_ROBOTS, ALLOWED_ROBOTS, SIGNAL } from '../src/crawlers.mjs';
 import { misspellings, providerClaims, retiredTerms } from '../src/brand.mjs';
 
@@ -77,7 +78,7 @@ for (const page of pages) {
       if (JSON.stringify(howto.step.map(x => x.name)) !== JSON.stringify(shown)) problems.push(`${page}: HowTo steps differ from the visible steps`);
     }
     const svc = nodes.find(n => n['@type'] === 'Service');
-    if (svc && svc.description !== meta) problems.push(`${page}: Service description differs from the page definition`);
+    if (svc && metaDescription(svc.description) !== meta) problems.push(`${page}: Service description differs from the page definition`);
     if (svc) for (const k of ['image', 'availableChannel', 'audience', 'provider']) if (!svc[k]) problems.push(`${page}: Service has no ${k}`);
   }
   if (!isNotFound && !/<link rel="canonical"/.test(html)) problems.push(`${page}: no canonical link`);

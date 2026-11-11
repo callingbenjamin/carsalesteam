@@ -2,7 +2,7 @@
   "key": "dealerships",
   "name": "Dealerships",
   "tagline": "Every lead deserves a next step.",
-  "description": "CarSalesTeam is a managed workflow service that puts dealership vehicle enquiries, test drives and service follow-ups in one workflow, with staff in control.",
+  "description": "CarSalesTeam is a managed workflow service for dealer groups and their dealerships that brings vehicle enquiries, test-drive requests and service follow-ups into one workflow, with your sales and service teams in control.",
   "topic": "Dealership enquiry follow-up",
   "task": "following up sales and service enquiries",
   "hero": {
@@ -11,7 +11,7 @@
       "Every lead deserves",
       "a next step."
     ],
-    "intro": "CarSalesTeam is a managed workflow service that puts dealership vehicle enquiries, test drives and service follow-ups in one workflow, with staff in control.",
+    "intro": "CarSalesTeam is a managed workflow service for dealer groups and their dealerships that brings vehicle enquiries, test-drive requests and service follow-ups into one workflow, with your sales and service teams in control.",
     "audience": "For dealer groups & their dealerships",
     "request": "Is the SUV still available? Can I test-drive it Saturday?",
     "next": [
@@ -28,7 +28,7 @@
   },
   "summary": {
     "question": "Who are we?",
-    "answer": "CarSalesTeam is a managed workflow service that puts dealership vehicle enquiries, test drives and service follow-ups in one workflow, with staff in control. Every enquiry gets a clear next step, and staff confirm inventory and appointments before anything is promised.",
+    "answer": "CarSalesTeam is a managed workflow service for dealer groups and their dealerships that brings vehicle enquiries, test-drive requests and service follow-ups into one workflow, with your sales and service teams in control. Every enquiry gets a clear next step, and staff confirm inventory and appointments before anything is promised.",
     "takeaways": [
       "Every enquiry gets a clear next step and a named person to confirm it.",
       "Vehicle availability, discounts, financing, trade-in valuations and repair authorisations stay with authorised staff.",
@@ -146,7 +146,7 @@
   "faq": [
     {
       "q": "Does this connect to our DMS or CRM?",
-      "a": "Only if that is agreed after an assessment. We assess your existing systems, permissions and integration options before agreeing scope; no integration with a particular DMS or CRM is promised in advance."
+      "a": "Only if that is agreed after an assessment. We assess your existing systems, permissions and integration options before agreeing scope; this demo does not imply support for a particular DMS or CRM."
     },
     {
       "q": "Can it quote prices or approve financing?",

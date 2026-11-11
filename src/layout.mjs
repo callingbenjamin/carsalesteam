@@ -33,9 +33,19 @@ export const eyebrow = (text, tone) =>
 // before the page paints (no defer), for example to set a class on <html>; the CSP forbids inline scripts.
 export const mdPath = path => (path === '/' ? '/index' : path) + '.md';
 
-export function page({ path, title, shareTitle = title, description, image, imageAlt, bodyClass = '', header, main, footer, config, jsonLd, ogType = 'website', noindex = false }) {
+// Meta, og and twitter descriptions stay within 160 characters: a longer definition is cut at its last comma, or
+// else its last space, inside the limit. The cut text is the start of the visible definition, word for word.
+export const metaDescription = text => {
+  if (text.length <= 160) return text;
+  const cut = text.slice(0, 160);
+  const comma = cut.lastIndexOf(',');
+  return (comma >= 100 ? cut.slice(0, comma) : cut.slice(0, cut.lastIndexOf(' '))).replace(/[\s,;:.\-]+$/, '');
+};
+
+export function page({ path, title, shareTitle = title, description: fullDescription, image, imageAlt, bodyClass = '', header, main, footer, config, jsonLd, ogType = 'website', noindex = false }) {
   if (!imageAlt) throw new Error(`${path}: page() needs imageAlt for its share image`);
   const url = SITE.url + path;
+  const description = metaDescription(fullDescription);
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -88,7 +98,7 @@ export function header({ links = [] } = {}) {
 }
 export function footer({ current } = {}) {
   const link = (href, label) => `<li><a href="${href}">${esc(label)}</a></li>`;
-  return `<footer class="footer"><div class="wrap"><div class="foot-grid"><div class="foot-brand"><a class="brand" href="/" aria-label="${SITE.name} home">${LOGO}</a><p>Sales and service enquiries, followed through with your team in control.</p></div><nav class="foot-nav" aria-label="Footer"><div class="foot-col"><p class="foot-h">Resources</p><ul>${link('/guides','Guides')}${link('/privacy','Privacy')}</ul></div><div class="foot-col"><p class="foot-h">Contact</p><ul>${link('mailto:'+SITE.email,SITE.email)}</ul></div></nav></div><div class="foot-end"><div class="foot-mark" aria-hidden="true">${LOGO}</div><div class="foot-bottom"><span class="governance">Built and run by <a href="${SITE.parent.url}" rel="noopener">${SITE.parent.name}</a>.</span><span class="copyright">© ${new Date().getFullYear()} ${SITE.name}</span></div></div></div></footer>`;
+  return `<footer class="footer"><div class="wrap"><div class="foot-grid"><div class="foot-brand"><a class="brand" href="/" aria-label="${SITE.name} home">${LOGO}</a><p>AI workforces, built and run around your team.</p></div><nav class="foot-nav" aria-label="Footer"><div class="foot-col"><p class="foot-h">Resources</p><ul>${link('/guides','Guides')}${link('/privacy','Privacy')}</ul></div><div class="foot-col"><p class="foot-h">Contact</p><ul>${link('mailto:'+SITE.email,SITE.email)}</ul></div></nav></div><div class="foot-end"><div class="foot-mark" aria-hidden="true">${LOGO}</div><div class="foot-bottom"><span class="governance">Built and run by <a href="${SITE.parent.url}" rel="noopener">${SITE.parent.name}</a>.</span><span class="copyright">© ${new Date().getFullYear()} ${SITE.name}</span></div></div></div></footer>`;
 }
 
 // The four principles, listed in the Markdown version of the home page (src/markdown.mjs).
