@@ -79,19 +79,16 @@ ${footer}${config ? `\n<script id="config" type="application/json">${jsonBlock(c
 `;
 }
 
-const CHEVRON = '<span aria-hidden="true">⌄</span>';
 export const lineOf = key => SITE.lines[key];
 export function header({ links = [] } = {}) {
   const cta = links.find(l => l.button) ?? { href: '/#start', label: 'Talk to us' };
-  const industries = SITE.sectors.map(k => `<a href="${SITE.sectorSites[k]}"><strong>${esc(lineOf(k).name)}</strong><span>${esc(lineOf(k).industry)}</span></a>`).join('');
-  const resources = '<a href="/guides"><strong>Guides</strong><span>How-tos and definitions</span></a>';
-  const menu = (id, name, body) => `<div class="menu"><button type="button" class="menu-btn" aria-expanded="false" aria-controls="${id}">${name}${CHEVRON}</button><div class="menu-panel" id="${id}">${body}</div></div>`;
+  const items = '<a href="/#workflow">Workflow</a><a href="/guides">Guides</a><a href="/#questions">Questions</a>';
   const button = `<a class="btn" href="${cta.href}">${esc(cta.label)}</a>`;
-  return `<header class="top"><div class="wrap nav"><div class="brand-lockup"><a class="brand" href="/" aria-label="${SITE.name} home">${LOGO}</a><span class="brand-by">by Actuathron</span></div><nav class="desktop" aria-label="Main navigation">${menu('menu-industries', 'Industries', industries)}${menu('menu-resources', 'Resources', resources)}<a href="/#workflow">How it works</a>${button}</nav><details class="mobile"><summary>Menu</summary><nav aria-label="Mobile navigation"><p class="m-h">Industries</p>${industries}<p class="m-h">Resources</p>${resources}<a href="/#workflow"><strong>How it works</strong></a>${button}</nav></details></div></header>`;
+  return `<header class="top"><div class="wrap nav"><div class="brand-lockup"><a class="brand" href="/" aria-label="${SITE.name} home">${LOGO}</a><span class="brand-by">by Actuathron</span></div><nav class="desktop" aria-label="Main navigation">${items}${button}</nav><details class="mobile"><summary>Menu</summary><nav aria-label="Mobile navigation">${items}${button}</nav></details></div></header>`;
 }
 export function footer({ current } = {}) {
   const link = (href, label) => `<li><a href="${href}">${esc(label)}</a></li>`;
-  return `<footer class="footer"><div class="wrap"><div class="foot-grid"><div class="foot-brand"><a class="brand" href="/" aria-label="${SITE.name} home">${LOGO}</a><p>Sales and service enquiries, followed through with your team in control.</p></div><nav class="foot-nav" aria-label="Footer"><div class="foot-col"><p class="foot-h">Industries</p><ul>${SITE.sectors.map(k => link(SITE.sectorSites[k], lineOf(k).name)).join('')}</ul></div><div class="foot-col"><p class="foot-h">Resources</p><ul>${link('/guides','Guides')}${link('/privacy','Privacy')}</ul></div><div class="foot-col"><p class="foot-h">Contact</p><ul>${link('mailto:'+SITE.email,SITE.email)}</ul></div></nav></div><div class="foot-end"><div class="foot-mark" aria-hidden="true">${LOGO}</div><div class="foot-bottom"><span class="governance">Built and run by <a href="${SITE.parent.url}" rel="noopener">${SITE.parent.name}</a>.</span><span class="copyright">© ${new Date().getFullYear()} ${SITE.name}</span></div></div></div></footer>`;
+  return `<footer class="footer"><div class="wrap"><div class="foot-grid"><div class="foot-brand"><a class="brand" href="/" aria-label="${SITE.name} home">${LOGO}</a><p>Sales and service enquiries, followed through with your team in control.</p></div><nav class="foot-nav" aria-label="Footer"><div class="foot-col"><p class="foot-h">Resources</p><ul>${link('/guides','Guides')}${link('/privacy','Privacy')}</ul></div><div class="foot-col"><p class="foot-h">Contact</p><ul>${link('mailto:'+SITE.email,SITE.email)}</ul></div></nav></div><div class="foot-end"><div class="foot-mark" aria-hidden="true">${LOGO}</div><div class="foot-bottom"><span class="governance">Built and run by <a href="${SITE.parent.url}" rel="noopener">${SITE.parent.name}</a>.</span><span class="copyright">© ${new Date().getFullYear()} ${SITE.name}</span></div></div></div></footer>`;
 }
 
 // The four principles, listed in the Markdown version of the home page (src/markdown.mjs).

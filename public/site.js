@@ -14,7 +14,7 @@ if (header) {
 document.querySelectorAll('.mobile nav a').forEach(a =>
   a.addEventListener('click', () => document.querySelector('.mobile').removeAttribute('open')));
 
-// Header menus (Industries, Resources): they open on hover and on keyboard focus through CSS; a click or tap toggles
+// Header menus (if any): they open on hover and on keyboard focus through CSS; a click or tap toggles
 // them too, and Escape or a click elsewhere closes them.
 const menus = [...document.querySelectorAll('.menu')];
 const closeMenus = except => menus.forEach(m => {

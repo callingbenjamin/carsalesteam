@@ -17,25 +17,10 @@ export const SITE = {
   parent: { name: 'Actuathron', url: 'https://actuathron.com/' },
   // The one service, rendered as the home page from src/content/sectors/<sector>.json.
   sector: 'dealerships',
-  sectors: ['hotels', 'brokerages', 'dealerships', 'home-services', 'property-management'],
-  // The company that serves each industry: its name as on its own website, and the industry in plain words.
-  // The shared Industries menus read these.
+  // The industry this site serves: its name and the industry in plain words.
   lines: {
-    hotels: { name: 'LobbyClerk', industry: 'Hotels' },
-    brokerages: { name: 'ClosingAide', industry: 'Brokerages' },
     dealerships: { name: 'CarSalesTeam', industry: 'Dealerships' },
-    'home-services': { name: 'Crewola', industry: 'Home Services' },
-    'property-management': { name: 'CondoStaff', industry: 'Property Management' },
   },
-  // Each industry's own website, linked from the shared header and footer.
-  sectorSites: {
-    hotels: 'https://lobbyclerk.com/',
-    brokerages: 'https://closingaide.com/',
-    dealerships: 'https://carsalesteam.com/',
-    'home-services': 'https://crewola.com/',
-    'property-management': 'https://condostaff.com/',
-  },
-
   guides: ['dealership-vehicle-enquiries', 'staff-minutes-per-resolved-request', 'approval-rules', 'workflow-exceptions', 'human-in-the-loop-workflow', 'workflow-baseline'],
   // Last real content change of each page (YYYY-MM-DD), used for sitemap lastmod and dateModified.
   // Update the date when you change what a page says. Guides carry their own dates in their JSON files.
