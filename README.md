@@ -13,7 +13,7 @@ The enquiry form opens an email to `sales@carsalesteam.com` (or downloads a text
 
 ## How it is built
 
-Plain static HTML, CSS and JavaScript. No framework. The only npm dependency is `@vercel/functions`, used by `middleware.js`; run `npm install` once. Node 20+ is required.
+Plain static HTML, CSS and JavaScript. The home page ports the removed Actuathron dealerships build (554b7f2): dark #0B0F11 scenes, Instrument Serif and Geist/Geist Mono fonts, a scenario explorer, scroll reveals, a workflow marquee, and a closing-call still. Guides, privacy and 404 share its document styling while preserving their existing text. The CarSalesTeam SVG lockup and icons are unchanged. Reduced motion keeps the poster visible and disables animations; the muted background video has no Pause/Play button. No framework. The only npm dependency is `@vercel/functions`, used by `middleware.js`; run `npm install` once. Node 20+ is required.
 
 ```
 src/content/sectors/dealerships.json  all the words on the home page (edit this to change copy)
@@ -32,7 +32,7 @@ scripts/check.mjs            links and anchors, one JSON-LD block per page, FAQ 
                              meta description on the page, share-image alt text, robots.txt groups and Content-Signal,
                              llms.txt sections, canonicals, no emojis
 scripts/test-middleware.mjs  tests middleware.js with blocked and allowed user agents
-scripts/make-images.py       regenerates the share image (public/og/home.png), the touch and app icons and favicon.ico (needs google-chrome)
+scripts/make-images.py       regenerates only public/og/home.png; existing logos and icons are never modified (Playwright + Chromium; see script environment variables)
 scripts/make-responsive.py   makes the AVIF and WebP sizes of the hero photo
 ```
 

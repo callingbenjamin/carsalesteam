@@ -1,92 +1,34 @@
-"""Regenerates the share images (public/og/*.png), the touch and app icons and public/favicon.ico.
+"""Regenerate only public/og/home.png; existing logos and icons are never modified.
 
-Run after changing a headline or a hero photo:
-    npm run build && python3 scripts/make-images.py
-Needs Google Chrome on the PATH as google-chrome (headless screenshots, no other dependencies).
-The mark is a car in a chat bubble: public/brand/carsalesteam-mark.svg (detailed, two windows) and
-public/favicon.svg (the same shape drawn on a 16 px grid with one window, so it stays legible in a tab).
+Requires Playwright (PLAYWRIGHT_MODULE) and Chromium (CHROME_BIN). Defaults match
+this workspace; override both environment variables on another machine.
 """
-import json, pathlib, html, tempfile, subprocess, struct
-
+import os, pathlib, subprocess, tempfile, re
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-# The logo files are the source of truth: the ivory version sits on the graphite cards, the mark alone on the icon.
-LOGO = (ROOT / 'public/brand/carsalesteam-logo-ivory.svg').read_text()
-MARK = (ROOT / 'public/brand/carsalesteam-mark.svg').read_text()
-FAVICON = (ROOT / 'public/favicon.svg').read_text()
-FONT = (ROOT / 'public/fonts/geist-latin-v5.woff2').as_uri()
-
-def accent_lines(lines, accent):
-    """Escapes each headline line, wrapping the part of the accent phrase that falls on it in <span class="accent">."""
-    full = ' '.join(lines)
-    at = full.find(accent) if accent else -1
-    out, start = [], 0
-    for l in lines:
-        a, b = max(at, start) - start, min(at + len(accent or ''), start + len(l)) - start
-        if at < 0 or b <= a:
-            out.append(html.escape(l))
-        else:
-            out.append(html.escape(l[:a]) + '<span class="accent">' + html.escape(l[a:b]) + '</span>' + html.escape(l[b:]))
-        start += len(l) + 1
-    return '<br>'.join(out)
-
-def card(eyebrow, lines, photo=None, accent=None):
-    bg = f'url({photo.as_uri()}) center/cover' if photo else '#20292C'
-    return f'''<!doctype html><html><head><style>
-@font-face{{font-family:Geist;src:url({FONT}) format('woff2');font-weight:400 700}}
-body{{margin:0;width:1200px;height:630px;font-family:Geist;color:#F5F2EB;background:{bg};position:relative;overflow:hidden}}
-.wash{{position:absolute;inset:0;background:linear-gradient(90deg,#20292Cf2 0%,#20292Ccc 48%,#20292C55 100%)}}
-.in{{position:absolute;inset:0;padding:64px 72px;display:flex;flex-direction:column;justify-content:space-between}}
-.brand svg{{display:block;height:46px;width:300px}}
-.eyebrow{{font-size:16px;letter-spacing:3px;text-transform:uppercase;color:#aaa8a3;margin-bottom:22px}}
-h1{{font-weight:500;font-size:64px;line-height:1.08;letter-spacing:-2.4px;margin:0;max-width:900px;white-space:nowrap}}
-/* Same amber accent as the hero, with a dark halo so it reads over the photo. */
-.accent{{color:#F2B544;text-shadow:0 1px 12px rgba(20,24,26,.55),0 0 .08em #20292C,0 0 .2em #20292C}}
-.bar{{width:120px;height:4px;background:#F2B544}}
-</style></head><body><div class="wash"></div><div class="in">
-<div class="brand">{LOGO}</div>
-<div><div class="eyebrow">{html.escape(eyebrow)}</div><h1>{accent_lines(lines, accent)}</h1></div>
-<div class="bar"></div></div></body></html>'''
-
-def icon(size):
-    # The mark on the graphite tile, 71% of the width (the 180 px touch icon has always used 128 px).
-    m = round(size * 128 / 180)
-    return f'''<!doctype html><html><body style="margin:0;width:{size}px;height:{size}px;background:#20292C;display:grid;place-items:center">
-<div style="width:{m}px;height:{m}px">{MARK.replace('<svg ', f'<svg width="{m}" height="{m}" style="display:block" ')}</div></body></html>'''
-
-def tab_icon(size):
-    return f'''<!doctype html><html><body style="margin:0;width:{size}px;height:{size}px;background:transparent">
-{FAVICON.replace('<svg ', f'<svg width="{size}" height="{size}" style="display:block" ')}</body></html>'''
-
-def shot(doc, out, w, h, transparent=False):
-    tmp = pathlib.Path(tempfile.mkdtemp()) / 'page.html'
-    tmp.write_text(doc)
-    # Load from a file:// page so the local font and photo are allowed to load.
-    subprocess.run(['google-chrome', '--headless=new', '--disable-gpu', '--no-sandbox', '--hide-scrollbars',
-                    '--allow-file-access-from-files', '--virtual-time-budget=3000', f'--window-size={w},{h}',
-                    *(['--default-background-color=00000000'] if transparent else []),
-                    f'--screenshot={out}', tmp.as_uri()], check=True, capture_output=True)
-
-def write_ico(pngs, out):
-    # An .ico that holds PNG images (supported by every current browser), one entry per size.
-    data = [p.read_bytes() for _, p in pngs]
-    head = struct.pack('<HHH', 0, 1, len(pngs))
-    offset = 6 + 16 * len(pngs)
-    for (size, _), d in zip(pngs, data):
-        head += struct.pack('<BBBBHHII', size % 256, size % 256, 0, 0, 1, 32, len(d), offset)
-        offset += len(d)
-    out.write_bytes(head + b''.join(data))
-
-d = json.loads((ROOT / 'src/content/sectors/dealerships.json').read_text())
-shot(card('Dealership enquiry follow-up for dealer groups', d['hero']['headline'], ROOT / 'public/media/dealerships/poster.jpg',
-           d['hero'].get('accent')),
-     ROOT / 'public/og/home.png', 1200, 630)
-shot(icon(180), ROOT / 'public/apple-touch-icon.png', 180, 180)
-for size in (192, 512):
-    shot(icon(size), ROOT / f'public/icon-{size}.png', size, size)
-tmp = pathlib.Path(tempfile.mkdtemp())
-pngs = []
-for size in (16, 32, 48):
-    shot(tab_icon(size), tmp / f'{size}.png', size, size, transparent=True)
-    pngs.append((size, tmp / f'{size}.png'))
-write_ico(pngs, ROOT / 'public/favicon.ico')
-print('wrote public/og/home.png, public/apple-touch-icon.png, public/icon-192.png, public/icon-512.png and public/favicon.ico')
+module = os.environ.get('PLAYWRIGHT_MODULE', '/workspace/propvault/node_modules/playwright/index.mjs')
+chrome = os.environ.get('CHROME_BIN', '/home/box/.cache/ms-playwright/chromium-1248/chrome-linux64/chrome')
+with tempfile.TemporaryDirectory(prefix='carsalesteam-og-') as tmp:
+    doc = pathlib.Path(tmp) / 'og.html'
+    logo = re.sub(r'(<text\b[^>]*?)fill="#20292C"', r'\1fill="currentColor"', (ROOT / 'public/brand/carsalesteam-logo.svg').read_text())
+    photo = (ROOT / 'public/media/dealerships/poster.jpg').as_uri()
+    font = (ROOT / 'public/fonts/geist-latin-v5.woff2').as_uri()
+    serif = (ROOT / 'public/fonts/instrument-serif-latin-v5.woff2').as_uri()
+    doc.write_text(f'''<!doctype html><html><head><style>
+@font-face{{font-family:Geist;src:url({font});font-weight:100 900}}
+@font-face{{font-family:Instrument;src:url({serif})}}
+*{{box-sizing:border-box}}body{{margin:0;width:1200px;height:630px;color:#F5F2EB;font-family:Geist;background:url({photo}) center/cover}}
+.wash{{position:absolute;inset:0;background:linear-gradient(90deg,#0B0F11ee,#0B0F1199 65%,#0B0F1155)}}
+main{{position:absolute;inset:0;padding:60px 70px;display:flex;flex-direction:column;justify-content:space-between}}
+.brand{{display:flex;align-items:flex-start;gap:14px}}.brand svg{{width:330px;height:auto}}.brand span{{font-size:21px;line-height:1;color:#f5f2eba8;margin-top:21px;letter-spacing:.1px;white-space:nowrap}}
+p{{font-size:16px;letter-spacing:3px;margin:0 0 24px;color:#F2B544}}h1{{font:400 86px/.98 Instrument;margin:0;max-width:900px;letter-spacing:-1px}}
+.bar{{height:4px;width:120px;background:#F2B544}}
+</style></head><body><div class="wash"></div><main><div class="brand">{logo}<span>by Actuathron</span></div><div><p>CARSALESTEAM FOR DEALERSHIPS</p><h1>Every lead deserves<br>a next step.</h1></div><div class="bar"></div></main></body></html>''')
+    script = '''import {chromium} from MODULE;
+const browser = await chromium.launch({executablePath:CHROME,args:['--no-sandbox','--allow-file-access-from-files']});
+const page = await browser.newPage({viewport:{width:1200,height:630},deviceScaleFactor:1});
+await page.goto(URL); await page.evaluate(()=>document.fonts.ready); await page.screenshot({path:OUT}); await browser.close();'''
+    import json
+    for key, value in [('MODULE',module),('CHROME',chrome),('URL',doc.as_uri()),('OUT',str(ROOT/'public/og/home.png'))]:
+        script = script.replace(key,json.dumps(value))
+    subprocess.run(['node','--input-type=module','-'],input=script,text=True,check=True,cwd=ROOT)
+print('Wrote public/og/home.png (1200 × 630); icons unchanged.')
