@@ -80,14 +80,14 @@ ${answerBlock({ ...d.summary, link: guide ? { href: `/guides/${guide.slug}`, lab
 ${marquee(names)}
 <div class="wrap">
 ${stepsDiagram(d.workflow.steps.map((s, i) => ({ ...s, example: examples[i] })))}
-<p class="micro example-note">Illustrative example · synthetic data</p>
+<p class="micro example-note">Illustrative example with synthetic data, from the “${esc(d.demo.scenes[0].tab)}” scenario below. It is not a customer record.</p>
 </div></section>
 <section class="demo-section sec deep" id="example"><div class="wrap">
 <div class="section-head"><div>${eyebrow(d.demo.eyebrow)}<h2>${esc(d.demo.heading)}</h2></div><p>${esc(d.demo.body)}</p></div>
 <div class="demo">
 <aside class="demo-side"><div class="label">Choose a scenario</div><div class="tabs" role="group" aria-label="Example scenarios">${d.demo.scenes.map((s, i) => `<button type="button" class="tab${i === 0 ? ' active' : ''}" aria-pressed="${i === 0}" aria-controls="demo-panel"><span class="tab-n" aria-hidden="true">${pad2(i + 1)}</span>${esc(s.tab)}</button>`).join('')}</div><p class="micro">Illustrative example · synthetic data</p></aside>
 <div class="demo-body" id="demo-panel">
-<div class="demo-titlebar"><span>${SITE.name}</span><span>Illustrative example · synthetic data</span></div>
+<div class="demo-titlebar"><span>${SITE.name} / ${esc(d.name)}</span><span>Illustrative example · synthetic data</span></div>
 <ol class="demo-track"><li class="done"><span class="track-n" aria-hidden="true">01</span>Request captured</li><li class="done"><span class="track-n" aria-hidden="true">02</span>Next step prepared</li><li id="demo-stage"><span class="track-n" aria-hidden="true">03</span>Your team decides<em id="demo-stage-state">Waiting</em></li></ol>
 <div class="demo-inner">
 <dl class="demo-meta"><div><dt>Source</dt><dd id="demo-source">${esc(first.source)}</dd></div><div><dt>Owner</dt><dd id="demo-owner">${esc(first.owner)}</dd></div></dl>
