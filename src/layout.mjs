@@ -98,7 +98,7 @@ export function header({ links = [] } = {}) {
 }
 export function footer({ current } = {}) {
   const link = (href, label) => `<li><a href="${href}">${esc(label)}</a></li>`;
-  return `<footer class="footer"><div class="wrap"><div class="foot-grid"><div class="foot-brand"><a class="brand" href="/" aria-label="${SITE.name} home">${LOGO}</a><p>AI workforces, built and run around your team.</p></div><nav class="foot-nav" aria-label="Footer"><div class="foot-col"><p class="foot-h">Resources</p><ul>${link('/guides','Guides')}${link('/privacy','Privacy')}</ul></div><div class="foot-col"><p class="foot-h">Contact</p><ul>${link('mailto:'+SITE.email,SITE.email)}</ul></div></nav></div><div class="foot-bottom"><span class="governance">Built and run by <a href="${SITE.parent.url}" rel="noopener">${SITE.parent.name}</a>.</span><span class="copyright">© ${new Date().getFullYear()} ${SITE.name}</span></div></div></footer>`;
+  return `<footer class="footer"><div class="wrap"><div class="foot-grid"><div class="foot-brand"><a class="brand" href="/" aria-label="${SITE.name} home">${LOGO}</a><p>Every lead deserves a next step.</p></div><nav class="foot-nav" aria-label="Footer"><div class="foot-col"><p class="foot-h">Resources</p><ul>${link('/guides','Guides')}${link('/privacy','Privacy')}</ul></div><div class="foot-col"><p class="foot-h">Contact</p><ul>${link('mailto:'+SITE.email,SITE.email)}</ul></div></nav></div><div class="foot-bottom"><span class="governance">Built and run by <a href="${SITE.parent.url}" rel="noopener">${SITE.parent.name}</a>.</span><span class="copyright">© ${new Date().getFullYear()} ${SITE.name}</span></div></div></footer>`;
 }
 
 // The four principles, listed in the Markdown version of the home page (src/markdown.mjs).
